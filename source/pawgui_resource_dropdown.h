@@ -34,7 +34,6 @@ SOFTWARE.
 #ifndef PAWGUI_RESOURCE_DROPDOWN_H
 #define PAWGUI_RESOURCE_DROPDOWN_H
 
-
 #include "pawgui_base.h"
 #include "pawgui_context.h"
 #include "pawgui_general_resource_container.h"
@@ -43,41 +42,41 @@ namespace pawgui
 {
     class widget_drop_down_resource_menu: public widget_basic
     {
-    private:
-        widget_resource_container * selectedResource;
-        widget_resource_container * containerTree;
-        int maxHeightToRender;
-        popup_menu_option * subOptions;
-        std::string dropdownName;
-        std::string displayedResult;
-        gpe::animaton2d * selectedanimation;
-        gpe::texture_base *selectedImage;
-        int opId;
-        bool isSelectable;
-        int selectedId;
-        bool isOpen;
-        bool justActivated;
-    public:
-        widget_drop_down_resource_menu(  std::string name, widget_resource_container * cTree = NULL,int id = -1,bool selectable = true);
-        ~widget_drop_down_resource_menu();
-        std::string get_data();
-        void load_data(std::string dataString);
-        std::string get_menu_option(int layerNumb, int atNumb);
-        widget_resource_container * get_container_at(int layerNumb, int atNumb);
-        widget_resource_container * get_selected_container();
-        std::string get_plain_string();
-        int get_selected_id();
-        std::string get_selected_name();
-        int get_menu_size();
-        bool just_activated();
-        //std::string get_name();
-        void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
-        void add_folder_contents(widget_resource_container * fFolder = NULL, popup_menu_option * fOptionFolder = NULL);
-        void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
-        void set_name(std::string new_name);
-        void set_selected_target(std::string new_name);
-        void set_selection(int new_id);
+        private:
+            widget_resource_container * selectedResource;
+            widget_resource_container * containerTree;
+            int maxHeightToRender;
+            popup_menu_option * subOptions;
+            std::string dropdownName;
+            std::string displayedResult;
+            gpe::animaton2d * selectedanimation;
+            gpe::texture_base *selectedImage;
+            int opId;
+            bool isSelectable;
+            int selectedId;
+            bool isOpen;
+            bool justActivated;
+        public:
+            widget_drop_down_resource_menu(  std::string name, widget_resource_container * cTree = NULL,int id = -1,bool selectable = true);
+            ~widget_drop_down_resource_menu();
+            std::string get_data();
+            void load_data(std::string dataString);
+            std::string get_menu_option(int layerNumb, int atNumb);
+            widget_resource_container * get_container_at(int layerNumb, int atNumb);
+            widget_resource_container * get_selected_container();
+            std::string get_plain_string();
+            int get_selected_id();
+            std::string get_selected_name();
+            int get_menu_size();
+            bool just_activated();
+            //std::string get_name();
+            void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
+            void add_folder_contents(widget_resource_container * fFolder = NULL, popup_menu_option * fOptionFolder = NULL);
+            void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
+            void set_name(std::string new_name);
+            void set_selected_target(std::string new_name);
+            void set_selection(int new_id);
     };
-
+}
 
 #endif //PAWGUI_RESOURCE_DROPDOWN_H

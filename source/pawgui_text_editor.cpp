@@ -2528,7 +2528,7 @@ namespace pawgui
             {
                 if( textEditorButtonBar->selectedOption==TEXTAREA_OPTION_IMPORT)
                 {
-                    std::string importTextFileName = GPE_GetOpenFileName("Import Text","",main_settings->fileOpenTextFileDir );
+                    std::string importTextFileName = get_filename_open_from_popup("Import Text","",main_settings->fileOpenTextFileDir );
                     if( (int)importTextFileName.size() > 0)
                     {
                         //if( display_prompt_message("Warning!","Clearing this text area is irreversible. Are you sure you want to continue this operation?")==DISPLAY_QUERY_YES )
@@ -2553,7 +2553,7 @@ namespace pawgui
                 }
                 else if( textEditorButtonBar->selectedOption==TEXTAREA_OPTION_EXPORT)
                 {
-                    std::string exportTextFileName = GPE_GetSaveFileName("Export Text","",main_settings->fileOpenFunctionDir);
+                    std::string exportTextFileName = get_filename_save_from_popup("Export Text","",main_settings->fileOpenFunctionDir);
                     if( sff_ex::file_exists(exportTextFileName) )
                     {
                         if( display_prompt_message("Warning!","File Exists already, do you wish to overwrite it?)")==DISPLAY_QUERY_YES )

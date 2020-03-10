@@ -42,56 +42,55 @@ namespace pawgui
 {
     class widget_tab_resource_bar: public widget_basic
     {
-    private:
-        bool openContextMenu;
-        gpe::shape_rect tabBox;
-        gpe::shape_rect tabHeaderBox;
-        std::vector <general_resource *> subOptions;
-        widget_button_icon * tabExpandButton;
-        bool isExpanded;
-    public:
-        bool useDockButton;
-        general_resource * selectedResource;
-        int barXPadding, barYPadding;
-        int tabToClose;
-        int tabSize;
-        int tabXPAdding;
-        int miniTabSize;
-        int extraSmallSize;
-        int smallTabSize;
-        int medTabSize;
-        int largeTabSize;
-        int extraLargeTabSize;
-        int xxLargeTabSize;
-        int tabsPerView;
-        int tabPos;
-        int tabXHover;
-        int tabInUse;
-        widget_tab_resource_bar();
-        ~widget_tab_resource_bar();
+        private:
+            bool openContextMenu;
+            gpe::shape_rect tabBox;
+            gpe::shape_rect tabHeaderBox;
+            std::vector <general_resource *> subOptions;
+            widget_button_icon * tabExpandButton;
+            bool isExpanded;
+        public:
+            bool useDockButton;
+            general_resource * selectedResource;
+            int barXPadding, barYPadding;
+            int tabToClose;
+            int tabSize;
+            int tabXPAdding;
+            int miniTabSize;
+            int extraSmallSize;
+            int smallTabSize;
+            int medTabSize;
+            int largeTabSize;
+            int extraLargeTabSize;
+            int xxLargeTabSize;
+            int tabsPerView;
+            int tabPos;
+            int tabXHover;
+            int tabInUse;
+            widget_tab_resource_bar();
+            ~widget_tab_resource_bar();
 
-        void add_new_tab(general_resource * newTabResource);
-        general_resource * get_selected_resource();
-        void close_resource_tab( std::string projectParentName, int resIdIn);
-        void close_tab( int tabIdToClose);
-        void close_tabs_left( int tabIdToClose);
-        void close_tabs_right( int tabIdToClose);
-        void close_tabs_from_project( std::string projectDirNameIn);
-        void close_all_tabs();
-        void move_to_tab(int newTabId);
-        void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        bool requests_fullscreen();
-        int search_for_string(std::string needle);
-        int search_and_replace_string(std::string needle, std::string newStr = "");
-        void set_coords(int newX, int newY);
-        void set_height(int newHeight);
-        void set_selected_gresource(general_resource * newResource = NULL);
-        void set_width(int newWidth);
-        void update_tabsizes();
-        void toggle_full_width();
+            void add_new_tab(general_resource * newTabResource);
+            general_resource * get_selected_resource();
+            void close_resource_tab( std::string projectParentName, int resIdIn);
+            void close_tab( int tabIdToClose);
+            void close_tabs_left( int tabIdToClose);
+            void close_tabs_right( int tabIdToClose);
+            void close_tabs_from_project( std::string projectDirNameIn);
+            void close_all_tabs();
+            void move_to_tab(int newTabId);
+            void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            bool requests_fullscreen();
+            int search_for_string(std::string needle);
+            int search_and_replace_string(std::string needle, std::string newStr = "");
+            void set_coords(int newX, int newY);
+            void set_height(int newHeight);
+            void set_selected_gresource(general_resource * newResource = NULL);
+            void set_width(int newWidth);
+            void update_tabsizes();
+            void toggle_full_width();
     };
-
     extern widget_tab_resource_bar * main_tab_resource_bar;
 }
 #endif //PAWGUI_TAB_RESOURCEBAR_H

@@ -180,9 +180,9 @@ namespace pawgui
                 }
             }
 
-            if( GPE_EYE_DROPPER!=NULL)
+            if( eyedropper_texture!=NULL)
             {
-                GPE_EYE_DROPPER->render_tex_resized( widget_box.x-cam->x + widget_box.h/4, widget_box.y-cam->y + widget_box.h/4, widget_box.h/2, widget_box.h/2,  NULL, theme_main->main_box_font_color );
+                eyedropper_texture->render_tex_resized( widget_box.x-cam->x + widget_box.h/4, widget_box.y-cam->y + widget_box.h/4, widget_box.h/2, widget_box.h/2,  NULL, theme_main->main_box_font_color );
             }
             if( selectorType == GPE_CS_TYPE_INT )
             {

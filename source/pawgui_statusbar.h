@@ -40,20 +40,19 @@ namespace pawgui
 {
     class widget_statusbar: public widget_basic
     {
-    private:
-        std::string codeEditorStatusBarString;
-        std::string insertModeString;
-    public:
-        std::string statusBarLeftText;
-        widget_statusbar();
-        ~widget_statusbar();
-        void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
-        void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect * cam = NULL);
-        void reset_statusbar();
-        void set_codestring(std::string newCodeString);
-        void set_insertmode(std::string newInsertMode);
+        private:
+            std::string codeEditorStatusBarString;
+            std::string insertModeString;
+        public:
+            std::string statusBarLeftText;
+            widget_statusbar();
+            ~widget_statusbar();
+            void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
+            void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect * cam = NULL);
+            void reset_statusbar();
+            void set_codestring(std::string newCodeString);
+            void set_insertmode(std::string newInsertMode);
     };
-
     extern widget_statusbar * main_statusbar;
 }
 #endif //PAWGUI_STATUS_BAR_H

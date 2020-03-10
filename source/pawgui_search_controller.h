@@ -46,31 +46,30 @@ namespace pawgui
 {
     class search_controller
     {
-    public:
-        //Search Settings
-        int findAllStartXPos, findAllStartYPos;
-        int previousSearchMode;
-        int textSearchMode;
-        bool showFindAllResults;
-        //For Find/Replace Box of TextArea
-        widget_input_text * findTextStringBox;
-        widget_input_number * goToLineStringBox;
-        widget_input_text * replaceTextStringBox;
-        widget_button_label * findButton;
-        widget_button_label * findAllButton;
-        widget_button_label * goToButton;
-        widget_button_label * replaceButton;
-        widget_button_label * replaceAllButton;
-        widget_checkbox * findMatchCase;
+        public:
+            //Search Settings
+            int findAllStartXPos, findAllStartYPos;
+            int previousSearchMode;
+            int textSearchMode;
+            bool showFindAllResults;
+            //For Find/Replace Box of TextArea
+            widget_input_text * findTextStringBox;
+            widget_input_number * goToLineStringBox;
+            widget_input_text * replaceTextStringBox;
+            widget_button_label * findButton;
+            widget_button_label * findAllButton;
+            widget_button_label * goToButton;
+            widget_button_label * replaceButton;
+            widget_button_label * replaceAllButton;
+            widget_checkbox * findMatchCase;
 
-        widget_label_text * scopeLabel;
-        widget_dropdown_menu * findScope;
-        search_controller();
-        ~search_controller();
-        void close_finder();
-        bool using_search();
+            widget_label_text * scopeLabel;
+            widget_dropdown_menu * findScope;
+            search_controller();
+            ~search_controller();
+            void close_finder();
+            bool using_search();
     };
-
     extern search_controller * main_search_controller;
 }
 #endif //PAWGUI_SEARCH_CONTROLLER_H

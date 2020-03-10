@@ -42,55 +42,55 @@ namespace pawgui
 
     class widget_scrollbar_xaxis: public widget_basic
     {
-    protected:
-        bool isHeldOn;
-        bool isOnScrollBox;
-        float mouseXScrolPos;
-        bool hasMoved;
-    public:
-        bool autoCorrect;
-        gpe::shape_rect contextRect;
-        gpe::shape_rect fullRect;
-        float scrollWidth, scrollPercent, scrollPixels, scrollXPos, scrollDisplayPixels;
-        bool isNeeded;
-        widget_scrollbar_xaxis();
-        ~widget_scrollbar_xaxis();
-        bool calculate_sizing();
-        int get_box_width();
-        int get_box_height();
-        bool has_moved();
-        bool is_held();
-        bool is_scrolling();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
-        void reset_scroller();
+        protected:
+            bool isHeldOn;
+            bool isOnScrollBox;
+            float mouseXScrolPos;
+            bool hasMoved;
+        public:
+            bool autoCorrect;
+            gpe::shape_rect contextRect;
+            gpe::shape_rect fullRect;
+            float scrollWidth, scrollPercent, scrollPixels, scrollXPos, scrollDisplayPixels;
+            bool isNeeded;
+            widget_scrollbar_xaxis();
+            ~widget_scrollbar_xaxis();
+            bool calculate_sizing();
+            int get_box_width();
+            int get_box_height();
+            bool has_moved();
+            bool is_held();
+            bool is_scrolling();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
+            void reset_scroller();
     };
 
     class widget_scrollbar_yaxis: public widget_basic
     {
-    protected:
-        bool isHeldOn;
-        bool isOnScrollBox;
-        float mouseYScrolPos;
-        bool hasMoved;
-    public:
-        bool autoCorrect;
-        bool documentActions;
-        gpe::shape_rect contextRect;
-        gpe::shape_rect fullRect;
-        float scrollHeight, scrollPercent, scrollYPos, scrollDisplayPixels;
-        bool isNeeded;
-        widget_scrollbar_yaxis();
-        ~widget_scrollbar_yaxis();
-        bool calculate_sizing();
-        int get_box_width();
-        int get_box_height();
-        bool has_moved();
-        bool is_held();
-        bool is_scrolling();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
-        void reset_scroller();
+        protected:
+            bool isHeldOn;
+            bool isOnScrollBox;
+            float mouseYScrolPos;
+            bool hasMoved;
+        public:
+            bool autoCorrect;
+            bool documentActions;
+            gpe::shape_rect contextRect;
+            gpe::shape_rect fullRect;
+            float scrollHeight, scrollPercent, scrollYPos, scrollDisplayPixels;
+            bool isNeeded;
+            widget_scrollbar_yaxis();
+            ~widget_scrollbar_yaxis();
+            bool calculate_sizing();
+            int get_box_width();
+            int get_box_height();
+            bool has_moved();
+            bool is_held();
+            bool is_scrolling();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
+            void reset_scroller();
     };
 }
 #endif //PAWGUI_SCROLLBARS_H

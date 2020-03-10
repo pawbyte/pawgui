@@ -65,8 +65,8 @@ namespace pawgui
             GPE_LOGO = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gamepencil_icon_72dpi.png" );
             GPE_TEXTURE_TRANSPARENT_BG = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/textures/transparent_bg.png");
             checkmark_texture = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/chevron-down.png");
-            GPE_DROPDOWN_ARROW = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/angle-down.png");
-            GPE_EYE_DROPPER = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/eyedropper.png");
+            dropdown_arrow_texture = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/angle-down.png");
+            eyedropper_texture = rsm_gui->texture_add_filename(  gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/eyedropper.png");
 
             main_scrollbar_arrow = rsm_gui->animation_add("guiScrollArrowDown", gpe::app_directory_name+"resources/gfx/iconpacks/fontawesome/caret-down.png",1,true,0,0,false);
             return true;

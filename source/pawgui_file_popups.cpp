@@ -34,22 +34,22 @@ SOFTWARE.
 
 namespace pawgui
 {
-    std::string  GPE_GetOpenFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory)
+    std::string  get_filename_open_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory)
     {
-        return GPE_GetPlainFileName( prompt, allowedFileTypes,previousDirectory,false);
+        return get_filename_plain_from_popup( prompt, allowedFileTypes,previousDirectory,false);
     }
 
-    std::string GPE_GetSaveFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory )
+    std::string get_filename_save_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory )
     {
-        return GPE_GetPlainFileName( prompt, allowedFileTypes,previousDirectory,true);
+        return get_filename_plain_from_popup( prompt, allowedFileTypes,previousDirectory,true);
     }
 
-    std::string  GPE_GetDirectoryName( const std::string & prompt, std::string &previousDirectory, bool isSaving )
+    std::string  get_directory_name_from_popup( const std::string & prompt, std::string &previousDirectory, bool isSaving )
     {
-        return GPE_GetPlainFileName(prompt,"",previousDirectory,isSaving, true);
+        return get_filename_plain_from_popup(prompt,"",previousDirectory,isSaving, true);
     }
 
-    std::string GPE_GetPlainFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory,bool isSaving, bool isDirectorySearch )
+    std::string get_filename_plain_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory,bool isSaving, bool isDirectorySearch )
     {
         //RESOURCE_TO_DRAG = NULL;
         gpe::GPE_File * currentFile = NULL;

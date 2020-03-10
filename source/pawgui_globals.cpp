@@ -39,7 +39,7 @@ namespace pawgui
     gpe::asset_manager * rsm_gui = NULL;
 
     gpe::texture_base * checkmark_texture = NULL;
-    gpe::texture_base  * GPE_DROPDOWN_ARROW = NULL;
-    gpe::texture_base  * GPE_EYE_DROPPER = NULL;
+    gpe::texture_base  * dropdown_arrow_texture = NULL;
+    gpe::texture_base  * eyedropper_texture = NULL;
 
 }

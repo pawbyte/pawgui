@@ -34,7 +34,7 @@ SOFTWARE.
 #ifndef PAWGUI_THEMES_H
 #define PAWGUI_THEMES_H
 
-#include "../gpe/GPE.h"
+#include "../gpe/gpe.h"
 #include "pawgui_constants.h"
 #include "pawgui_globals.h"
 
@@ -95,132 +95,132 @@ namespace pawgui
 
     class gui_theme
     {
-    private:
-        std::vector< gpe::color * > theme_colors;
-        bool non_default_theme;
-    public:
-        std::string theme_name;
-        std::string theme_local_location;
-        std::string themeBgFileLocation;
-        gpe::texture_base * theme_texture_bg;
+        private:
+            std::vector< gpe::color * > theme_colors;
+            bool non_default_theme;
+        public:
+            std::string theme_name;
+            std::string theme_local_location;
+            std::string themeBgFileLocation;
+            gpe::texture_base * theme_texture_bg;
 
-        gpe::animaton2d * main_menu_animation;
+            gpe::animaton2d * main_menu_animation;
 
-        //main bg gpe::colors ( defaults everywhere)
-        gpe::color * program_color;
-        gpe::color * program_color_header;
+            //main bg gpe::colors ( defaults everywhere)
+            gpe::color * program_color;
+            gpe::color * program_color_header;
 
-        gpe::color * main_box_color;
-        gpe::color * main_box_highlight_color;
-        gpe::color * main_box_font_color;
-        gpe::color * main_box_font_url_color;
-        gpe::color * main_box_font_url_hovered_color;
-        gpe::color * main_box_font_url_visited_color;
-        gpe::color * main_box_font_highlight_color;
-        gpe::color * main_box_faded_font_color;
-        gpe::color * main_box_faded_color;
-        gpe::color * main_border_color;
-        gpe::color * main_border_highlight_color;
-        gpe::color * main_box_shadow_color;
-        //For Folders and such...
-        gpe::color * folder_color;
-        gpe::color * folder_color_highlight;
-        //For Input Fields, Drop Down Menus & Resource Drop Downs
-        gpe::color * input_highlight_color;
-        gpe::color * input_highlight_outline_color;
-        gpe::color * input_highlight_alt_color;
-        gpe::color * input_color;
-        gpe::color * input_error_font_color;
-        gpe::color * input_error_Box_color;
-        gpe::color * input_error_outline_color;
-        gpe::color * input_outline_color;
-        gpe::color * input_font_color;
-        gpe::color * input_highlight_font_color;
-        gpe::color * input_faded_font_color;
-        gpe::color * input_selected_color;
-        //For ButtonBar and Iconed Buttons
-        gpe::color * icon_box_color;
-        gpe::color * icon_box_highlight_color;
-        gpe::color * icon_box_selected_color;
-        gpe::color * icon_border_color;
-        gpe::color * icon_border_highlight_color;
-        gpe::color * icon_border_selected_color;
-        gpe::color * icon_font_color;
-        gpe::color * icon_font_highlight_color;
-        gpe::color * icon_font_selected_color;
-        //For Button and such...
-        gpe::color * checkbox_color;
-        gpe::color * button_box_color;
-        gpe::color * button_box_highlight_color;
-        gpe::color * button_box_selected_color;
-        gpe::color * button_box_shadow_color;
-        gpe::color * button_border_color;
-        gpe::color * button_border_highlight_color;
-        gpe::color * button_border_selected_color;
-        gpe::color * button_font_color;
-        gpe::color * button_font_highlight_color;
-        //For Gui boxes, like main menu, toolbar and oontext menus
-        gpe::color * popup_box_highlight_color;
-        gpe::color * popup_box_highlight_alt_color;
-        gpe::color * popup_box_close_color;
-        gpe::color * popup_box_close_hightlight_color;
-        gpe::color * popup_box_close_font_color;
-        gpe::color * popup_box_color;
-        gpe::color * popup_box_border_color;
-        gpe::color * popup_box_font_color;
-        gpe::color * popup_box_highlight_font_color;
-        gpe::color * popup_box_faded_font_color;
-        gpe::color * popup_box_shadow_color;
-        //Scroll box gpe::colors
-        gpe::color * scroll_box_color;
-        gpe::color * scroll_box_border_color;
-        gpe::color * scroll_box_arrow_color;
-        gpe::color * scroll_box_camera_color;
-        gpe::color * scroll_box_camera_highlight_color;
-        //for text boxes
-        gpe::color * text_box_outer_color;
-        gpe::color * text_box_outer_font_color;
-        gpe::color * text_box_color;
-        gpe::color * text_box_outline_color;
-        gpe::color * text_box_highlight_color;
-        gpe::color * text_box_font_color;
-        gpe::color * text_box_font_comment_color;
-        gpe::color * text_box_font_highlight_color;
-        gpe::color * text_box_font_datatype_color;
-        gpe::color * text_box_font_dquote_color;
-        gpe::color * text_box_font_function_color;
-        gpe::color * text_box_font_function_alt_color;
-        gpe::color * text_box_font_keyword_color;
-        gpe::color * text_box_font_keyword_alt_color;
-        gpe::color * text_box_font_js_color;
-        gpe::color * text_box_font_js_alt_color;
-        gpe::color * text_box_font_variable_color;
-        gpe::color * text_box_font_variable_alt_color;
-        gpe::color * text_box_font_number_color;
-        gpe::color * text_box_font_squote_color;
-        gpe::color * text_box_font_symbols_color;
-        gpe::color * text_box_project_function_color;
-        gpe::color * text_box_project_function_alt_color;
-        gpe::color * text_box_project_keyword_color;
-        gpe::color * text_box_project_keyword_alt_color;
-        //for errors
-        gpe::color * main_error_font_color;
-        gpe::color * main_warning_font_color;
-        gpe::color * main_suggestion_font_color;
-        gui_theme(std::string name, bool isCustomTheme = false );
-        ~gui_theme();
-        gpe::color * add_color(std::string name,uint8_t r, uint8_t g, uint8_t b);
-        gpe::color * add_color(std::string name, gpe::color * saved_color );
-        bool change_color(std::string name,uint8_t r, uint8_t g, uint8_t b);
-        gpe::color * find_color(std::string name);
-        gpe::color * get_color(int pos);
-        int get_color_count();
-        bool is_custom_theme();
-        bool load_background( std::string bgTextureLocation);
-        bool load_theme(std::string themeLocationIn);
-        bool render_background( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam );
-        bool save_theme();
-        bool save_theme_as(std::string themeLocationOut);
+            gpe::color * main_box_color;
+            gpe::color * main_box_highlight_color;
+            gpe::color * main_box_font_color;
+            gpe::color * main_box_font_url_color;
+            gpe::color * main_box_font_url_hovered_color;
+            gpe::color * main_box_font_url_visited_color;
+            gpe::color * main_box_font_highlight_color;
+            gpe::color * main_box_faded_font_color;
+            gpe::color * main_box_faded_color;
+            gpe::color * main_border_color;
+            gpe::color * main_border_highlight_color;
+            gpe::color * main_box_shadow_color;
+            //For Folders and such...
+            gpe::color * folder_color;
+            gpe::color * folder_color_highlight;
+            //For Input Fields, Drop Down Menus & Resource Drop Downs
+            gpe::color * input_highlight_color;
+            gpe::color * input_highlight_outline_color;
+            gpe::color * input_highlight_alt_color;
+            gpe::color * input_color;
+            gpe::color * input_error_font_color;
+            gpe::color * input_error_Box_color;
+            gpe::color * input_error_outline_color;
+            gpe::color * input_outline_color;
+            gpe::color * input_font_color;
+            gpe::color * input_highlight_font_color;
+            gpe::color * input_faded_font_color;
+            gpe::color * input_selected_color;
+            //For ButtonBar and Iconed Buttons
+            gpe::color * icon_box_color;
+            gpe::color * icon_box_highlight_color;
+            gpe::color * icon_box_selected_color;
+            gpe::color * icon_border_color;
+            gpe::color * icon_border_highlight_color;
+            gpe::color * icon_border_selected_color;
+            gpe::color * icon_font_color;
+            gpe::color * icon_font_highlight_color;
+            gpe::color * icon_font_selected_color;
+            //For Button and such...
+            gpe::color * checkbox_color;
+            gpe::color * button_box_color;
+            gpe::color * button_box_highlight_color;
+            gpe::color * button_box_selected_color;
+            gpe::color * button_box_shadow_color;
+            gpe::color * button_border_color;
+            gpe::color * button_border_highlight_color;
+            gpe::color * button_border_selected_color;
+            gpe::color * button_font_color;
+            gpe::color * button_font_highlight_color;
+            //For Gui boxes, like main menu, toolbar and oontext menus
+            gpe::color * popup_box_highlight_color;
+            gpe::color * popup_box_highlight_alt_color;
+            gpe::color * popup_box_close_color;
+            gpe::color * popup_box_close_hightlight_color;
+            gpe::color * popup_box_close_font_color;
+            gpe::color * popup_box_color;
+            gpe::color * popup_box_border_color;
+            gpe::color * popup_box_font_color;
+            gpe::color * popup_box_highlight_font_color;
+            gpe::color * popup_box_faded_font_color;
+            gpe::color * popup_box_shadow_color;
+            //Scroll box gpe::colors
+            gpe::color * scroll_box_color;
+            gpe::color * scroll_box_border_color;
+            gpe::color * scroll_box_arrow_color;
+            gpe::color * scroll_box_camera_color;
+            gpe::color * scroll_box_camera_highlight_color;
+            //for text boxes
+            gpe::color * text_box_outer_color;
+            gpe::color * text_box_outer_font_color;
+            gpe::color * text_box_color;
+            gpe::color * text_box_outline_color;
+            gpe::color * text_box_highlight_color;
+            gpe::color * text_box_font_color;
+            gpe::color * text_box_font_comment_color;
+            gpe::color * text_box_font_highlight_color;
+            gpe::color * text_box_font_datatype_color;
+            gpe::color * text_box_font_dquote_color;
+            gpe::color * text_box_font_function_color;
+            gpe::color * text_box_font_function_alt_color;
+            gpe::color * text_box_font_keyword_color;
+            gpe::color * text_box_font_keyword_alt_color;
+            gpe::color * text_box_font_js_color;
+            gpe::color * text_box_font_js_alt_color;
+            gpe::color * text_box_font_variable_color;
+            gpe::color * text_box_font_variable_alt_color;
+            gpe::color * text_box_font_number_color;
+            gpe::color * text_box_font_squote_color;
+            gpe::color * text_box_font_symbols_color;
+            gpe::color * text_box_project_function_color;
+            gpe::color * text_box_project_function_alt_color;
+            gpe::color * text_box_project_keyword_color;
+            gpe::color * text_box_project_keyword_alt_color;
+            //for errors
+            gpe::color * main_error_font_color;
+            gpe::color * main_warning_font_color;
+            gpe::color * main_suggestion_font_color;
+            gui_theme(std::string name, bool isCustomTheme = false );
+            ~gui_theme();
+            gpe::color * add_color(std::string name,uint8_t r, uint8_t g, uint8_t b);
+            gpe::color * add_color(std::string name, gpe::color * saved_color );
+            bool change_color(std::string name,uint8_t r, uint8_t g, uint8_t b);
+            gpe::color * find_color(std::string name);
+            gpe::color * get_color(int pos);
+            int get_color_count();
+            bool is_custom_theme();
+            bool load_background( std::string bgTextureLocation);
+            bool load_theme(std::string themeLocationIn);
+            bool render_background( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam );
+            bool save_theme();
+            bool save_theme_as(std::string themeLocationOut);
     };
 
     extern gui_theme * theme_default;

@@ -42,94 +42,94 @@ namespace pawgui
 {
     class widget_branch: public widget_basic
     {
-    protected:
-        gpe::branch_type branchType;
-        int barXPadding, barYPadding;
-        bool subMenuIsOpen;
-        int globalId;
-        bool isVisible;
-        int lastWidth;
-        std::string name;
-        int optionSuperType;
-        //gpe::texture_base * textTexture;
-        gpe::texture_base * iconTexture;
-    public:
-        int rightClickedId;
-        int branchLevel;
-        std::vector < widget_branch * > sub_elements;
-        bool isLocked;
-        int selectedSubOption;
-        widget_branch * selectedBranch;
-        widget_branch * parentBranch;
-        widget_branch * treeParent;
-        int foundX2Pos;
-        int previouslySoughtId;
-        bool mouseInRange;
-        widget_branch();
-        virtual ~widget_branch();
-        void add_to_list( widget_panel_list * tList = NULL);
-        void add_to_searched_list( widget_panel_list * tList, std::string needleString );
-        virtual void add_branch( widget_branch * branch, bool changeId = true  );
-        virtual bool can_add_new_branch();
-        widget_branch * get_branch_from_pos( int pos );
-        widget_branch * get_branch_from_id( int id );
-        widget_branch * get_first_branch();
-        widget_branch * get_last_branch();
-        int get_global_id();
-        std::string get_name();
-        int get_selected_id();
-        gpe::branch_type get_type();
-        bool hovering_openclose( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
-        virtual int increment_count();
-        void insert_branch( widget_branch * branch, int pos = -1 );
-        int matches(widget_branch * otherBranch );
-        bool is_visible();
-        void open_and_view();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect *cam = NULL);
-        bool remove_branch( int branchId );
-        void remove_branch(std::string branchName );
-        void remove_branch( widget_branch * branch );
-        void remove_all_branches();
-        virtual void render_branch();
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        virtual bool save_branch_data(std::ofstream * fileTarget, int nestedFoldersIn = 0);
-        void set_global_id( int new_id );
-        virtual void set_name( std::string new_name );
+        protected:
+            gpe::branch_type branchType;
+            int barXPadding, barYPadding;
+            bool subMenuIsOpen;
+            int globalId;
+            bool isVisible;
+            int lastWidth;
+            std::string name;
+            int optionSuperType;
+            //gpe::texture_base * textTexture;
+            gpe::texture_base * iconTexture;
+        public:
+            int rightClickedId;
+            int branchLevel;
+            std::vector < widget_branch * > sub_elements;
+            bool isLocked;
+            int selectedSubOption;
+            widget_branch * selectedBranch;
+            widget_branch * parentBranch;
+            widget_branch * treeParent;
+            int foundX2Pos;
+            int previouslySoughtId;
+            bool mouseInRange;
+            widget_branch();
+            virtual ~widget_branch();
+            void add_to_list( widget_panel_list * tList = NULL);
+            void add_to_searched_list( widget_panel_list * tList, std::string needleString );
+            virtual void add_branch( widget_branch * branch, bool changeId = true  );
+            virtual bool can_add_new_branch();
+            widget_branch * get_branch_from_pos( int pos );
+            widget_branch * get_branch_from_id( int id );
+            widget_branch * get_first_branch();
+            widget_branch * get_last_branch();
+            int get_global_id();
+            std::string get_name();
+            int get_selected_id();
+            gpe::branch_type get_type();
+            bool hovering_openclose( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
+            virtual int increment_count();
+            void insert_branch( widget_branch * branch, int pos = -1 );
+            int matches(widget_branch * otherBranch );
+            bool is_visible();
+            void open_and_view();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect *cam = NULL);
+            bool remove_branch( int branchId );
+            void remove_branch(std::string branchName );
+            void remove_branch( widget_branch * branch );
+            void remove_all_branches();
+            virtual void render_branch();
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            virtual bool save_branch_data(std::ofstream * fileTarget, int nestedFoldersIn = 0);
+            void set_global_id( int new_id );
+            virtual void set_name( std::string new_name );
     };
 
     //Trees aren't parents of branches, but for this class they are :-)
     class widget_tree: public widget_branch
     {
-    private:
-        int maxSuperFolderCount;
-        int seekedX2Pos;
-        int barTitleWidth;
-        int barTitleHeight;
-        int globalBranchCounter;
-        widget_button_icon * addButton;
-        widget_input_text * searchField;
-        std::vector < widget_branch * > searchResultsElements;
-    public:
-        bool useMetaTop;
-        widget_panel_list * treeList;
-        bool justResized;
-        bool showYScroll;
-        bool beingResized;
-        bool treeResized;
-        bool branchMoved;
-        gpe::texture_base * opTexture;
-        std::string needleBranch;
-        widget_tree( std::string menuName,  gpe::branch_type optionSuperType, int optionId = -1 );
-        ~widget_tree( );
-        bool add_button_clicked();
-        bool can_add_new_branch();
-        int increment_count();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
-        void render_branch();
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void toggle_self();
-        bool save_branch_data(std::ofstream * fileTarget, int nestedFoldersIn = 0);
-        void select_branch(widget_branch * branch );
+        private:
+            int maxSuperFolderCount;
+            int seekedX2Pos;
+            int barTitleWidth;
+            int barTitleHeight;
+            int globalBranchCounter;
+            widget_button_icon * addButton;
+            widget_input_text * searchField;
+            std::vector < widget_branch * > searchResultsElements;
+        public:
+            bool useMetaTop;
+            widget_panel_list * treeList;
+            bool justResized;
+            bool showYScroll;
+            bool beingResized;
+            bool treeResized;
+            bool branchMoved;
+            gpe::texture_base * opTexture;
+            std::string needleBranch;
+            widget_tree( std::string menuName,  gpe::branch_type optionSuperType, int optionId = -1 );
+            ~widget_tree( );
+            bool add_button_clicked();
+            bool can_add_new_branch();
+            int increment_count();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL );
+            void render_branch();
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void toggle_self();
+            bool save_branch_data(std::ofstream * fileTarget, int nestedFoldersIn = 0);
+            void select_branch(widget_branch * branch );
     };
 }
 #endif //PAWGUI_STREE_H

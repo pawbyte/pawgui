@@ -494,9 +494,9 @@ namespace pawgui
             {
                 gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->input_outline_color,true);
             }
-            if( GPE_DROPDOWN_ARROW!=NULL)
+            if( dropdown_arrow_texture!=NULL)
             {
-                GPE_DROPDOWN_ARROW->render_tex_resized( widget_box.x+widget_box.w-widget_box.h-cam->x,widget_box.y - cam->y,widget_box.h,widget_box.h, NULL, theme_main->input_font_color );
+                dropdown_arrow_texture->render_tex_resized( widget_box.x+widget_box.w-widget_box.h-cam->x,widget_box.y - cam->y,widget_box.h,widget_box.h, NULL, theme_main->input_font_color );
             }
         }
     }

@@ -131,4 +131,4 @@ namespace pawgui
     void update_popup_info(std::string newMessage="", int selectedOpId=-1, bool popIsContext = false);
 }
 
-#endif
+#endif //PAWGUI_BASE_H

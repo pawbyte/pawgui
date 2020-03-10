@@ -43,10 +43,10 @@ SOFTWARE.
 
 namespace pawgui
 {
-    std::string  GPE_GetPlainFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory, bool isSaving = false, bool isDirectorySearch = false);
-    std::string  GPE_GetDirectoryName( const std::string & prompt, std::string &previousDirectory, bool isSaving = false);
-    std::string  GPE_GetOpenFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory );
-    std::string  GPE_GetSaveFileName( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory );
+    std::string  get_filename_plain_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory, bool isSaving = false, bool isDirectorySearch = false);
+    std::string  get_directory_name_from_popup( const std::string & prompt, std::string &previousDirectory, bool isSaving = false);
+    std::string  get_filename_open_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory );
+    std::string  get_filename_save_from_popup( const std::string & prompt, std::string allowedFileTypes, std::string &previousDirectory );
 }
 
 #endif //PAWGUI_FILE_POPUPS_H

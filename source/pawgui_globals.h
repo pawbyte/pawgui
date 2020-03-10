@@ -41,13 +41,13 @@ namespace pawgui
     extern bool colorblind_mode_on;
     extern gpe::asset_manager * rsm_gui;
 
-    extern std::string GPE_Action_Message;
-    extern int GPE_Action_ID;
-    extern bool GPE_ACTION_IS_CONTEXT;
+    extern std::string action_message_text;
+    extern int action_message_id;
+    extern bool action_is_context;
 
     extern gpe::texture_base * checkmark_texture;
-    extern gpe::texture_base  * GPE_DROPDOWN_ARROW;
-    extern gpe::texture_base  * GPE_EYE_DROPPER;
+    extern gpe::texture_base  * dropdown_arrow_texture;
+    extern gpe::texture_base  * eyedropper_texture;
 }
 
 #endif //PAWGUI_GLOBALS_H

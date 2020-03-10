@@ -35,9 +35,9 @@ SOFTWARE.
 
 namespace pawgui
 {
-    std::string GPE_Action_Message = "";
-    int GPE_Action_ID = -1;
-    bool GPE_ACTION_IS_CONTEXT = false;
+    std::string action_message_text = "";
+    int action_message_id = -1;
+    bool action_is_context = false;
     popup_menu_option * main_context_menu = NULL;
 
     popup_menu_option::popup_menu_option(std::string name, int id, bool selectable, bool seeShortCut, bool makeContext, int kbS1, int kbS2, int kbS3 )
@@ -1579,7 +1579,7 @@ namespace pawgui
             close_toolbar();
         }
 
-        if((int)GPE_Action_Message.size() > 0 )
+        if((int)action_message_text.size() > 0 )
         {
             close_toolbar();
             gpe::input->reset_all_input();

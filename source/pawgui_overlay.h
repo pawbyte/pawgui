@@ -40,34 +40,32 @@ namespace pawgui
 {
     class overlay_system
     {
-    private:
-        gpe::texture_base * toolTipTexture;
-        int toolTipX, toolTipY;
-        int toolTip_halign, toolTip_valign;
-        gpe::texture_base * previousScreenshot;
-        bool tipTipJustUpdated;
-        std::string tempUserMessageTitle;
-        std::string tempUserMessageSubtitle;
-        std::string tempUserMessageText;
-        bool tempTopLeftMessage;
-        float temporayMessageDisplayTimer;
-        float temporayMessageDisplayStartTimer;
-    public:
-        std::string toolTipString;
-        overlay_system();
-        ~overlay_system();
-        bool overhead_used();
-        void process_cursor();
+        private:
+            gpe::texture_base * toolTipTexture;
+            int toolTipX, toolTipY;
+            int toolTip_halign, toolTip_valign;
+            gpe::texture_base * previousScreenshot;
+            bool tipTipJustUpdated;
+            std::string tempUserMessageTitle;
+            std::string tempUserMessageSubtitle;
+            std::string tempUserMessageText;
+            bool tempTopLeftMessage;
+            float temporayMessageDisplayTimer;
+            float temporayMessageDisplayStartTimer;
+        public:
+            std::string toolTipString;
+            overlay_system();
+            ~overlay_system();
+            bool overhead_used();
+            void process_cursor();
 
-        void update_tooltip(std::string newTip);
-        void render_frozen_screenshot();
-        void render_temporary_message();
-        void render_tooltip(int xPos = -1, int yPos = -1 );
-        void take_frozen_screenshot();
-        void update_temporary_message(std::string mTitle="", std::string mSubTitle="", std::string mText="", float messDuration = 3, bool topLeftMessage = true );
-
+            void update_tooltip(std::string newTip);
+            void render_frozen_screenshot();
+            void render_temporary_message();
+            void render_tooltip(int xPos = -1, int yPos = -1 );
+            void take_frozen_screenshot();
+            void update_temporary_message(std::string mTitle="", std::string mSubTitle="", std::string mText="", float messDuration = 3, bool topLeftMessage = true );
     };
-
     extern overlay_system * main_overlay_system;
 }
 

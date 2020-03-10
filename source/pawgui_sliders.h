@@ -40,54 +40,54 @@ namespace pawgui
 {
     class widget_slide_xaxis: public widget_basic
     {
-    protected:
-        bool isOnScrollBox;
-        float mouseXScrolPos;
-        bool hasMoved;
-        bool isHeldOn;
-        float myValue;
-        float minValue;
-        float max_value;
-        float currentSliderXPos;
-        float scrollDisplayPixels;
-    public:
-        bool isNeeded;
-        widget_slide_xaxis( float sVal  = 50, float sMin = 0, float sMax = 100 );
-        ~widget_slide_xaxis();
-        float get_value();
-        bool has_moved();
-        bool is_held();
-        bool is_scrolling();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void reset_scroller();
-        void set_data( float sVal  = 50, float sMin = 0, float sMax = 100 );
-        bool set_value( float sVal );
+        protected:
+            bool isOnScrollBox;
+            float mouseXScrolPos;
+            bool hasMoved;
+            bool isHeldOn;
+            float myValue;
+            float minValue;
+            float max_value;
+            float currentSliderXPos;
+            float scrollDisplayPixels;
+        public:
+            bool isNeeded;
+            widget_slide_xaxis( float sVal  = 50, float sMin = 0, float sMax = 100 );
+            ~widget_slide_xaxis();
+            float get_value();
+            bool has_moved();
+            bool is_held();
+            bool is_scrolling();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void reset_scroller();
+            void set_data( float sVal  = 50, float sMin = 0, float sMax = 100 );
+            bool set_value( float sVal );
     };
 
     class widget_slider_yaxis: public widget_basic
     {
-    protected:
-        bool isOnScrollBox;
-        float mouseYScrolPos;
-        bool hasMoved;
-        bool isHeldOn;
-        float scrollDisplayPixels;
-    public:
-        bool isNeeded;
-        widget_slider_yaxis( float sVal  = 50, float sMin = 0, float sMax = 100 );
-        ~widget_slider_yaxis();
-        float get_value();
-        float get_box_width();
-        float get_box_height();
-        bool has_moved();
-        bool is_held();
-        bool is_scrolling();
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void reset_scroller();
-        void set_data( float sVal  = 50, float sMin = 0, float sMax = 100 );
-        bool set_value( float sVal );
+        protected:
+            bool isOnScrollBox;
+            float mouseYScrolPos;
+            bool hasMoved;
+            bool isHeldOn;
+            float scrollDisplayPixels;
+        public:
+            bool isNeeded;
+            widget_slider_yaxis( float sVal  = 50, float sMin = 0, float sMax = 100 );
+            ~widget_slider_yaxis();
+            float get_value();
+            float get_box_width();
+            float get_box_height();
+            bool has_moved();
+            bool is_held();
+            bool is_scrolling();
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void reset_scroller();
+            void set_data( float sVal  = 50, float sMin = 0, float sMax = 100 );
+            bool set_value( float sVal );
     };
 }
 #endif //PAWGUI_SLIDERS_H

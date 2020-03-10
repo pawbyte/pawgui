@@ -43,7 +43,7 @@ namespace pawgui
     const int MAX_STORED_TEXT_PREVIOUS_ENTRIES = 32;
     class widget_input_text: public widget_basic
     {
-    protected:
+        protected:
             int prevwidget_boxW, prevwidget_boxH;
             std::string textInputString;
             std::string placeHolderString;
@@ -108,7 +108,7 @@ namespace pawgui
             void set_string(std::string newString);
             void set_placeholder(std::string newString);
             bool was_submitted();
-        };
+    };
 
     class widget_input_number: public widget_input_text
     {

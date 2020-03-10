@@ -261,7 +261,7 @@ namespace pawgui
                     {
                         selectedId = foundResult;
                         selectedResource = containerTree->find_resource_from_id(selectedId);
-                        displayedResult = GPE_Action_Message;
+                        displayedResult = action_message_text;
                     }
                     else
                     {
@@ -299,9 +299,9 @@ namespace pawgui
                 gpe::gfs->render_text_resized( widget_box.x+GENERAL_GPE_GUI_PADDING-cam->x,widget_box.y+widget_box.h/2-cam->y,opName,theme_main->input_font_color,FONT_POPUP,gpe::fa_left,gpe::fa_middle,widget_box.w-widget_box.h-12,-1);
             }
             //gpe::gcanvas->render_rectangle( widget_box.x+widget_box.w-widget_box.h*3/4-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->input_outline_color ,false);
-            if( GPE_DROPDOWN_ARROW!=NULL )
+            if( dropdown_arrow_texture!=NULL )
             {
-                GPE_DROPDOWN_ARROW->render_tex_resized(  widget_box.x+widget_box.w-widget_box.h-cam->x,widget_box.y - cam->y,widget_box.h,widget_box.h, NULL, theme_main->input_font_color );
+                dropdown_arrow_texture->render_tex_resized(  widget_box.x+widget_box.w-widget_box.h-cam->x,widget_box.y - cam->y,widget_box.h,widget_box.h, NULL, theme_main->input_font_color );
             }
             if( isInUse)
             {

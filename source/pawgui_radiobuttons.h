@@ -41,40 +41,40 @@ namespace pawgui
 {
     class widget_radio_button_controller: public widget_basic
     {
-    private:
-        int selectedId;
-        int hoveredOption;
-        int opXPadding, opYPadding;
-        int opWidth, opHeight;
-        bool keepAlphabetized;
-        int numCols;
-        int rowsPerCol;
-    protected:
-        std::vector <gpe::key_pair *> subOptions;
-    public:
-        bool allowDuplicates;
-        widget_radio_button_controller(std::string cName = "", bool alphabetize = false, int colNum=1);
-        ~widget_radio_button_controller();
-        std::string get_data();
-        void load_data(std::string dataString);
-        void add_opton(std::string newOption);
-        void add_menu_option(std::string optionName, std::string optionSubStr= "",int optionValue = 0, bool selectOption = false);
-        std::string get_menu_option(int atNumb);
-        std::string get_plain_string();
-        int get_selected_id();
-        std::string get_selected_tag();
-        int get_selected_value();
+        private:
+            int selectedId;
+            int hoveredOption;
+            int opXPadding, opYPadding;
+            int opWidth, opHeight;
+            bool keepAlphabetized;
+            int numCols;
+            int rowsPerCol;
+        protected:
+            std::vector <gpe::key_pair *> subOptions;
+        public:
+            bool allowDuplicates;
+            widget_radio_button_controller(std::string cName = "", bool alphabetize = false, int colNum=1);
+            ~widget_radio_button_controller();
+            std::string get_data();
+            void load_data(std::string dataString);
+            void add_opton(std::string newOption);
+            void add_menu_option(std::string optionName, std::string optionSubStr= "",int optionValue = 0, bool selectOption = false);
+            std::string get_menu_option(int atNumb);
+            std::string get_plain_string();
+            int get_selected_id();
+            std::string get_selected_tag();
+            int get_selected_value();
 
-        void organize_options();
-        void remove_data(std::string dataString);
-        void remove_option(std::string optionToCut);
-        void remove_option_id(int optionToCut);
-        void set_selection( int newSelection);
-        bool set_from_tag(std::string newselectedTag);
-        void set_value( int valueToSelect);
-        void prerender_self( );
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void organize_options();
+            void remove_data(std::string dataString);
+            void remove_option(std::string optionToCut);
+            void remove_option_id(int optionToCut);
+            void set_selection( int newSelection);
+            bool set_from_tag(std::string newselectedTag);
+            void set_value( int valueToSelect);
+            void prerender_self( );
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
     };
 }
 

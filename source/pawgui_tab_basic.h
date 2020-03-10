@@ -41,42 +41,42 @@ namespace pawgui
     //Essentially the same as the widget_tab_resource_bar class, but tabs can not be closed by clicking an "X"
     class widget_tabbar: public widget_basic
     {
-    private:
-        std::vector <std::string> subOptions;
-    public:
-        bool canCloseTabs;
-        bool tabIsRightClicked;
-        int fontTextWidth, fontTextHeight;
-        int barXPadding, barYPadding;
-        int tabSize;
-        int miniTabSize;
-        int extraSmallSize;
-        int smallTabSize;
-        int medTabSize;
-        int largeTabSize;
-        int extraLargeTabSize;
-        int xxLargeTabSize;
-        int tabsPerView;
-        int tabPos;
-        int tabInUse;
-        bool isInUse;
-        widget_tabbar( bool dynamicClosing = false);
-        ~widget_tabbar();
-        void add_new_tab(std::string newOption, bool switchToNew = true);
-        void calculate_tabs();
-        bool contains_tab( std::string tabName );
-        void open_tab(int tabId);
-        void open_tab(std::string tabName);
-        std::string get_selected_name();
-        int get_selected_tab();
-        int get_tab_count();
-        void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam = NULL);
-        void remove_all_tabs( );
-        bool remove_tab( int tabId );
-        bool remove_tab( std::string tabName );
-        void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect * cam = NULL);
-        void select_tab( int tabToSelect );
-        void toggle_tab( std::string tabName );
+        private:
+            std::vector <std::string> subOptions;
+        public:
+            bool canCloseTabs;
+            bool tabIsRightClicked;
+            int fontTextWidth, fontTextHeight;
+            int barXPadding, barYPadding;
+            int tabSize;
+            int miniTabSize;
+            int extraSmallSize;
+            int smallTabSize;
+            int medTabSize;
+            int largeTabSize;
+            int extraLargeTabSize;
+            int xxLargeTabSize;
+            int tabsPerView;
+            int tabPos;
+            int tabInUse;
+            bool isInUse;
+            widget_tabbar( bool dynamicClosing = false);
+            ~widget_tabbar();
+            void add_new_tab(std::string newOption, bool switchToNew = true);
+            void calculate_tabs();
+            bool contains_tab( std::string tabName );
+            void open_tab(int tabId);
+            void open_tab(std::string tabName);
+            std::string get_selected_name();
+            int get_selected_tab();
+            int get_tab_count();
+            void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam = NULL);
+            void remove_all_tabs( );
+            bool remove_tab( int tabId );
+            bool remove_tab( std::string tabName );
+            void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect * cam = NULL);
+            void select_tab( int tabToSelect );
+            void toggle_tab( std::string tabName );
     };
 }
 #endif //PAWGUI_TAB_BASIC_H

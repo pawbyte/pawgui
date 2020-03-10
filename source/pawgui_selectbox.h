@@ -41,66 +41,66 @@ namespace pawgui
 {
     class selectbox_option
     {
-    public:
-        bool sectionHasContent;
-        bool useGuiColor;
-        bool isChecked;
-        std::string optionName;
-        gpe::texture_base * optionTexture;
-        gpe::animaton2d * optionanimation;
-        int subimageIndex;
-        float optionValue;
-        selectbox_option();
-        ~selectbox_option();
-        void prerender_self( );
+        public:
+            bool sectionHasContent;
+            bool useGuiColor;
+            bool isChecked;
+            std::string optionName;
+            gpe::texture_base * optionTexture;
+            gpe::animaton2d * optionanimation;
+            int subimageIndex;
+            float optionValue;
+            selectbox_option();
+            ~selectbox_option();
+            void prerender_self( );
     };
 
     class widget_selctbox: public widget_basic
     {
-    private:
-        std::vector <selectbox_option * > subOptions;
-        int intedPos;
-        float pos;
-        float startPos;
-        float maxOptionsInView;
-        int maxHeight;
-        int optionHeight;
-        bool showHideOthersCheckboxToggle;
-        widget_scrollbar_yaxis * optionsScroller;
-    public:
-        int downDelay;
-        int upDelay;
-        bool showCheckboxes;
-        int optionIconWidth;
-        widget_selctbox(std::string name = "");
-        ~widget_selctbox();
-        std::string get_data();
-        void load_data(std::string dataString);
-        void add_option(std::string newOptionName, float newOpValue = -1,gpe::texture_base * evRepIcon = NULL, gpe::animaton2d * evRepanimation=NULL, int subimageInIndex = 0, bool selectNew = false, bool useGuiColor = true);
-        void correct_camera();
-        void clear_list();
-        int get_option_id(std::string optionName );
-        std::string get_selected_name();
-        float get_selected_value();
-        int get_selection();
-        int get_size();
-        selectbox_option * get_option(int optionId);
-        std::string get_option_name(int optionId);
-        void insert_option(int optionId, std::string new_name, gpe::texture_base * evRepIcon = NULL, gpe::animaton2d * evRepanimation=NULL, int subimageInIndex = 0,bool selectNew = false);
-        void limit_height(int newH);
-        void alter_content( int optionId, bool sectionHasContent);
-        void alter_content_from_value( float valueId, bool sectionHasContent);
-        bool move_down_space();
-        bool move_up_space();
-        void prerender_self( );
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void rename_option(int optionId, std::string new_name);
-        void remove_option(int optionId);
-        void set_option_height( int newOptionHeight);
-        void set_selected_option( std::string optionToSelect);
-        void set_selection( int selId);
-        void toggle_others_checked();
+        private:
+            std::vector <selectbox_option * > subOptions;
+            int intedPos;
+            float pos;
+            float startPos;
+            float maxOptionsInView;
+            int maxHeight;
+            int optionHeight;
+            bool showHideOthersCheckboxToggle;
+            widget_scrollbar_yaxis * optionsScroller;
+        public:
+            int downDelay;
+            int upDelay;
+            bool showCheckboxes;
+            int optionIconWidth;
+            widget_selctbox(std::string name = "");
+            ~widget_selctbox();
+            std::string get_data();
+            void load_data(std::string dataString);
+            void add_option(std::string newOptionName, float newOpValue = -1,gpe::texture_base * evRepIcon = NULL, gpe::animaton2d * evRepanimation=NULL, int subimageInIndex = 0, bool selectNew = false, bool useGuiColor = true);
+            void correct_camera();
+            void clear_list();
+            int get_option_id(std::string optionName );
+            std::string get_selected_name();
+            float get_selected_value();
+            int get_selection();
+            int get_size();
+            selectbox_option * get_option(int optionId);
+            std::string get_option_name(int optionId);
+            void insert_option(int optionId, std::string new_name, gpe::texture_base * evRepIcon = NULL, gpe::animaton2d * evRepanimation=NULL, int subimageInIndex = 0,bool selectNew = false);
+            void limit_height(int newH);
+            void alter_content( int optionId, bool sectionHasContent);
+            void alter_content_from_value( float valueId, bool sectionHasContent);
+            bool move_down_space();
+            bool move_up_space();
+            void prerender_self( );
+            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void rename_option(int optionId, std::string new_name);
+            void remove_option(int optionId);
+            void set_option_height( int newOptionHeight);
+            void set_selected_option( std::string optionToSelect);
+            void set_selection( int selId);
+            void toggle_others_checked();
     };
 }
 #endif //PAWGUI_SELECTBOX_H

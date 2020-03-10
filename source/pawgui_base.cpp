@@ -430,13 +430,13 @@ namespace pawgui
 
     void update_action_message(std::string newMessage)
     {
-        GPE_Action_Message = newMessage;
+        action_message_text = newMessage;
     }
 
     void update_popup_info(std::string newMessage, int selectedOpId, bool popIsContext)
     {
-        GPE_Action_Message = newMessage;
-        GPE_Action_ID = selectedOpId;
-        GPE_ACTION_IS_CONTEXT = popIsContext;
+        action_message_text = newMessage;
+        action_message_id = selectedOpId;
+        action_is_context = popIsContext;
     }
 }
