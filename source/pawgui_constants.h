@@ -35,25 +35,21 @@ SOFTWARE.
 
 namespace pawgui
 {
-    const int version_major = 1;
-    const int version_minor = 2;
+    const int version_major = 2;
+    const int version_minor = 0;
     const int version_patch_level = 0;
 
     const int nestedFolderLimit = 4;
 
     enum class search_mode
     {
-        find_text = 0,
-        find_text_all = 1,
-        goto_line = 2,
-        replace_text = 3,
-        replace_text_all = 4,
-
+        mode_none = 0,
+        find_text = 1,
+        find_text_all = 2,
+        goto_line = 3,
+        replace_text = 4,
+        replace_text_all = 5,
     };
-
-    const int display_query_no = 0;
-    const int display_query_yes = 1;
-    const int display_query_cancel = 2;
 }
 
 #endif //PAWGUI_CONSTANTS_H

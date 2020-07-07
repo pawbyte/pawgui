@@ -105,7 +105,7 @@ namespace pawgui
             parsed_text* tempParseContent = NULL;
             if( renderColor==NULL)
             {
-                renderColor = theme_main->text_box_font_color;
+                renderColor = pawgui::theme_main->text_box_font_color;
             }
             int fontWidth = fontIn->get_mono_width();
             for( int i = 0; i < maxParseSize; i++)

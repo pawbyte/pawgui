@@ -43,37 +43,37 @@ namespace pawgui
 
     class gpe_widget_color_picker: public widget_basic
     {
-    protected:
-        gpe::color * storedColor;
-        int fontSizeW, fontSizeH;
-    public:
-        gpe::shape_rect fieldElementBox;
-        std::string inputLabel;
-        bool showLabel;
-        gpe_widget_color_picker(std::string startName="",std::string description="", int r = 255, int g = 255, int b = 255 );
-        ~gpe_widget_color_picker();
-        std::string get_data();
-        void load_data(std::string dataString);
-        gpe::color * get_color();
-        gpe::color * get_duplicate_color();
-        std::string get_hex_string();
-        std::string get_rgb_string();
-        std::string get_plain_string();
-        int get_r();
-        int get_g();
-        int get_b();
-        void set_label(std::string newLabel);
-        void set_name(std::string new_name);
-        void set_string(std::string newString);
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void set_color_from_rgb( gpe::color *newColor);
-        void set_color_from_rgb(std::string newColorStr);
-        void set_color_from_hex(std::string newColorStr);
-        void set_r(int r);
-        void set_g(int g);
-        void set_b(int b);
-        void set_rgb(int r, int g, int b);
+        protected:
+            gpe::color * storedColor;
+            int fontSizeW, fontSizeH;
+        public:
+            gpe::shape_rect fieldElementBox;
+            std::string inputLabel;
+            bool showLabel;
+            gpe_widget_color_picker(std::string startName="",std::string description="", int r = 255, int g = 255, int b = 255 );
+            ~gpe_widget_color_picker();
+            std::string get_data();
+            void load_data(std::string dataString);
+            gpe::color * get_color();
+            gpe::color * get_duplicate_color();
+            std::string get_hex_string();
+            std::string get_rgb_string();
+            std::string get_plain_string();
+            int get_r();
+            int get_g();
+            int get_b();
+            void set_label(std::string newLabel);
+            void set_name(std::string new_name);
+            void set_string(std::string newString);
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void set_color_from_rgb( gpe::color *newColor);
+            void set_color_from_rgb(std::string newColorStr);
+            void set_color_from_hex(std::string newColorStr);
+            void set_r(int r);
+            void set_g(int g);
+            void set_b(int b);
+            void set_rgb(int r, int g, int b);
     };
 
     bool get_color_from_popup(std::string popUpCaption = "", gpe::color * currColor = NULL);

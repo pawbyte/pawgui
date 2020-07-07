@@ -37,44 +37,44 @@ SOFTWARE.
 
 namespace pawgui
 {
-    typedef enum
+    enum class content_selector_type
     {
-        GPE_CS_TYPE_INT,     /**< Int */
-        GPE_CS_TYPE_float,     /**< float */
-        GPE_CS_TYPE_color,     /**< Color */
-        GPE_CS_TYPE_STRING,     /**< String */
-    } widget_content_selector_Type;
+        cs_type_int = 0,     /**< Int */
+        cs_type_float = 1,     /**< float */
+        cs_type_color = 2,     /**< Color */
+        cs_type_string = 3,     /**< String */
+    };
 
     class widget_content_selector: public widget_basic
     {
-    protected:
-        int fontSizeW, fontSizeH;
-    public:
-        int selectorId;
-        int selectorType;
-        int selectorGroup; //Seperated groups will be used per level essentially
-        int storedInt;
-        float storeddfloat;
-        gpe::color * storedColor;
-        std::string storedString;
-        gpe::shape_rect fieldElementBox;
-        widget_content_selector(std::string name="",std::string description="" );
-        ~widget_content_selector();
-        std::string get_data();
-        void load_data(std::string dataString);
-        std::string get_plain_string();
-        void set_label(std::string newLabel);
-        void set_name(std::string new_name);
-        void set_string(std::string newString);
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void set_color_from_rgb( gpe::color * newColor);
-        void set_color_from_rgb(std::string newColorStr);
-        void set_color_from_hex(std::string newColorStr);
-        void set_r(int r);
-        void set_g(int g);
-        void set_b(int b);
-        void set_rgb(int r, int g, int b);
+        protected:
+            int fontSizeW, fontSizeH;
+        public:
+            int selectorId;
+            content_selector_type selectorType;
+            int selectorGroup; //Seperated groups will be used per level essentially
+            int storedInt;
+            float storeddfloat;
+            gpe::color * storedColor;
+            std::string storedString;
+            gpe::shape_rect fieldElementBox;
+            widget_content_selector(std::string name="",std::string description="" );
+            ~widget_content_selector();
+            std::string get_data();
+            void load_data(std::string dataString);
+            std::string get_plain_string();
+            void set_label(std::string newLabel);
+            void set_name(std::string new_name);
+            void set_string(std::string newString);
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void set_color_from_rgb( gpe::color * newColor);
+            void set_color_from_rgb(std::string newColorStr);
+            void set_color_from_hex(std::string newColorStr);
+            void set_r(int r);
+            void set_g(int g);
+            void set_b(int b);
+            void set_rgb(int r, int g, int b);
     };
 
     extern widget_content_selector * main_content_selector;

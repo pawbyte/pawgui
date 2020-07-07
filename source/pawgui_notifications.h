@@ -1,5 +1,5 @@
 /*
-pawgui_radiobuttons.h
+pawgui_notifications.h
 This file is part of:
 PawByte Ambitious Working GUI(PAWGUI)
 https://www.pawbyte.com/pawgui
@@ -31,51 +31,43 @@ SOFTWARE.
 
 */
 
-#ifndef PAWGUI_RADIOBUTTONS_H
-#define PAWGUI_RADIOBUTTONS_H
+#ifndef pawgui_notificatons_h
+#define pawgui_notificatons_h
 
 #include "pawgui_base.h"
-#include "pawgui_parsers.h"
 
 namespace pawgui
 {
-    class widget_radio_button_controller: public widget_basic
+    class widget_notifcation: public widget_basic
     {
-        private:
-            int selectedId;
-            int hoveredOption;
-            int opXPadding, opYPadding;
-            int opWidth, opHeight;
-            bool keepAlphabetized;
-            int numCols;
-            int rowsPerCol;
         protected:
-            std::vector <gpe::key_pair *> subOptions;
+            std::string notification_text;
+            std::string notification_url;
+            gpe::texture_base * notification_icon;
         public:
-            bool allowDuplicates;
-            widget_radio_button_controller(std::string cName = "", bool alphabetize = false, int colNum=1);
-            ~widget_radio_button_controller();
+            bool remove_requested;
+            widget_notifcation(std::string name_param, std::string description = "");
+            ~widget_notifcation();
             std::string get_data();
-            void load_data(std::string dataString);
-            void add_opton(std::string newOption);
-            void add_menu_option(std::string optionName, std::string optionSubStr= "",int optionValue = 0, bool selectOption = false);
-            std::string get_menu_option(int atNumb);
             std::string get_plain_string();
-            int get_selected_id();
-            std::string get_selected_tag();
-            int get_selected_value();
+            void load_data(std::string dataString);
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void set_name(std::string name_param);
+    };
 
-            void organize_options();
-            void remove_data(std::string dataString);
-            void remove_option(std::string optionToCut);
-            void remove_option_id(int optionToCut);
-            void set_selection( int newSelection);
-            bool set_from_tag(std::string newselectedTag);
-            void set_value( int valueToSelect);
-            void prerender_self( );
+    class widget_notfications_holder: public widget_basic
+    {
+        public:
+            int notifications_in_view_max;
+            std::vector < widget_notifcation* > notifications;
+            widget_notfications_holder();
+            ~widget_notfications_holder();
+            widget_notifcation * add_notification( std::string name, std::string description);
+            bool remove_notification( std::string name );
             void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
             void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
     };
 }
 
-#endif //PAWGUI_RADIOBUTTONS_H
+#endif //pawgui_notificatons_h

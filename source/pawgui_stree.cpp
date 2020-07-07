@@ -55,7 +55,7 @@ namespace pawgui
         mouseInRange = false;
         isVisible = true;
 
-        opName = name = "unnamed_branch";
+        widget_name = name = "unnamed_branch";
         branchType = gpe::branch_type::DEFAULT;
         globalId = -1;
 
@@ -191,16 +191,16 @@ namespace pawgui
         return branchType;
     }
 
-    bool widget_branch::hovering_openclose( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    bool widget_branch::hovering_openclose( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
         if( !isHovered)
         {
             return false;
         }
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
 
-        if( gpe::input->mouse_position_x <= viewedSpace->x - cam->x + widget_box.x + widget_box.w ) //branchLevel * RESOURCE_AREA_HEIGHT+GENERAL_PLUSMINUX_ICON_SIZE )
+        if( gpe::input->mouse_position_x <= view_space->x - cam->x + widget_box.x + widget_box.w ) //branchLevel * resource_container_default_height+default_icon_plusminus_size )
         {
             return true;
         }
@@ -266,11 +266,11 @@ namespace pawgui
         }
     }
 
-    void widget_branch::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam  )
+    void widget_branch::process_self( gpe::shape_rect * view_space, gpe::shape_rect *cam  )
     {
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
-        widget_basic::process_self( viewedSpace, cam );
+        widget_basic::process_self( view_space, cam );
         widget_box.w = cam->w;
         widget_box.h = SPECIAL_BRANCH_HEIGHT;
         if( isHovered )
@@ -281,7 +281,7 @@ namespace pawgui
             }
             else if( isClicked )
             {
-                if( hovering_openclose( viewedSpace, cam) )
+                if( hovering_openclose( view_space, cam) )
                 {
                     subMenuIsOpen = !subMenuIsOpen;
                 }
@@ -293,7 +293,7 @@ namespace pawgui
             }
             else if(  isRightClicked )
             {
-                if( hovering_openclose( viewedSpace, cam) )
+                if( hovering_openclose( view_space, cam) )
                 {
                     subMenuIsOpen = !subMenuIsOpen;
                 }
@@ -393,12 +393,12 @@ namespace pawgui
         }
     }
 
-    void widget_branch::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam   )
+    void widget_branch::render_self( gpe::shape_rect * view_space, gpe::shape_rect *cam   )
     {
         bool selfIsInView = false;
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( cam!=NULL && viewedSpace!=NULL)
+        if( cam!=NULL && view_space!=NULL)
         {
             int rendY = widget_box.y;
             if( rendY>=cam->y && rendY <=cam->y+cam->h )
@@ -415,7 +415,7 @@ namespace pawgui
                 if(treeParent!=NULL && treeParent->get_selected_id()==globalId && globalId > 0  )
                 {
                     gpe::gcanvas->render_rectangle( 0,widget_box.y-cam->y,
-                                           cam->w-cam->x,widget_box.y+16-cam->y,theme_main->button_box_highlight_color,false,255 );
+                                           cam->w-cam->x,widget_box.y+16-cam->y,pawgui::theme_main->button_box_highlight_color,false,255 );
                 }
             }
             if( (int)sub_elements.size() > 0 )
@@ -424,7 +424,7 @@ namespace pawgui
                 {
                     if( selfIsInView )
                     {
-                        gpe::gfs->render_text( widget_box.x-cam->x, widget_box.y-cam->y,"-",theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
+                        gpe::gfs->render_text( widget_box.x-cam->x, widget_box.y-cam->y,"-",pawgui::theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
                     }
                     widget_branch * foundBranch = NULL;
 
@@ -435,20 +435,20 @@ namespace pawgui
                         if(foundBranch!=NULL)
                         {
                             foundBranch->previouslySoughtId = selectedSubOption;
-                            foundBranch->render_self( viewedSpace,cam);
+                            foundBranch->render_self( view_space,cam);
 
                         }
                     }*/
                     gpe::gfs->render_text( widget_box.x-cam->x,
                                      widget_box.y-cam->y,
-                                     "-",theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
+                                     "-",pawgui::theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
 
                 }
                 else if( (selfIsInView  ) )
                 {
                     gpe::gfs->render_text( widget_box.x-cam->x,
                                      widget_box.y-cam->y,
-                                     "+",theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
+                                     "+",pawgui::theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
 
                 }
             }
@@ -457,9 +457,9 @@ namespace pawgui
             {
                 if( iconTexture!=NULL )
                 {
-                    iconTexture->render_tex_resized(widget_box.x+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,widget_box.y-cam->y, SPECIAL_BRANCH_HEIGHT,SPECIAL_BRANCH_HEIGHT,NULL,  theme_main->main_box_font_color );
+                    iconTexture->render_tex_resized(widget_box.x+default_icon_plusminus_size-cam->x,widget_box.y-cam->y, SPECIAL_BRANCH_HEIGHT,SPECIAL_BRANCH_HEIGHT,NULL,  pawgui::theme_main->main_box_font_color );
                 }
-                gpe::gfs->render_text( widget_box.x+SPECIAL_BRANCH_HEIGHT+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,widget_box.y-cam->y+SPECIAL_BRANCH_HEIGHT/2, name,theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_center);
+                gpe::gfs->render_text( widget_box.x+SPECIAL_BRANCH_HEIGHT+default_icon_plusminus_size-cam->x,widget_box.y-cam->y+SPECIAL_BRANCH_HEIGHT/2, name,pawgui::theme_main->main_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_center);
             }
         }
     }
@@ -477,7 +477,7 @@ namespace pawgui
 
     void widget_branch::set_name( std::string new_name )
     {
-        opName = name = new_name;
+        widget_name = name = new_name;
     }
 
 
@@ -488,7 +488,7 @@ namespace pawgui
         searchField = new widget_input_text("","Search..." );
         needsNewLine = true;
         treeList = new widget_panel_list();
-        opName = name = menuName;
+        widget_name = name = menuName;
         branchType = optionSuperType;
         globalId = optionId;
 
@@ -553,12 +553,12 @@ namespace pawgui
         return globalBranchCounter;
     }
 
-    void widget_tree::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam  )
+    void widget_tree::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam  )
     {
         rightClickedId = -1;
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find(cam);
-        widget_basic::process_self( viewedSpace, cam );
+        widget_basic::process_self( view_space, cam );
         indentationLevel = 0;
         //if( isVisible )
         {
@@ -604,10 +604,10 @@ namespace pawgui
                 if( useMetaTop )
                 {
                     addButton->set_coords( widget_box.x, widget_box.y );
-                    searchField->set_coords( addButton->get_x2pos()+GENERAL_GPE_GUI_PADDING, widget_box.y );
-                    searchField->set_width( widget_box.w - searchField->get_xpos()-GENERAL_GPE_GUI_PADDING );
-                    addButton->process_self( viewedSpace, cam  );
-                    searchField->process_self( viewedSpace, cam  );
+                    searchField->set_coords( addButton->get_x2pos()+padding_default, widget_box.y );
+                    searchField->set_width( widget_box.w - searchField->get_xpos()-padding_default );
+                    addButton->process_self( view_space, cam  );
+                    searchField->process_self( view_space, cam  );
                 }
                 else
                 {
@@ -653,7 +653,7 @@ namespace pawgui
                         }
                     }
                 }
-                treeList->process_self( viewedSpace, cam );
+                treeList->process_self( view_space, cam );
             }
         }
     }
@@ -663,46 +663,46 @@ namespace pawgui
         widget_branch::render_branch( );
     }
 
-    void widget_tree::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_tree::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
 
         if( isVisible )
         {
 
-            if( theme_main->theme_texture_bg == NULL)
+            if( pawgui::theme_main->theme_texture_bg == NULL)
             {
-                //gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,theme_main->program_color,false);
+                //gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,pawgui::theme_main->program_color,false);
             }
 
 
             if( useMetaTop )
             {
-                addButton->render_self( viewedSpace, cam  );
-                searchField->render_self( viewedSpace, cam  );
+                addButton->render_self( view_space, cam  );
+                searchField->render_self( view_space, cam  );
             }
             else
             {
                 gpe::gcanvas->render_rectangle( widget_box.x - cam->x, widget_box.y - cam->y,
-                                       widget_box.x + widget_box.w, widget_box.y + barTitleHeight - cam->x,theme_main->popup_box_color,false);
-                gpe::gfs->render_text( widget_box.x +GENERAL_GPE_GUI_PADDING - cam->x, widget_box.y - cam->y, name, theme_main->popup_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
+                                       widget_box.x + widget_box.w, widget_box.y + barTitleHeight - cam->x,pawgui::theme_main->popup_box_color,false);
+                gpe::gfs->render_text( widget_box.x +padding_default - cam->x, widget_box.y - cam->y, name, pawgui::theme_main->popup_box_font_color,FONT_STREE_BRANCH,gpe::fa_left,gpe::fa_top);
             }
             if( hasScrollControl)
             {
                 gpe::gcanvas->render_rectangle( widget_box.x -cam->x,widget_box.y -cam->y,
-                                       widget_box.x+widget_box.w -cam->x, widget_box.y+widget_box.h-cam->y,theme_main->button_box_highlight_color,true);
+                                       widget_box.x+widget_box.w -cam->x, widget_box.y+widget_box.h-cam->y,pawgui::theme_main->button_box_highlight_color,true);
             }
             else
             {
                 gpe::gcanvas->render_rectangle( widget_box.x -cam->x,widget_box.y -cam->y,
-                                       widget_box.x+widget_box.w -cam->x, widget_box.y+widget_box.h-cam->y,theme_main->text_box_outline_color,true);
+                                       widget_box.x+widget_box.w -cam->x, widget_box.y+widget_box.h-cam->y,pawgui::theme_main->text_box_outline_color,true);
             }
 
             if( treeList!=NULL )
             {
                 ///current_branch->selectedSubOption = selectedSubOption;
-                treeList->render_self(viewedSpace, cam);
+                treeList->render_self(view_space, cam);
             }
         }
     }

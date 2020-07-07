@@ -35,10 +35,6 @@ SOFTWARE.
 
 namespace pawgui
 {
-    int POPUP_FONT_SIZE_WIDTH = 12;
-    int POPUP_FONT_SIZE_HEIGHT = 12;
-    int POPUP_MENU_VALUE = -1;
-
     widget_basic::widget_basic()
     {
         renderPackageName = "";
@@ -64,9 +60,9 @@ namespace pawgui
         isRightClicked = false;
         isEnabled = true;
         isHovered = false;
-        guiListTypeName = "";
-        guiListTypeId = 0;
-        opName = "";
+        widget_type = "";
+        widget_type_id = 0;
+        widget_name = "";
         descriptionText = "";
         showBorderBox = true;
         hasLineBreak = false;
@@ -138,12 +134,12 @@ namespace pawgui
 
     std::string widget_basic::get_name()
     {
-        return opName;
+        return widget_name;
     }
 
     std::string widget_basic::get_element_type()
     {
-        return guiListTypeName;
+        return widget_type;
     }
 
     std::string widget_basic::get_data()
@@ -153,7 +149,7 @@ namespace pawgui
 
     std::string widget_basic::get_plain_string()
     {
-        return "\""+opName+"\"";
+        return "\""+widget_name+"\"";
     }
 
     void widget_basic::load_data(std::string dataString)
@@ -230,7 +226,7 @@ namespace pawgui
         }
     }
 
-    void widget_basic::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam)
+    void widget_basic::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam)
     {
         bool wasHovered = isHovered;
         windowInView = false;
@@ -259,13 +255,13 @@ namespace pawgui
             return;
         }
 
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if(viewedSpace!=NULL && cam!=NULL)
+        if(view_space!=NULL && cam!=NULL)
         {
-            if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,viewedSpace->x,viewedSpace->y,viewedSpace->x+viewedSpace->w,viewedSpace->y+viewedSpace->h) )
+            if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,view_space->x,view_space->y,view_space->x+view_space->w,view_space->y+view_space->h) )
             {
-                if ( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,widget_box.x+viewedSpace->x-cam->x,widget_box.y+viewedSpace->y-cam->y,widget_box.x+widget_box.w+viewedSpace->x-cam->x,widget_box.y+widget_box.h+viewedSpace->y-cam->y) )
+                if ( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,widget_box.x+view_space->x-cam->x,widget_box.y+view_space->y-cam->y,widget_box.x+widget_box.w+view_space->x-cam->x,widget_box.y+widget_box.h+view_space->y-cam->y) )
                 {
                     isHovered = true;
                     if( main_overlay_system!=NULL)
@@ -276,7 +272,7 @@ namespace pawgui
                         }
                         else
                         {
-                            main_overlay_system->update_tooltip(opName);
+                            main_overlay_system->update_tooltip(widget_name);
                         }
                     }
                     if( gpe::input->check_mouse_pressed(0) )
@@ -318,7 +314,7 @@ namespace pawgui
 
     }
 
-    void widget_basic::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_basic::render_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
 
     }
@@ -355,7 +351,7 @@ namespace pawgui
 
     void widget_basic::set_name(std::string new_name)
     {
-        opName = new_name;
+        widget_name = new_name;
     }
 
     void widget_basic::set_coords(int newX, int newY)

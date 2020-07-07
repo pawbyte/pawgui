@@ -53,16 +53,7 @@ namespace pawgui
 
     overlay_system::~overlay_system()
     {
-        if( previousScreenshot!=NULL)
-        {
-            delete previousScreenshot;
-            previousScreenshot = NULL;
-        }
-        if( toolTipTexture!=NULL)
-        {
-            delete toolTipTexture;
-            toolTipTexture = NULL;
-        }
+
     }
 
     bool overlay_system::overhead_used()
@@ -98,7 +89,7 @@ namespace pawgui
             }
             if( toolTipTexture!=NULL)
             {
-                //toolTipTexture->loadFromRenderedText(gpe::renderer_main,newTip,theme_main->popup_box_font_color,gpe::font_default);
+                //toolTipTexture->loadFromRenderedText(gpe::renderer_main,newTip,pawgui::theme_main->popup_box_font_color,gpe::font_default);
             }
             tipTipJustUpdated = true;
         }
@@ -139,20 +130,20 @@ namespace pawgui
             int noticeAlphaValue = (temporayMessageDisplayTimer/temporayMessageDisplayStartTimer)*255;
             if( tempTopLeftMessage)
             {
-                gpe::gcanvas->render_rectangle( 0,0,256,96,theme_main->popup_box_color,false, noticeAlphaValue);
-                gpe::gcanvas->render_rectangle( 0,0,256,96,theme_main->popup_box_border_color,true,noticeAlphaValue);
-                render_text( 0,GENERAL_GPE_GUI_PADDING,tempUserMessageTitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
-                render_text( 0,GENERAL_GPE_GUI_PADDING*2+GPE_AVERAGE_LINE_HEIGHT,tempUserMessageSubtitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
-                render_text( 0,GENERAL_GPE_GUI_PADDING*3+GPE_AVERAGE_LINE_HEIGHT*2,tempUserMessageText,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
+                gpe::gcanvas->render_rectangle( 0,0,256,96,pawgui::theme_main->popup_box_color,false, noticeAlphaValue);
+                gpe::gcanvas->render_rectangle( 0,0,256,96,pawgui::theme_main->popup_box_border_color,true,noticeAlphaValue);
+                render_text( 0,padding_default,tempUserMessageTitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
+                render_text( 0,padding_default*2+default_line_height,tempUserMessageSubtitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
+                render_text( 0,padding_default*3+default_line_height*2,tempUserMessageText,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top,noticeAlphaValue);
 
             }
             else
             {
-                gpe::gcanvas->render_rectangle( gpe::screen_width/2-256,gpe::screen_height-128,gpe::screen_width/2+256,gpe::screen_height-32,theme_main->popup_box_color,false, noticeAlphaValue);
-                gpe::gcanvas->render_rectangle( gpe::screen_width/2-256,gpe::screen_height-128,gpe::screen_width/2+256,gpe::screen_height-32,theme_main->popup_box_border_color,true,noticeAlphaValue);
-                render_text( gpe::screen_width/2,gpe::screen_height-128+GENERAL_GPE_GUI_PADDING,tempUserMessageTitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
-                render_text( gpe::screen_width/2,gpe::screen_height-128+GENERAL_GPE_GUI_PADDING*2+GPE_AVERAGE_LINE_HEIGHT,tempUserMessageSubtitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
-                render_text( gpe::screen_width/2,gpe::screen_height-128+GENERAL_GPE_GUI_PADDING*3+GPE_AVERAGE_LINE_HEIGHT*2,tempUserMessageText,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
+                gpe::gcanvas->render_rectangle( gpe::screen_width/2-256,gpe::screen_height-128,gpe::screen_width/2+256,gpe::screen_height-32,pawgui::theme_main->popup_box_color,false, noticeAlphaValue);
+                gpe::gcanvas->render_rectangle( gpe::screen_width/2-256,gpe::screen_height-128,gpe::screen_width/2+256,gpe::screen_height-32,pawgui::theme_main->popup_box_border_color,true,noticeAlphaValue);
+                render_text( gpe::screen_width/2,gpe::screen_height-128+padding_default,tempUserMessageTitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
+                render_text( gpe::screen_width/2,gpe::screen_height-128+padding_default*2+default_line_height,tempUserMessageSubtitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
+                render_text( gpe::screen_width/2,gpe::screen_height-128+padding_default*3+default_line_height*2,tempUserMessageText,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top,noticeAlphaValue);
             }
             temporayMessageDisplayTimer--;
         }
@@ -167,7 +158,7 @@ namespace pawgui
             {
                 xPos = gpe::input->mouse_position_x;
             }
-            if( yPos < 0 || yPos > gpe::screen_height-GENERAL_GPE_GUI_PADDING-toolTipTexture->get_height() )
+            if( yPos < 0 || yPos > gpe::screen_height-padding_default-toolTipTexture->get_height() )
             {
                 yPos = gpe::input->mouse_position_y+32;
             }
@@ -180,9 +171,9 @@ namespace pawgui
             }
 
             int xPos2 = 0;
-            int yPos2 = yPos+TEXTBOX_FONT_SIZE_HEIGHT+GENERAL_GPE_GUI_PADDING/2;
+            int yPos2 = yPos+TEXTBOX_FONT_SIZE_HEIGHT+padding_default/2;
 
-            int maxLength = ( gpe::screen_width - GENERAL_GPE_GUI_PADDING*4)/TEXTBOX_FONT_SIZE_WIDTH;
+            int maxLength = ( gpe::screen_width - padding_default*4)/TEXTBOX_FONT_SIZE_WIDTH;
             int lineCountForTip = 1;
             std::vector< std::string > toolTipLines;
             std::string tempToolTipString = toolTipString;
@@ -195,29 +186,29 @@ namespace pawgui
                     toolTipLines.push_back( stg_ex::get_substring(tempToolTipString,0,maxLength) );
                     tempToolTipString = stg_ex::get_substring(tempToolTipString,maxLength);
                 }
-                yPos2= yPos+TEXTBOX_FONT_SIZE_HEIGHT*( (int)toolTipLines.size() )+GENERAL_GPE_GUI_PADDING/2;
+                yPos2= yPos+TEXTBOX_FONT_SIZE_HEIGHT*( (int)toolTipLines.size() )+padding_default/2;
             }
             else
             {
                 toolTipLines.push_back(toolTipString);
-                if(xPos+TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size()+GENERAL_GPE_GUI_PADDING*2 > gpe::screen_width)
+                if(xPos+TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size()+padding_default*2 > gpe::screen_width)
                 {
-                    xPos = gpe::screen_width-( TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size() )-GENERAL_GPE_GUI_PADDING*2;
+                    xPos = gpe::screen_width-( TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size() )-padding_default*2;
                     if( xPos < 0)
                     {
                         xPos = 0;
                     }
                 }
-                xPos2 = xPos+ TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size()+GENERAL_GPE_GUI_PADDING*2;
+                xPos2 = xPos+ TEXTBOX_FONT_SIZE_WIDTH*(int)toolTipString.size()+padding_default*2;
             }
 
-            gpe::gcanvas->render_rectangle( xPos-GENERAL_GPE_GUI_PADDING/2,yPos-GENERAL_GPE_GUI_PADDING/2,xPos2,yPos2,theme_main->popup_box_color,false);
+            gpe::gcanvas->render_rectangle( xPos-padding_default/2,yPos-padding_default/2,xPos2,yPos2,pawgui::theme_main->popup_box_color,false);
             for( int i = 0; i < (int)toolTipLines.size(); i++)
             {
-                gpe::gfs->render_text( xPos+GENERAL_GPE_GUI_PADDING,yPos+TEXTBOX_FONT_SIZE_HEIGHT*i, toolTipLines[i],theme_main->popup_box_font_color,FONT_TOOLTIP,gpe::fa_left,gpe::fa_top);
+                gpe::gfs->render_text( xPos+padding_default,yPos+TEXTBOX_FONT_SIZE_HEIGHT*i, toolTipLines[i],pawgui::theme_main->popup_box_font_color,FONT_TOOLTIP,gpe::fa_left,gpe::fa_top);
             }
 
-            gpe::gcanvas->render_rectangle( xPos-GENERAL_GPE_GUI_PADDING/2,yPos-GENERAL_GPE_GUI_PADDING/2,xPos2,yPos2,theme_main->popup_box_border_color,true);
+            gpe::gcanvas->render_rectangle( xPos-padding_default/2,yPos-padding_default/2,xPos2,yPos2,pawgui::theme_main->popup_box_border_color,true);
         }
         tipTipJustUpdated = false;
     }

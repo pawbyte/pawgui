@@ -49,8 +49,8 @@ namespace pawgui
         public:
             //Search Settings
             int findAllStartXPos, findAllStartYPos;
-            int previousSearchMode;
-            int textSearchMode;
+            pawgui::search_mode previousSearchMode;
+            pawgui::search_mode textSearchMode;
             bool showFindAllResults;
             //For Find/Replace Box of TextArea
             widget_input_text * findTextStringBox;

@@ -67,7 +67,7 @@ SOFTWARE.
 
 namespace pawgui
 {
-    bool init_gui();
+    bool init_gui( std::string mono_font_location, int font_min_size );
     bool quit_gui();
 }
 

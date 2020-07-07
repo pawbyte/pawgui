@@ -38,6 +38,10 @@ SOFTWARE.
 
 namespace pawgui
 {
+    const int display_query_no = 0;
+    const int display_query_yes = 1;
+    const int display_query_cancel = 2;
+
     class loader_display
     {
     private:

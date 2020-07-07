@@ -39,7 +39,7 @@ namespace pawgui
     widget_statusbar::widget_statusbar()
     {
         widget_box.h = 24;
-        guiListTypeName = "statusbar";
+        widget_type = "statusbar";
         codeEditorStatusBarString = "";
         insertModeString = "";
     }
@@ -49,17 +49,17 @@ namespace pawgui
 
     }
 
-    void widget_statusbar::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_statusbar::process_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
         codeEditorStatusBarString= "";
         insertModeString = "";
     }
 
-    void widget_statusbar::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_statusbar::render_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
         if( isEnabled&& widget_box.h >0 && FONT_STATUSBAR!=NULL)
         {
-            gpe::gcanvas->render_rect( &widget_box,theme_main->program_color,false);
+            gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->program_color,false);
             int statusBarStringWidth = 0, statusBarStringHeight = 0;
             int projectNameWidth = 0, projectNameHeight = 0;
             if( (int)statusBarLeftText.size() > 0)
@@ -77,32 +77,32 @@ namespace pawgui
                 if( (int)codeEditorStatusBarString.size() > 0)
                 {
                     FONT_STATUSBAR->get_numbered_metrics(codeEditorStatusBarString,&statusBarStringWidth, &statusBarStringHeight);
-                    if( widget_box.w > statusBarStringWidth+projectNameWidth +GENERAL_GPE_GUI_PADDING )
+                    if( widget_box.w > statusBarStringWidth+projectNameWidth +padding_default )
                     {
-                        gpe::gfs->render_text( widget_box.x,widget_box.y+widget_box.h/2,projectNameToRender,theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
-                        //gpe::gcanvas->render_rectangle( widget_box.x+projectNameWidth,widget_box.y,widget_box.x+widget_box.w,widget_box.y+widget_box.h,theme_main->button_box_color,false);
-                        gpe::gfs->render_text( widget_box.x+projectNameWidth+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2,codeEditorStatusBarString,theme_main->main_box_font_color,FONT_STATUSBAR,gpe::fa_left,gpe::fa_middle);
+                        gpe::gfs->render_text( widget_box.x,widget_box.y+widget_box.h/2,projectNameToRender,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
+                        //gpe::gcanvas->render_rectangle( widget_box.x+projectNameWidth,widget_box.y,widget_box.x+widget_box.w,widget_box.y+widget_box.h,pawgui::theme_main->button_box_color,false);
+                        gpe::gfs->render_text( widget_box.x+projectNameWidth+padding_default,widget_box.y+widget_box.h/2,codeEditorStatusBarString,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR,gpe::fa_left,gpe::fa_middle);
                     }
                     else
                     {
-                        gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2,codeEditorStatusBarString,theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
+                        gpe::gfs->render_text( widget_box.x+padding_default,widget_box.y+widget_box.h/2,codeEditorStatusBarString,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
                     }
                 }
-                else if( widget_box.w > projectNameWidth +GENERAL_GPE_GUI_PADDING )
+                else if( widget_box.w > projectNameWidth +padding_default )
                 {
-                    gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2,projectNameToRender,theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
+                    gpe::gfs->render_text( widget_box.x+padding_default,widget_box.y+widget_box.h/2,projectNameToRender,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle);
                 }
                 else
                 {
-                    gpe::gfs->render_text( widget_box.x+widget_box.w-GENERAL_GPE_GUI_PADDING/2,widget_box.y+widget_box.h/2,projectNameToRender,theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_right, gpe::fa_middle);
+                    gpe::gfs->render_text( widget_box.x+widget_box.w-padding_default/2,widget_box.y+widget_box.h/2,projectNameToRender,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_right, gpe::fa_middle);
                 }
             }
             else if( (int)codeEditorStatusBarString.size() > 0)
             {
                 FONT_STATUSBAR->get_numbered_metrics(codeEditorStatusBarString,&statusBarStringWidth, &statusBarStringHeight);
-                gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2,codeEditorStatusBarString,theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle );
+                gpe::gfs->render_text( widget_box.x+padding_default,widget_box.y+widget_box.h/2,codeEditorStatusBarString,pawgui::theme_main->main_box_font_color,FONT_STATUSBAR, gpe::fa_left, gpe::fa_middle );
             }
-            gpe::gcanvas->render_rect( &widget_box,theme_main->main_border_color,true);
+            gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->main_border_color,true);
         }
     }
 

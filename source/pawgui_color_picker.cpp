@@ -42,11 +42,11 @@ namespace pawgui
 
     gpe_widget_color_picker::gpe_widget_color_picker( std::string name,std::string description, int r, int g, int b )
     {
-        opName = name;
+        widget_name = name;
         set_label( name );
         descriptionText = description;
-        guiListTypeName = "colorpicker";
-        guiListTypeId = 2;
+        widget_type = "colorpicker";
+        widget_type_id = 2;
         storedColor = new gpe::color("customColor", r,g,b );
         widget_box.x = 0;
         widget_box.y = 0;
@@ -59,7 +59,7 @@ namespace pawgui
 
         fontSizeH = 12;
         fontSizeW = 12;
-        FONT_TEXTINPUT->get_metrics("A",&fontSizeW,&fontSizeH);
+        font_textinput->get_metrics("A",&fontSizeW,&fontSizeH);
         if( fontSizeW<=0)
         {
             fontSizeW = 12;
@@ -81,7 +81,7 @@ namespace pawgui
 
     std::string gpe_widget_color_picker::get_data()
     {
-        return guiListTypeName+":"+opName+"==|||=="+get_rgb_string()+",,,";
+        return widget_type+":"+widget_name+"==|||=="+get_rgb_string()+",,,";
     }
 
     void gpe_widget_color_picker::load_data(std::string dataString)
@@ -177,11 +177,11 @@ namespace pawgui
     {
         if( (int)new_name.size() > 0)
         {
-            if( opName == inputLabel )
+            if( widget_name == inputLabel )
             {
                 set_label(new_name);
             }
-            opName = new_name;
+            widget_name = new_name;
         }
     }
 
@@ -190,7 +190,7 @@ namespace pawgui
 
     }
 
-    void gpe_widget_color_picker::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void gpe_widget_color_picker::process_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
         if( widget_box.w >= 256 )
         {
@@ -219,7 +219,7 @@ namespace pawgui
         }
         /*
         Old Protocol for Label Fields
-        widget_basic::process_self(viewedSpace,cam);
+        widget_basic::process_self(view_space,cam);
 
         New Protocol for labeled fields
 
@@ -230,13 +230,13 @@ namespace pawgui
             isClicked = false;
             isHovered = false;
             clickedOutside = false;
-            viewedSpace = gpe::camera_find(viewedSpace);
+            view_space = gpe::camera_find(view_space);
             cam = gpe::camera_find(cam);
-            if(viewedSpace!=NULL && cam!=NULL)
+            if(view_space!=NULL && cam!=NULL)
             {
-                if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,viewedSpace->x,viewedSpace->y,viewedSpace->x+viewedSpace->w,viewedSpace->y+viewedSpace->h) )
+                if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,view_space->x,view_space->y,view_space->x+view_space->w,view_space->y+view_space->h) )
                 {
-                    if ( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,fieldElementBox.x+viewedSpace->x-cam->x,fieldElementBox.y+viewedSpace->y-cam->y,fieldElementBox.x+fieldElementBox.w+viewedSpace->x-cam->x,fieldElementBox.y+fieldElementBox.h+viewedSpace->y-cam->y) )
+                    if ( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,fieldElementBox.x+view_space->x-cam->x,fieldElementBox.y+view_space->y-cam->y,fieldElementBox.x+fieldElementBox.w+view_space->x-cam->x,fieldElementBox.y+fieldElementBox.h+view_space->y-cam->y) )
                     {
                         isHovered = true;
                         if( (int)descriptionText.size()>0 )
@@ -245,7 +245,7 @@ namespace pawgui
                         }
                         else
                         {
-                            main_overlay_system->update_tooltip(opName);
+                            main_overlay_system->update_tooltip(widget_name);
                         }
                         if( gpe::input->check_mouse_released( mb_left))
                         {
@@ -284,32 +284,32 @@ namespace pawgui
         }
     }
 
-    void gpe_widget_color_picker::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void gpe_widget_color_picker::render_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
         if( isEnabled && cam!=NULL)
         {
             if( isInUse)
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, theme_main->main_box_highlight_color, false );
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, pawgui::theme_main->main_box_highlight_color, false );
                 if( showLabel && (int)inputLabel.size() > 0)
                 {
-                    gpe::gfs->render_text_resized( widget_box.x-cam->x+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2-cam->y,inputLabel,theme_main->main_box_font_highlight_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_middle );
+                    gpe::gfs->render_text_resized( widget_box.x-cam->x+padding_default,widget_box.y+widget_box.h/2-cam->y,inputLabel,pawgui::theme_main->main_box_font_highlight_color,font_textinput,gpe::fa_left,gpe::fa_middle );
                 }
             }
             else
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, theme_main->main_box_color, false );
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, pawgui::theme_main->main_box_color, false );
 
                 if( showLabel && (int)inputLabel.size() > 0)
                 {
-                    gpe::gfs->render_text_resized( widget_box.x-cam->x+GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2-cam->y,inputLabel,theme_main->main_box_font_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_middle );
+                    gpe::gfs->render_text_resized( widget_box.x-cam->x+padding_default,widget_box.y+widget_box.h/2-cam->y,inputLabel,pawgui::theme_main->main_box_font_color,font_textinput,gpe::fa_left,gpe::fa_middle );
                 }
             }
             gpe::gcanvas->render_rectangle( fieldElementBox.x-cam->x,fieldElementBox.y-cam->y,fieldElementBox.x+fieldElementBox.w-cam->x,fieldElementBox.y+fieldElementBox.h-cam->y,storedColor,false);
-            //gpe::gcanvas->render_vertical_line_color( widget_box.x-cam->x,widget_box.y-cam->y, widget_box.y+widget_box.h-cam->y, theme_main->main_border_color );
-            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, theme_main->main_border_color, true );
+            //gpe::gcanvas->render_vertical_line_color( widget_box.x-cam->x,widget_box.y-cam->y, widget_box.y+widget_box.h-cam->y, pawgui::theme_main->main_border_color );
+            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y, pawgui::theme_main->main_border_color, true );
         }
     }
 
@@ -435,7 +435,7 @@ namespace pawgui
             return false;
         }
         gpe::game_runtime->end_loop();
-        //RESOURCE_TO_DRAG = NULL;
+        //resource_dragged = NULL;
         if( (int)popUpCaption.size() ==0)
         {
             popUpCaption = "Select a Color";
@@ -498,23 +498,23 @@ namespace pawgui
             widget_box.w = promptBoxWidth;
             widget_box.h = promptBoxHeight;
 
-            colorShadeBox.x = widget_box.x+GENERAL_GPE_GUI_PADDING*2+texture_color_picker_gradient->get_width();
-            colorShadeBox.y = widget_box.y+GENERAL_GPE_GUI_PADDING+32;
+            colorShadeBox.x = widget_box.x+padding_default*2+texture_color_picker_gradient->get_width();
+            colorShadeBox.y = widget_box.y+padding_default+32;
 
             //editor_gui_main->reset_gui_info();
-            yesButton->set_coords( widget_box.x+GENERAL_GPE_GUI_PADDING, widget_box.y+widget_box.h-32);
-            cancelButton->set_coords( yesButton->get_xpos()+yesButton->get_width()+GENERAL_GPE_GUI_PADDING,yesButton->get_ypos() );
+            yesButton->set_coords( widget_box.x+padding_default, widget_box.y+widget_box.h-32);
+            cancelButton->set_coords( yesButton->get_xpos()+yesButton->get_width()+padding_default,yesButton->get_ypos() );
 
-            newColorRValue->set_coords(colorShadeBox.x+colorShadeBox.w+GENERAL_GPE_GUI_PADDING,widget_box.y+GENERAL_GPE_GUI_PADDING+48);
+            newColorRValue->set_coords(colorShadeBox.x+colorShadeBox.w+padding_default,widget_box.y+padding_default+48);
             newColorRValue->set_width(128);
 
-            newColorGValue->set_coords(colorShadeBox.x+colorShadeBox.w+GENERAL_GPE_GUI_PADDING,newColorRValue->get_ypos()+newColorRValue->get_height()+GENERAL_GPE_GUI_PADDING);
+            newColorGValue->set_coords(colorShadeBox.x+colorShadeBox.w+padding_default,newColorRValue->get_ypos()+newColorRValue->get_height()+padding_default);
             newColorGValue->set_width(128);
 
-            newColorBValue->set_coords(colorShadeBox.x+colorShadeBox.w+GENERAL_GPE_GUI_PADDING,newColorGValue->get_ypos()+newColorGValue->get_height()+GENERAL_GPE_GUI_PADDING);
+            newColorBValue->set_coords(colorShadeBox.x+colorShadeBox.w+padding_default,newColorGValue->get_ypos()+newColorGValue->get_height()+padding_default);
             newColorBValue->set_width(128);
 
-            newColorHexValue->set_coords(colorShadeBox.x+colorShadeBox.w+GENERAL_GPE_GUI_PADDING,newColorBValue->get_ypos()+newColorBValue->get_height()+GENERAL_GPE_GUI_PADDING);
+            newColorHexValue->set_coords(colorShadeBox.x+colorShadeBox.w+padding_default,newColorBValue->get_ypos()+newColorBValue->get_height()+padding_default);
             newColorHexValue->set_width(128);
 
             yesButton->process_self();
@@ -570,16 +570,16 @@ namespace pawgui
                 main_overlay_system->render_frozen_screenshot( );
 
                 //Update screen
-                gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_color,false);
-                gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_border_color,true);
+                gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_color,false);
+                gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_border_color,true);
                 if( texture_color_picker_gradient!=NULL)
                 {
-                    texture_color_picker_gradient->render_tex( widget_box.x+GENERAL_GPE_GUI_PADDING,widget_box.y+32+GENERAL_GPE_GUI_PADDING );
+                    texture_color_picker_gradient->render_tex( widget_box.x+padding_default,widget_box.y+32+padding_default );
                 }
-                int preiewColorYPos = yesButton->get_ypos()-GENERAL_GPE_GUI_PADDING-64;
+                int preiewColorYPos = yesButton->get_ypos()-padding_default-64;
 
-                gpe::gcanvas->render_rect( &colorShadeBox,theme_main->program_color,false);
-                gpe::gcanvas->render_rect( &colorShadeBox,theme_main->main_border_color,true);
+                gpe::gcanvas->render_rect( &colorShadeBox,pawgui::theme_main->program_color,false);
+                gpe::gcanvas->render_rect( &colorShadeBox,pawgui::theme_main->main_border_color,true);
 
                 for( colorPickerShaderI = 0; colorPickerShaderI <= colorShadeBox.h; colorPickerShaderI++)
                 {
@@ -590,28 +590,28 @@ namespace pawgui
 
                     gpe::gcanvas->render_horizontal_line_color( colorShadeBox.y+colorPickerShaderI,colorShadeBox.x,colorShadeBox.x+colorShadeBox.w,colorShadeTempColor);
                 }
-                gpe::gcanvas->render_horizontal_line_color( colorShadeBox.y+selectedColorShade,colorShadeBox.x-4,colorShadeBox.x+colorShadeBox.w+4,theme_main->main_border_color );
+                gpe::gcanvas->render_horizontal_line_color( colorShadeBox.y+selectedColorShade,colorShadeBox.x-4,colorShadeBox.x+colorShadeBox.w+4,pawgui::theme_main->main_border_color );
 
 
                 if( currColor!=NULL)
                 {
-                    preiewColorYPos = yesButton->get_ypos()-GENERAL_GPE_GUI_PADDING-40;
-                    gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,preiewColorYPos,"Older Color:",theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
+                    preiewColorYPos = yesButton->get_ypos()-padding_default-40;
+                    gpe::gfs->render_text( widget_box.x+padding_default,preiewColorYPos,"Older Color:",pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
                     gpe::gcanvas->render_rectangle( widget_box.x+128,preiewColorYPos,widget_box.x+256,preiewColorYPos+32,currColor,false);
 
-                    preiewColorYPos = yesButton->get_ypos()-GENERAL_GPE_GUI_PADDING-80;
-                    gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,preiewColorYPos,"New Color:",theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
+                    preiewColorYPos = yesButton->get_ypos()-padding_default-80;
+                    gpe::gfs->render_text( widget_box.x+padding_default,preiewColorYPos,"New Color:",pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
                     gpe::gcanvas->render_rectangle( widget_box.x+128,preiewColorYPos,widget_box.x+256,preiewColorYPos+32,alteredColor,false);
                 }
                 else
                 {
-                    preiewColorYPos = yesButton->get_ypos()-GENERAL_GPE_GUI_PADDING-40;
-                    gpe::gfs->render_text( widget_box.x+GENERAL_GPE_GUI_PADDING,preiewColorYPos,"New Color:",theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
+                    preiewColorYPos = yesButton->get_ypos()-padding_default-40;
+                    gpe::gfs->render_text( widget_box.x+padding_default,preiewColorYPos,"New Color:",pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_left,gpe::fa_top);
                     gpe::gcanvas->render_rectangle( widget_box.x+128,preiewColorYPos,widget_box.x+256,preiewColorYPos+32,alteredColor,false);
                 }
-                gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,theme_main->popup_box_highlight_color,false);
-                gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_border_color,true);
-                gpe::gfs->render_text( widget_box.x+widget_box.w/2,widget_box.y+GENERAL_GPE_GUI_PADDING,popUpCaption,theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
+                gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,pawgui::theme_main->popup_box_highlight_color,false);
+                gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_border_color,true);
+                gpe::gfs->render_text( widget_box.x+widget_box.w/2,widget_box.y+padding_default,popUpCaption,pawgui::theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
                 yesButton->render_self( );
                 cancelButton->render_self( );
                 newColorRValue->render_self( );

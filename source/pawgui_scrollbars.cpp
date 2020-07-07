@@ -33,20 +33,20 @@ SOFTWARE.
 
 #include "pawgui_scrollbars.h"
 
-gpe::animaton2d  * main_scrollbar_arrow = NULL;
-
 namespace pawgui
 {
+    gpe::animaton2d  * main_scrollbar_arrow = NULL;
+
     widget_scrollbar_xaxis::widget_scrollbar_xaxis()
     {
         autoCorrect = true;
         widget_box.x = contextRect.x =  fullRect.x = 0;
         widget_box.y = contextRect.y =  fullRect.y = 0;
-        widget_box.w = contextRect.w =  fullRect.w = GENERAL_GPE_GUI_PADDING / 2;
-        widget_box.h = contextRect.h =  fullRect.h = GENERAL_GPE_GUI_PADDING / 2;
+        widget_box.w = contextRect.w =  fullRect.w = padding_default / 2;
+        widget_box.h = contextRect.h =  fullRect.h = padding_default / 2;
 
 
-        scrollWidth = GENERAL_GPE_GUI_PADDING;
+        scrollWidth = padding_default;
         scrollPercent = 100;
         scrollPixels = 16;
         scrollXPos = 0;
@@ -110,10 +110,10 @@ namespace pawgui
         return isOnScrollBox;
     }
 
-    void widget_scrollbar_xaxis::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_scrollbar_xaxis::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
         cam = gpe::camera_find(cam);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         bool doWork = true;
 
         calculate_sizing();
@@ -124,7 +124,7 @@ namespace pawgui
         isHeldOn = false;
         if( doWork)
         {
-            if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,viewedSpace->x+widget_box.x-cam->x,viewedSpace->y+widget_box.y-cam->y,viewedSpace->x+widget_box.x+widget_box.w-cam->x,viewedSpace->y+widget_box.y+widget_box.h-cam->y) )
+            if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,view_space->x+widget_box.x-cam->x,view_space->y+widget_box.y-cam->y,view_space->x+widget_box.x+widget_box.w-cam->x,view_space->y+widget_box.y+widget_box.h-cam->y) )
             {
                 if( gpe::input->check_mouse_pressed( mb_left ) )
                 {
@@ -145,11 +145,11 @@ namespace pawgui
                 isHeldOn = false;
             }
 
-            if(viewedSpace->x+widget_box.x-cam->x <= gpe::input->mouse_position_x && gpe::input->mouse_position_x <= viewedSpace->x+widget_box.x+widget_box.w-cam->x )
+            if(view_space->x+widget_box.x-cam->x <= gpe::input->mouse_position_x && gpe::input->mouse_position_x <= view_space->x+widget_box.x+widget_box.w-cam->x )
             {
                 if( gpe::input->check_mouse_down( mb_left ) && isOnScrollBox)
                 {
-                    mouseXScrolPos = gpe::input->mouse_position_x - viewedSpace->x-widget_box.x-cam->x; //translates mouse coords to viewed space coords
+                    mouseXScrolPos = gpe::input->mouse_position_x - view_space->x-widget_box.x-cam->x; //translates mouse coords to viewed space coords
                     if( isOnScrollBox)
                     {
                         scrollXPos = mouseXScrolPos;
@@ -204,15 +204,15 @@ namespace pawgui
 
     }
 
-    void widget_scrollbar_xaxis::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_scrollbar_xaxis::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
         cam = gpe::camera_find(cam);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
 
-        if( cam!=NULL && viewedSpace!=NULL)
+        if( cam!=NULL && view_space!=NULL)
         {
-            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_color,false);
-            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_border_color,true);
+            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_color,false);
+            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_border_color,true);
             int scrollRenderPixels = scrollDisplayPixels;
             if( scrollRenderPixels < widget_box.h)
             {
@@ -220,17 +220,17 @@ namespace pawgui
             }
             if( isOnScrollBox )
             {
-                gpe::gcanvas->render_rectangle( widget_box.x+scrollXPos-cam->x,widget_box.y-cam->y,widget_box.x+scrollXPos+scrollRenderPixels-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_camera_highlight_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x+scrollXPos-cam->x,widget_box.y-cam->y,widget_box.x+scrollXPos+scrollRenderPixels-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_camera_highlight_color,false);
             }
             else
             {
-                gpe::gcanvas->render_rectangle( widget_box.x+scrollXPos-cam->x,widget_box.y-cam->y,widget_box.x+scrollXPos+scrollRenderPixels-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_camera_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x+scrollXPos-cam->x,widget_box.y-cam->y,widget_box.x+scrollXPos+scrollRenderPixels-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_camera_color,false);
             }
             /*
             render_animation_special( main_scrollbar_arrow,2,
                                  widget_box.x+widget_box.h/4-cam->x,widget_box.y+widget_box.h/4-cam->y,
-                                 widget_box.h/2,widget_box.h/2, theme_main->scroll_box_arrow_color );
-            render_animation_special( main_scrollbar_arrow,0,widget_box.x+widget_box.w-widget_box.h*3/4-cam->x,  widget_box.y+widget_box.h/4-cam->y,widget_box.h/2,widget_box.h/2,theme_main->scroll_box_arrow_color );
+                                 widget_box.h/2,widget_box.h/2, pawgui::theme_main->scroll_box_arrow_color );
+            render_animation_special( main_scrollbar_arrow,0,widget_box.x+widget_box.w-widget_box.h*3/4-cam->x,  widget_box.y+widget_box.h/4-cam->y,widget_box.h/2,widget_box.h/2,pawgui::theme_main->scroll_box_arrow_color );
             */
         }
     }
@@ -251,17 +251,17 @@ namespace pawgui
         documentActions = false;
         widget_box.x = 0;
         widget_box.y = 0;
-        widget_box.w = GENERAL_GPE_GUI_PADDING/2;
-        widget_box.h = GENERAL_GPE_GUI_PADDING/2;
+        widget_box.w = padding_default/2;
+        widget_box.h = padding_default/2;
 
         contextRect.x = fullRect.x = 0;
         contextRect.y = fullRect.y = 0;
-        contextRect.w = fullRect.w = GENERAL_GPE_GUI_PADDING/2;
-        contextRect.h = fullRect.h = GENERAL_GPE_GUI_PADDING/2;
+        contextRect.w = fullRect.w = padding_default/2;
+        contextRect.h = fullRect.h = padding_default/2;
 
-        scrollHeight = GENERAL_GPE_GUI_PADDING;
+        scrollHeight = padding_default;
         scrollPercent = 100;
-        scrollDisplayPixels = GENERAL_GPE_GUI_PADDING/2;
+        scrollDisplayPixels = padding_default/2;
         scrollYPos = 0;
 
         scrollYPos = 0;
@@ -327,19 +327,19 @@ namespace pawgui
         return isOnScrollBox;
     }
 
-    void widget_scrollbar_yaxis::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_scrollbar_yaxis::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
         cam = gpe::camera_find(cam);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         bool doWork = true;
-        if( viewedSpace!=NULL && cam!=NULL )
+        if( view_space!=NULL && cam!=NULL )
         {
             doWork = calculate_sizing();
             hasMoved = false;
             isHeldOn = false;
             if( doWork)
             {
-                if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,widget_box.x+viewedSpace->x-cam->x,widget_box.y+viewedSpace->y-cam->y,widget_box.x+widget_box.w+viewedSpace->x-cam->x,widget_box.y+widget_box.h+viewedSpace->y-cam->y) )
+                if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,widget_box.x+view_space->x-cam->x,widget_box.y+view_space->y-cam->y,widget_box.x+widget_box.w+view_space->x-cam->x,widget_box.y+widget_box.h+view_space->y-cam->y) )
                 {
                     if( gpe::input->check_mouse_pressed(0 ) )
                     {
@@ -347,11 +347,11 @@ namespace pawgui
                     }
                 }
 
-                if(widget_box.y+viewedSpace->y-cam->y <= gpe::input->mouse_position_y && gpe::input->mouse_position_y <= widget_box.y+widget_box.h+viewedSpace->y-cam->y )
+                if(widget_box.y+view_space->y-cam->y <= gpe::input->mouse_position_y && gpe::input->mouse_position_y <= widget_box.y+widget_box.h+view_space->y-cam->y )
                 {
                     if( gpe::input->check_mouse_down( mb_left ) && isOnScrollBox)
                     {
-                        mouseYScrolPos = gpe::input->mouse_position_y - viewedSpace->y-widget_box.y+cam->y; //translates mouse coords to viewed space coords
+                        mouseYScrolPos = gpe::input->mouse_position_y - view_space->y-widget_box.y+cam->y; //translates mouse coords to viewed space coords
                         if( isOnScrollBox)
                         {
                             scrollYPos = mouseYScrolPos;
@@ -420,14 +420,14 @@ namespace pawgui
         }
     }
 
-    void widget_scrollbar_yaxis::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam  )
+    void widget_scrollbar_yaxis::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam  )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( viewedSpace!=NULL && cam!=NULL )
+        if( view_space!=NULL && cam!=NULL )
         {
-            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_color,false);
-            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->scroll_box_border_color,true);
+            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_color,false);
+            gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->scroll_box_border_color,true);
             int scrollRenderPixels = scrollDisplayPixels;
             if( scrollRenderPixels < widget_box.w)
             {
@@ -435,18 +435,18 @@ namespace pawgui
             }
             if( isOnScrollBox )
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y+scrollYPos-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+scrollYPos+scrollRenderPixels-cam->y,theme_main->scroll_box_camera_highlight_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y+scrollYPos-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+scrollYPos+scrollRenderPixels-cam->y,pawgui::theme_main->scroll_box_camera_highlight_color,false);
             }
             else
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y+scrollYPos-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+scrollYPos+scrollRenderPixels-cam->y,theme_main->scroll_box_camera_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y+scrollYPos-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+scrollYPos+scrollRenderPixels-cam->y,pawgui::theme_main->scroll_box_camera_color,false);
             }
             /*
             render_animation_special( main_scrollbar_arrow,1,
                                  widget_box.x+widget_box.w/4-cam->x,widget_box.y+widget_box.w/4-cam->y,
                                  widget_box.w/2,widget_box.w/2,
-                                 theme_main->scroll_box_arrow_color);
-            render_animation_special( main_scrollbar_arrow,3,widget_box.x+widget_box.w/4-cam->x,widget_box.y+widget_box.h-widget_box.w*3/4-cam->y,widget_box.w/2,widget_box.w/2,theme_main->scroll_box_arrow_color);
+                                 pawgui::theme_main->scroll_box_arrow_color);
+            render_animation_special( main_scrollbar_arrow,3,widget_box.x+widget_box.w/4-cam->x,widget_box.y+widget_box.h-widget_box.w*3/4-cam->y,widget_box.w/2,widget_box.w/2,pawgui::theme_main->scroll_box_arrow_color);
             */
         }
     }

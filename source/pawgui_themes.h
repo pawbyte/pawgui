@@ -40,42 +40,39 @@ SOFTWARE.
 
 namespace pawgui
 {
-    const int GENERAL_GPE_GUI_PADDING = 16;
-    const int GPE_AVERAGE_LINE_HEIGHT = 20;
-    const int GPE_AVERAGE_LINE_HEIGHT_WITH_PADDING = 32;
-    const int GPE_TITLE_BPADDING = 16;
-    const int TOOLKEY_SHORTCUT_WIDTH = 64;
-    const int GENERAL_ICON_WIDTH = 24;
-    const int GENERAL_THUMBNAIL_SIZE = 48;
-    const int GENERAL_ICON_WIDTH_AND_PADDING = 32;
-    const int GENERAL_PLUSMINUX_ICON_SIZE = 8;
-    const int TOOLKEY_OPTION_PADDING = 16;
-    const int TOOLKEY_ICON_X_PADDING = 4;
-    const int GENERAL_NEAR_ICON_YPADDING = 8;
-    const int GPE_MAX_RECENT_project_LIST_SIZE = 15;
+    const int padding_default = 16;
+    const int default_line_height = 20;
+    const int default_line_height_padded = 32;
+    const int default_padding_title = 16;
+    const int default_toolkey_shortcut_width = 64;
+    const int default_icon_width = 24;
+    const int default_thumbnal_size = 48;
+    const int default_icon_width_padded = 32;
+    const int default_icon_plusminus_size = 8;
+    const int default_toolkey_padding = 16;
+    const int default_toolkey_iconx_padding = 4;
 
     //Default Fonts [ BEGIN ]
 
     //The font that's going to be used
-    extern gpe::font_base * FONT_BUTTONS_FONT;
-    extern gpe::font_base * FONT_POPUP;
-    extern gpe::font_base * GUI_TAB_FONT;
-    extern gpe::font_base * FONT_TOOLBAR;
-    extern gpe::font_base * FONT_RESOURCEBAR;
-    extern gpe::font_base * FONT_TEXTINPUT;
-    extern gpe::font_base * FONT_TEXTinput_COMMENT;
-    extern gpe::font_base * FONT_TEXTinput_KEYWORD;
-    extern gpe::font_base * FONT_TEXTinput_FUNCTION;
-    extern gpe::font_base * FONT_TEXTinput_NUMBER;
-    extern gpe::font_base * FONT_TEXTinput_QUOTE;
-    extern gpe::font_base * FONT_TEXTinput_SYMBOL;
-    extern gpe::font_base * FONT_TEXTinput_project_FUNCTION;
+    extern gpe::font_base * font_buttons;
+    extern gpe::font_base * font_popup;
+    extern gpe::font_base * font_tab;
+    extern gpe::font_base * font_toolbar;
+    extern gpe::font_base * font_resourcebar;
+    extern gpe::font_base * font_textinput;
+    extern gpe::font_base * font_textinput_comment;
+    extern gpe::font_base * font_textinput_keyword;
+    extern gpe::font_base * font_textinput_function;
+    extern gpe::font_base * font_textinput_number;
+    extern gpe::font_base * font_textinput_quote;
+    extern gpe::font_base * font_textinput_symbol;
+    extern gpe::font_base * font_textinput_project_function;
     extern gpe::font_base * FONT_TEXTinput_project_keyword;
 
-    extern gpe::font_base * FONT_TEXTinput_BOLD;
-    extern gpe::font_base * FONT_TERM_NAME;
-    extern gpe::font_base * FONT_TERM_DESCRIPTION;
-    extern gpe::font_base * FONT_TERM_SCOPE;
+    extern gpe::font_base * font_term_name;
+    extern gpe::font_base * font_term_description;
+    extern gpe::font_base * font_term_scope;
 
     extern gpe::font_base * font_default_prompt;
 
@@ -90,7 +87,7 @@ namespace pawgui
 
     //Default Fonts [ END ]
 
-    bool load_default_fonts();
+    bool load_default_fonts( std::string mono_font_location, int font_min_size = 12);
     void cleanup_fonts();
 
     class gui_theme
@@ -100,8 +97,9 @@ namespace pawgui
             bool non_default_theme;
         public:
             std::string theme_name;
+            std::string theme_iconpack;
             std::string theme_local_location;
-            std::string themeBgFileLocation;
+            std::string theme_bg_location;
             gpe::texture_base * theme_texture_bg;
 
             gpe::animaton2d * main_menu_animation;
@@ -216,9 +214,9 @@ namespace pawgui
             gpe::color * get_color(int pos);
             int get_color_count();
             bool is_custom_theme();
-            bool load_background( std::string bgTextureLocation);
+            bool load_background( std::string bg_textureLocation);
             bool load_theme(std::string themeLocationIn);
-            bool render_background( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam );
+            bool render_background( gpe::shape_rect * view_space, gpe::shape_rect * cam );
             bool save_theme();
             bool save_theme_as(std::string themeLocationOut);
     };

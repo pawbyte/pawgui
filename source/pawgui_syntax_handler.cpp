@@ -31,6 +31,7 @@ SOFTWARE.
 
 */
 #include "pawgui_syntax_handler.h"
+#include "pawgui_themes.h"
 
 namespace pawgui
 {
@@ -183,7 +184,7 @@ namespace pawgui
         {
             tFunctionReturnType = "void";
         }
-        tTerm = new syntax_compiler_term(nName, nParameters, tFunctionReturnType,nDescription, CTERM_FUNCTION,nScope );
+        tTerm = new syntax_compiler_term(nName, nParameters, tFunctionReturnType,nDescription, cterm_function,nScope );
         languageFunctions.push_back( tTerm);
         return true;
     }
@@ -569,8 +570,8 @@ namespace pawgui
         newParametersString = "";
         parametersAreValid = false;
 
-        syntax_language * JSLang = defaultLanguage = add_programming_language("JavaScript","JS",PROGRAM_LANGUAGE_JS, true,true,true );
-        syntax_language * CPPLang  = add_programming_language("C++","CPP",PROGRAM_LANGUAGE_CPP, true,true,false );
+        syntax_language * JSLang = defaultLanguage = add_programming_language("JavaScript","JS",pawgui::program_language_js, true,true,true );
+        syntax_language * CPPLang  = add_programming_language("C++","CPP",pawgui::program_language_cpp, true,true,false );
         CPPLang->macroCommentChar = "#";
 
 
@@ -1169,7 +1170,7 @@ namespace pawgui
         JSLang->add_language_variable("GPE_SETTINGS_SYSTEM_OS");
         JSLang->add_language_variable("GPE_GAME_PUBLISHER");
         JSLang->add_language_variable("GPE_GAME_DEVELOPER");
-        JSLang->add_language_variable("GPE_GAME_OBJECTS_COUNT");
+        JSLang->add_language_variable("GPE_game_objects_COUNT");
         JSLang->add_language_variable("GPE_SETTINGS_IS_DEBUGGING");
         JSLang->add_language_variable("GPE_SETTINGS_SHOW_FPS");
         JSLang->add_language_variable("GPE_SETTINGS_ENTRY_LEVEL_LOCATION");
@@ -1786,7 +1787,7 @@ namespace pawgui
             {
                 fullTermScope = "Scope: "+fullTermScope;
             }
-            if( highlightedTerm->termType==CTERM_FUNCTION)
+            if( highlightedTerm->termType==cterm_function)
             {
                 fullPhraseToRender = highlightedTerm->termFunctionReturnType+" "+highlightedTerm->termString+"("+highlightedTerm->get_parameters()+")";
             }
@@ -1799,7 +1800,7 @@ namespace pawgui
             int widestStringSize = std::max( (int)fullPhraseToRender.size(), (int)highlightedTerm->termDescription.size() );
             widestStringSize = std::max( (int)fullTermScope.size(), widestStringSize);
 
-            FONT_TEXTINPUT->get_metrics("A",&highlightedTermWidthh, &highlightedTermHeight);
+            font_textinput->get_metrics("A",&highlightedTermWidthh, &highlightedTermHeight);
             highlightedTermWidthh*=widestStringSize;
 
             if( highlightedTermXPos+32+highlightedTermWidthh > gpe::screen_width)
@@ -1812,18 +1813,18 @@ namespace pawgui
             }
 
             gpe::gcanvas->render_rectangle(  highlightedTermXPos, highlightedTermYPos,
-                                    highlightedTermXPos+highlightedTermWidthh+64, highlightedTermYPos+(GPE_AVERAGE_LINE_HEIGHT*3),theme_main->popup_box_color,false);
+                                    highlightedTermXPos+highlightedTermWidthh+64, highlightedTermYPos+(default_line_height*3),pawgui::theme_main->popup_box_color,false);
 
-            gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos,fullPhraseToRender,theme_main->popup_box_font_color,FONT_TERM_NAME,gpe::fa_left,gpe::fa_top,255 );
-            gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos+GPE_AVERAGE_LINE_HEIGHT,highlightedTerm->termDescription,theme_main->popup_box_font_color,FONT_TERM_DESCRIPTION,gpe::fa_left,gpe::fa_top,255 );
+            gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos,fullPhraseToRender,pawgui::theme_main->popup_box_font_color,font_term_name,gpe::fa_left,gpe::fa_top,255 );
+            gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos+default_line_height,highlightedTerm->termDescription,pawgui::theme_main->popup_box_font_color,font_term_description,gpe::fa_left,gpe::fa_top,255 );
 
             if( (int)fullTermScope.size()>1 )
             {
-                gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos+GPE_AVERAGE_LINE_HEIGHT*2,fullTermScope,theme_main->popup_box_font_color,FONT_TERM_SCOPE,gpe::fa_left,gpe::fa_top,255 );
+                gpe::gfs->render_text( highlightedTermXPos+32, highlightedTermYPos+default_line_height*2,fullTermScope,pawgui::theme_main->popup_box_font_color,font_term_scope,gpe::fa_left,gpe::fa_top,255 );
             }
 
             gpe::gcanvas->render_rectangle(  highlightedTermXPos, highlightedTermYPos,
-                                    highlightedTermXPos+highlightedTermWidthh+64, highlightedTermYPos+GPE_AVERAGE_LINE_HEIGHT*3,theme_main->popup_box_border_color,true);
+                                    highlightedTermXPos+highlightedTermWidthh+64, highlightedTermYPos+default_line_height*3,pawgui::theme_main->popup_box_border_color,true);
         }
     }
 
@@ -1843,7 +1844,7 @@ namespace pawgui
                 cTerm = suggestedCompilerTerms[iSuggestedEntry];
                 if( cTerm!=NULL)
                 {
-                    if( cTerm->termType==CTERM_FUNCTION)
+                    if( cTerm->termType==cterm_function)
                     {
                         if( (int)cTerm->termScope.size() > 0 && cTerm->termScope!="User Global" )
                         {
@@ -1864,19 +1865,19 @@ namespace pawgui
                     }
                     if( iSuggestedEntry==iSuggestionPos)
                     {
-                        gpe::gcanvas->render_rectangle(  highlightedTermXPos, currentYRenderPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos+GPE_AVERAGE_LINE_HEIGHT,theme_main->popup_box_highlight_color,false);
-                        gpe::gfs->render_only_text( highlightedTermXPos+32, currentYRenderPos,fullPhraseToRender,theme_main->popup_box_highlight_font_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_top,255 );
+                        gpe::gcanvas->render_rectangle(  highlightedTermXPos, currentYRenderPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos+default_line_height,pawgui::theme_main->popup_box_highlight_color,false);
+                        gpe::gfs->render_only_text( highlightedTermXPos+32, currentYRenderPos,fullPhraseToRender,pawgui::theme_main->popup_box_highlight_font_color,font_textinput,gpe::fa_left,gpe::fa_top,255 );
                     }
                     else
                     {
-                        gpe::gcanvas->render_rectangle(  highlightedTermXPos, currentYRenderPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos+GPE_AVERAGE_LINE_HEIGHT,theme_main->popup_box_color,false);
-                        gpe::gfs->render_only_text(highlightedTermXPos+32, currentYRenderPos,fullPhraseToRender,theme_main->popup_box_font_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_top,255 );
+                        gpe::gcanvas->render_rectangle(  highlightedTermXPos, currentYRenderPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos+default_line_height,pawgui::theme_main->popup_box_color,false);
+                        gpe::gfs->render_only_text(highlightedTermXPos+32, currentYRenderPos,fullPhraseToRender,pawgui::theme_main->popup_box_font_color,font_textinput,gpe::fa_left,gpe::fa_top,255 );
                     }
                     iRendSuggestion++;
                 }
-                currentYRenderPos += GPE_AVERAGE_LINE_HEIGHT;
+                currentYRenderPos += default_line_height;
             }
-            gpe::gcanvas->render_rectangle(  highlightedTermXPos, highlightedTermYPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos,theme_main->popup_box_border_color,true);
+            gpe::gcanvas->render_rectangle(  highlightedTermXPos, highlightedTermYPos,highlightedTermXPos+maxSuggestedTextWidth, currentYRenderPos,pawgui::theme_main->popup_box_border_color,true);
         }
     }
 }

@@ -42,45 +42,42 @@ namespace pawgui
 
     class widget_checkbox: public widget_basic
     {
-    protected:
-        bool isChecked;
-        int clickBoxW, clickBoxH;
-        int labelBoxW, labelBoxH;
-    public:
-        widget_checkbox(std::string name = "", std::string descriptor = "", bool already_checked = true);
-        ~widget_checkbox();
+        protected:
+            int clickBoxW, clickBoxH;
+            int labelBoxW, labelBoxH;
+        public:
+            widget_checkbox(std::string name = "", std::string descriptor = "", bool already_checked = true);
+            ~widget_checkbox();
 
-        std::string get_data();
-        bool is_checked();
-        void load_data(std::string dataString);
-        void prerender_self( );
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void set_checked( bool newCheckState );
-        void set_checkbox_size(int nBoxSize, bool resizewidget_box = true);
+            std::string get_data();
+            void load_data(std::string dataString);
+            void prerender_self( );
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void set_checked( bool newCheckState );
+            void set_checkbox_size(int nBoxSize, bool resizewidget_box = true);
     };
 
     class widget_checkbox_list: public widget_basic
     {
-    private:
-        int opXPadding, opYPadding;
-        int opWidth, opHeight;
-        bool keepAlphabetized;
-    protected:
-        std::vector < std::string > subOptions;
-        std::vector <bool > posIsChecked;
-    public:
-        bool allowDuplicates;
-        widget_checkbox_list();
-        ~widget_checkbox_list();
-        std::string get_data();
-        void load_data(std::string dataString);
-        void add_opton(std::string newOption);
-        void remove_opton(std::string optionToCut);
-        void remove_opton_id(int optionToCut);
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-
+        private:
+            int opXPadding, opYPadding;
+            int opWidth, opHeight;
+            bool keepAlphabetized;
+        protected:
+            std::vector < std::string > subOptions;
+            std::vector <bool > posIsChecked;
+        public:
+            bool allowDuplicates;
+            widget_checkbox_list();
+            ~widget_checkbox_list();
+            std::string get_data();
+            void load_data(std::string dataString);
+            void add_opton(std::string newOption);
+            void remove_opton(std::string optionToCut);
+            void remove_opton_id(int optionToCut);
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
     };
 }
 #endif //PAWGUI_CHCKBOX_H

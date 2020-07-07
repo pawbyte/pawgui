@@ -38,14 +38,14 @@ SOFTWARE.
 
 namespace pawgui
 {
-    typedef enum
+    enum
     {
-        GPE_PANEL_ALIGN_DEFAULT,     /**< Panel elements not modified */
-        GPE_PANEL_ALIGN_FULLROWS,     /**< Panel elements modified to fit within panel */
-        GPE_PANEL_ALIGN_FULL_LEFT,     /**< Panel elements modified to fit within panel with left element getting most of space */
-        GPE_PANEL_ALIGN_FULL_RIGHT,     /**< Panel elements modified to fit within panel with right element getting most of space */
-        GPE_PANEL_ALIGN_FULL_EQUAL,     /**< Panel elements modified to resize equally after non-resizable elements */
-    } GPE_Panel_Setup_Type;
+        panel_align_default = 0,     /**< Panel elements not modified */
+        panel_align_full = 1,     /**< Panel elements modified to fit within panel */
+        panel_align_left =2,     /**< Panel elements modified to fit within panel with left element getting most of space */
+        panel_align_right =3,     /**< Panel elements modified to fit within panel with right element getting most of space */
+        panel_align_equal = 4,     /**< Panel elements modified to resize equally after non-resizable elements */
+    };
 
     class widget_content_row: public widget_basic
     {
@@ -114,8 +114,8 @@ namespace pawgui
         void scroll_right(int xToMove );
         void scroll_down(int yToMove );
         void scroll_up(int yToMove );
-        void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-        void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+        void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+        void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
         void reset_self();
         void set_horizontal_align(int hValue);
         void set_full_width();

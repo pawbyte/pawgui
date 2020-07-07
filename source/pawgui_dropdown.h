@@ -41,58 +41,58 @@ namespace pawgui
 {
     class widget_dropdown_menu: public widget_basic
     {
-    private:
-        int widestOptionSpace;
-        int maxOptionsAllowed;
-        std::string dropdownName;
-        int opId;
-        bool isSelectable;
-        int selectedId;
-        std::string selectedName;
-        std::string selectedTag;
-        float selectedValue;
-        gpe::key_pair * selectedPair;
-        gpe::key_pair * dropDownParentPair;
-        bool isOpen;
-        bool justActivated;
-        bool showJustOptions;
-    public:
-        bool subMenuIsOpen;
-        gpe::color * barColor;
-        widget_dropdown_menu( std::string name = "", bool justOptions = false);
-        ~widget_dropdown_menu();
+        private:
+            int widestOptionSpace;
+            int maxOptionsAllowed;
+            std::string dropdownName;
+            int opId;
+            bool isSelectable;
+            int selectedId;
+            std::string selectedName;
+            std::string selectedTag;
+            float selectedValue;
+            gpe::key_pair * selectedPair;
+            gpe::key_pair * dropDownParentPair;
+            bool isOpen;
+            bool justActivated;
+            bool showJustOptions;
+        public:
+            bool subMenuIsOpen;
+            gpe::color * barColor;
+            widget_dropdown_menu( std::string name = "", bool justOptions = false);
+            ~widget_dropdown_menu();
 
-        std::string get_data();
-        void load_data(std::string dataString);
-        void remove_data(std::string dataString);
-        bool add_to_context_menu( popup_menu_option *  cLevel, gpe::key_pair * cKey );
-        gpe::key_pair * add_menu_option(std::string optionName, std::string optionSubStr= "",float optionValue = 0, bool selectOption = false);
-        void clear_dropdown();
-        gpe::key_pair *  find_option_id(  int pairId );
-        gpe::key_pair *  find_option_valie(  float pairValue );
-        gpe::key_pair *  find_selected_pair( gpe::key_pair *  pairIn, std::string pairName, int pairId = -1);
-        gpe::key_pair *  find_selected_pair_sub( gpe::key_pair *  pairIn, std::string pairSubString );
-        std::string get_menu_option(int atNumb);
-        int get_menu_size();
-        std::string get_plain_string();
-        int get_selected_id();
-        std::string get_selected_tag();
-        std::string get_selected_name();
+            std::string get_data();
+            void load_data(std::string dataString);
+            void remove_data(std::string dataString);
+            bool add_to_context_menu( popup_menu_option *  cLevel, gpe::key_pair * cKey );
+            gpe::key_pair * add_menu_option(std::string optionName, std::string optionSubStr= "",float optionValue = 0, bool selectOption = false);
+            void clear_dropdown();
+            gpe::key_pair *  find_option_id(  int pairId );
+            gpe::key_pair *  find_option_valie(  float pairValue );
+            gpe::key_pair *  find_selected_pair( gpe::key_pair *  pairIn, std::string pairName, int pairId = -1);
+            gpe::key_pair *  find_selected_pair_sub( gpe::key_pair *  pairIn, std::string pairSubString );
+            std::string get_menu_option(int atNumb);
+            int get_menu_size();
+            std::string get_plain_string();
+            int get_selected_id();
+            std::string get_selected_tag();
+            std::string get_selected_name();
 
-        float get_selected_value();
+            float get_selected_value();
 
-        std::string get_tag_from( std::string tagName, int tagId = -1);
-        bool just_activated();
-        void remove_option(std::string optionToRemove);
-        void reset_suboptions();
-        void set_id(int new_id);
-        void set_option_named( std::string newselectedOptionName );
-        void set_option_subvalue( std::string newselectedOptionName );
-        void set_option_value(float sValue);
-        void show_just_options(bool justOptions);
-        void process_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect *cam=NULL);
-        void render_self( gpe::shape_rect * viewedSpace=NULL, gpe::shape_rect * cam = NULL);
-        void set_name(std::string new_name);
+            std::string get_tag_from( std::string tagName, int tagId = -1);
+            bool just_activated();
+            void remove_option(std::string optionToRemove);
+            void reset_suboptions();
+            void set_id(int new_id);
+            void set_option_named( std::string newselectedOptionName );
+            void set_option_subvalue( std::string newselectedOptionName );
+            void set_option_value(float sValue);
+            void show_just_options(bool justOptions);
+            void process_self( gpe::shape_rect * view_space=NULL, gpe::shape_rect *cam=NULL);
+            void render_self( gpe::shape_rect * view_space=NULL, gpe::shape_rect * cam = NULL);
+            void set_name(std::string new_name);
     };
 }
 

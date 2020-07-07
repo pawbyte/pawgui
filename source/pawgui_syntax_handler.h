@@ -38,21 +38,21 @@ SOFTWARE.
 
 namespace pawgui
 {
-    const int PROGRAM_LANGUAGE_JS = 0;
-    const int PROGRAM_LANGUAGE_CPP = 1;
-    const int PROGRAM_LANGUAGE_CS = 2;
-    const int PROGRAM_LANGUAGE_TST = 3;
-    const int PROGRAM_LANGUAGE_HAXE = 4;
-    const int PROGRAM_LANGUAGE_LUA = 5;
-    const int PROGRAM_LANGUAGE_MAX = 6;
+    const int program_language_js = 0;
+    const int program_language_cpp = 1;
+    const int program_language_cs = 2;
+    const int program_language_tst = 3;
+    const int program_language_haxe = 4;
+    const int program_language_lua = 5;
+    const int program_language_max = 6;
 
     typedef enum
     {
-        CTERM_VARIABLE,
-        CTERM_CONSTANT,
-        CTERM_KEYWORD,
-        CTERM_FUNCTION,
-        CTERM_CLASS
+        cterm_variable,
+        cterm_constant,
+        cterm_keyword,
+        cterm_function,
+        cterm_class
     } compileTermTypes;
 
     class syntax_compiler_term

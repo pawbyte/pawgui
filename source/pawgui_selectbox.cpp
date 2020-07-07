@@ -42,7 +42,7 @@ namespace pawgui
         optionTexture = NULL;
         optionanimation = NULL;
         subimageIndex = 0;
-        isChecked = true;
+        isClicked = true;
         useGuiColor= false;
         sectionHasContent = true;
     }
@@ -58,30 +58,30 @@ namespace pawgui
 
     }
 
-    widget_selctbox::widget_selctbox( std::string name)
+    widget_selectbox::widget_selectbox( std::string name)
     {
         upDelay = 0;
         downDelay = 0;
-        guiListTypeName = "selectbox";
+        widget_type = "selectbox";
         widget_box.x = 0;
         widget_box.y = 0;
         widget_box.w = 192;
-        widget_box.h = GENERAL_GPE_GUI_PADDING;
+        widget_box.h = padding_default;
         maxHeight = -1;
         optionHeight = -1;
-        opName = name;
+        widget_name = name;
         intedPos = 0;
         pos = 0;
         startPos = 0;
         maxOptionsInView = 10;
-        optionHeight = GPE_TITLE_BPADDING+GENERAL_GPE_GUI_PADDING*2;
-        optionIconWidth = GPE_AVERAGE_LINE_HEIGHT;
+        optionHeight = default_padding_title+padding_default*2;
+        optionIconWidth = default_line_height;
         showCheckboxes = false;
         showHideOthersCheckboxToggle = true;
         optionsScroller = new widget_scrollbar_yaxis();
     }
 
-    widget_selctbox::~widget_selctbox()
+    widget_selectbox::~widget_selectbox()
     {
         selectbox_option * tOption = NULL;
         for( int i = subOptions.size()-1; i>=0; i--)
@@ -102,7 +102,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::correct_camera()
+    void widget_selectbox::correct_camera()
     {
         maxOptionsInView = floor( (float)widget_box.h / (float)optionHeight );
         //checks if pos is no longer in view
@@ -139,18 +139,18 @@ namespace pawgui
         gpe::update_rectangle(&optionsScroller->contextRect, 0, (float)startPos,0, (float)maxOptionsInView );
     }
 
-    std::string widget_selctbox::get_data()
+    std::string widget_selectbox::get_data()
     {
         return "";
     }
 
-    void widget_selctbox::load_data(std::string dataString)
+    void widget_selectbox::load_data(std::string dataString)
     {
 
     }
 
 
-    void widget_selctbox::add_option(std::string newOptionName, float newOpValue, gpe::texture_base * evRepIcon, gpe::animaton2d * evRepanimation, int subimageInIndex, bool selectNew, bool useGuiColor )
+    void widget_selectbox::add_option(std::string newOptionName, float newOpValue, gpe::texture_base * evRepIcon, gpe::animaton2d * evRepanimation, int subimageInIndex, bool selectNew, bool useGuiColor )
     {
         if( (int)newOptionName.size() > 0 || evRepIcon!=NULL || evRepanimation!=NULL )
         {
@@ -160,7 +160,7 @@ namespace pawgui
             newOption->optionanimation = evRepanimation;
             newOption->optionTexture = evRepIcon;
             newOption->useGuiColor = useGuiColor;
-            //newOption->optionNameTexture->loadFromRenderedText(gpe::renderer_main,newOptionName,theme_main->main_box_font_color,FONT_TEXTINPUT);
+            //newOption->optionNameTexture->loadFromRenderedText(gpe::renderer_main,newOptionName,pawgui::theme_main->main_box_font_color,font_textinput);
 
             newOption->subimageIndex = subimageInIndex;
 
@@ -177,7 +177,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::clear_list()
+    void widget_selectbox::clear_list()
     {
         selectbox_option * tempOption = NULL;
         for( int i = (int)subOptions.size()-1; i >=0; i--)
@@ -194,7 +194,7 @@ namespace pawgui
         startPos = 0;
     }
 
-    int widget_selctbox::get_option_id(std::string optionName )
+    int widget_selectbox::get_option_id(std::string optionName )
     {
         selectbox_option * tempOption = NULL;
         for( int i = (int)subOptions.size()-1; i >=0; i--)
@@ -211,7 +211,7 @@ namespace pawgui
         return -1;
     }
 
-    selectbox_option * widget_selctbox::get_option(int optionId)
+    selectbox_option * widget_selectbox::get_option(int optionId)
     {
         if( optionId >=0 && optionId < (int)subOptions.size() )
         {
@@ -224,7 +224,7 @@ namespace pawgui
         return NULL;
     }
 
-    std::string widget_selctbox::get_option_name(int optionId)
+    std::string widget_selectbox::get_option_name(int optionId)
     {
         if( optionId >=0 && optionId < (int)subOptions.size() )
         {
@@ -237,7 +237,7 @@ namespace pawgui
         return "";
     }
 
-    std::string widget_selctbox::get_selected_name()
+    std::string widget_selectbox::get_selected_name()
     {
         if( pos >=0 && pos < (int)subOptions.size() )
         {
@@ -250,7 +250,7 @@ namespace pawgui
         return "";
     }
 
-    float widget_selctbox::get_selected_value()
+    float widget_selectbox::get_selected_value()
     {
         if( pos >=0 && pos < (int)subOptions.size() )
         {
@@ -263,17 +263,17 @@ namespace pawgui
         return 0;
     }
 
-    int widget_selctbox::get_selection()
+    int widget_selectbox::get_selection()
     {
         return pos;
     }
 
-    int widget_selctbox::get_size()
+    int widget_selectbox::get_size()
     {
         return (int)subOptions.size();
     }
 
-    void widget_selctbox::insert_option(int optionId, std::string newOptionName, gpe::texture_base * evRepIcon, gpe::animaton2d * evRepanimation, int subimageInIndex, bool selectNew )
+    void widget_selectbox::insert_option(int optionId, std::string newOptionName, gpe::texture_base * evRepIcon, gpe::animaton2d * evRepanimation, int subimageInIndex, bool selectNew )
     {
         if( (int)newOptionName.size() > 0 || evRepIcon!=NULL || evRepanimation!=NULL )
         {
@@ -307,7 +307,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::limit_height(int newH)
+    void widget_selectbox::limit_height(int newH)
     {
         if( newH >=0)
         {
@@ -321,7 +321,7 @@ namespace pawgui
         maxOptionsInView = floor( (float)widget_box.h / (float)optionHeight );
     }
 
-    void widget_selctbox::alter_content( int optionId, bool sectionHasContent)
+    void widget_selectbox::alter_content( int optionId, bool sectionHasContent)
     {
         if( optionId >=0 && optionId < (int)subOptions.size() )
         {
@@ -332,7 +332,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::alter_content_from_value( float valueId, bool sectionHasContent)
+    void widget_selectbox::alter_content_from_value( float valueId, bool sectionHasContent)
     {
         for( int i = (int)subOptions.size()-1; i >=0; i--)
         {
@@ -344,7 +344,7 @@ namespace pawgui
         }
     }
 
-    bool widget_selctbox::move_down_space()
+    bool widget_selectbox::move_down_space()
     {
         if( pos +1 < (int)subOptions.size() )
         {
@@ -357,7 +357,7 @@ namespace pawgui
         return false;
     }
 
-    bool widget_selctbox::move_up_space()
+    bool widget_selectbox::move_up_space()
     {
         if( pos > 0 && (int)subOptions.size() > pos-1)
         {
@@ -370,7 +370,7 @@ namespace pawgui
         return false;
     }
 
-    void widget_selctbox::prerender_self(  )
+    void widget_selectbox::prerender_self(  )
     {
         selectbox_option * tOption = NULL;
         for( int i = 0; i < (int)subOptions.size() && i < (int)subOptions.size(); i++)
@@ -384,9 +384,9 @@ namespace pawgui
 
     }
 
-    void widget_selctbox::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam)
+    void widget_selectbox::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam)
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
 
         correct_camera();
@@ -394,7 +394,7 @@ namespace pawgui
         //only works if scrollbar is actually needed
         if( maxOptionsInView <= (int)subOptions.size() )
         {
-            optionsScroller->process_self( viewedSpace, cam );
+            optionsScroller->process_self( view_space, cam );
             startPos = (float)(optionsScroller->contextRect.y);
         }
 
@@ -450,7 +450,7 @@ namespace pawgui
                 if( pos >=0 && pos < (int)subOptions.size() )
                 {
                     selectbox_option *  optionToChange = subOptions[pos];
-                    optionToChange->isChecked = !optionToChange->isChecked;
+                    optionToChange->isClicked = !optionToChange->isClicked;
                 }
             }
         }
@@ -483,11 +483,11 @@ namespace pawgui
             startPos= 0;
         }
 
-        widget_basic::process_self(viewedSpace,cam);
+        widget_basic::process_self(view_space,cam);
         if( isClicked )
         {
             isInUse = true;
-            int checkBoxWidth = optionHeight+GENERAL_GPE_GUI_PADDING;
+            int checkBoxWidth = optionHeight+padding_default;
             int checkBoxHeight = optionHeight;
             if( showCheckboxes==false)
             {
@@ -496,8 +496,8 @@ namespace pawgui
             }
             //if( gpe::input->check_mouse_released( mb_left))
             {
-                int relativeOptionX = viewedSpace->x+widget_box.x-cam->x;
-                int relativeOptionY = viewedSpace->y+widget_box.y-cam->y;
+                int relativeOptionX = view_space->x+widget_box.x-cam->x;
+                int relativeOptionY = view_space->y+widget_box.y-cam->y;
                 for( int i = 0; i <= maxOptionsInView && i < (int)subOptions.size(); i++)
                 {
                     if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,relativeOptionX,relativeOptionY+(i)*optionHeight,
@@ -515,7 +515,7 @@ namespace pawgui
                                     tOp = subOptions.at(tPos);
                                     if( tOp!=NULL)
                                     {
-                                        tOp->isChecked = !tOp->isChecked;
+                                        tOp->isClicked = !tOp->isClicked;
                                     }
                                 }
                             }
@@ -552,11 +552,11 @@ namespace pawgui
         //gpe::error_log->report("Success on select box...");
     }
 
-    void widget_selctbox::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_selectbox::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( cam!=NULL && viewedSpace!=NULL )
+        if( cam!=NULL && view_space!=NULL )
         {
             intedPos = (int)pos;
             int relativeOptionX = widget_box.x-cam->x;
@@ -570,7 +570,7 @@ namespace pawgui
             {
                 foundIconWidth = 0;
             }
-            gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,theme_main->popup_box_color, false);
+            gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,pawgui::theme_main->popup_box_color, false);
             maxOptionsInView = widget_box.h / optionHeight;
             int iStartPos = (int)startPos;
 
@@ -578,11 +578,11 @@ namespace pawgui
             {
                 if( (int)subOptions.size() > 0)
                 {
-                    gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(pos-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(pos-iStartPos+1)*optionHeight,theme_main->button_border_color,false);
+                    gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(pos-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(pos-iStartPos+1)*optionHeight,pawgui::theme_main->button_border_color,false);
                 }
                 else if( pos > 0)
                 {
-                    gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(pos-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(pos-iStartPos+1)*optionHeight,theme_main->button_border_color,false);
+                    gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(pos-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(pos-iStartPos+1)*optionHeight,pawgui::theme_main->button_border_color,false);
                 }
             }
             else if( pos >= startPos+maxOptionsInView )
@@ -590,7 +590,7 @@ namespace pawgui
                 //pos = startPos+maxOptionsInView -1;
             }
             selectbox_option * tOption = NULL;
-            int checkBoxWidth = optionHeight+GENERAL_GPE_GUI_PADDING;
+            int checkBoxWidth = optionHeight+padding_default;
             int checkBoxHeight = optionHeight;
             if( showCheckboxes==false)
             {
@@ -598,7 +598,7 @@ namespace pawgui
                 checkBoxHeight = 0;
             }
 
-            gpe::color * fontRenderColor = theme_main->main_box_faded_font_color;
+            gpe::color * fontRenderColor = pawgui::theme_main->main_box_faded_font_color;
             for( int i = iStartPos; i <= (int)(iStartPos+maxOptionsInView) &&  i < (int)subOptions.size(); i++)
             {
                 tOption = subOptions.at( i );
@@ -606,54 +606,54 @@ namespace pawgui
                 {
                     if( !tOption->sectionHasContent && intedPos!=i)
                     {
-                        fontRenderColor = theme_main->popup_box_font_color;
-                        gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(i-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(i-iStartPos+1)*optionHeight,theme_main->program_color_header,false,228);
+                        fontRenderColor = pawgui::theme_main->popup_box_font_color;
+                        gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+(i-iStartPos)*optionHeight,relativeOptionX+widget_box.w,relativeOptionY+(i-iStartPos+1)*optionHeight,pawgui::theme_main->program_color_header,false,228);
                     }
                     else if( intedPos ==i )
                     {
-                        fontRenderColor = theme_main->popup_box_highlight_font_color;
+                        fontRenderColor = pawgui::theme_main->popup_box_highlight_font_color;
                     }
                     else
                     {
-                        fontRenderColor = theme_main->popup_box_font_color;
+                        fontRenderColor = pawgui::theme_main->popup_box_font_color;
                     }
 
                     if( showCheckboxes)
                     {
-                        gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight/8,relativeOptionY+1+(i-iStartPos)*optionHeight+optionHeight/8,relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight/2+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight*5/8,theme_main->button_box_color, false);
-                        if( tOption->isChecked && checkmark_texture!=NULL )
+                        gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+padding_default+optionHeight/8,relativeOptionY+1+(i-iStartPos)*optionHeight+optionHeight/8,relativeOptionX+relativeOptionX+padding_default+optionHeight/2+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight*5/8,pawgui::theme_main->button_box_color, false);
+                        if( tOption->isClicked && checkmark_texture!=NULL )
                         {
-                            checkmark_texture->render_tex_resized( relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/8,optionHeight/2,optionHeight/2,NULL,theme_main->checkbox_color );
+                            checkmark_texture->render_tex_resized( relativeOptionX+relativeOptionX+padding_default+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/8,optionHeight/2,optionHeight/2,NULL,pawgui::theme_main->checkbox_color );
                         }
-                        //gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING,relativeOptionY+1+(i-iStartPos)*optionHeight,relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight,relativeOptionY+(i-iStartPos+1)*optionHeight,theme_main->button_box_selected_color, true);
-                        gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight/8,relativeOptionY+1+(i-iStartPos)*optionHeight+optionHeight/8,relativeOptionX+relativeOptionX+GENERAL_GPE_GUI_PADDING+optionHeight/2+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight*5/8,theme_main->button_box_selected_color, true);
+                        //gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+padding_default,relativeOptionY+1+(i-iStartPos)*optionHeight,relativeOptionX+relativeOptionX+padding_default+optionHeight,relativeOptionY+(i-iStartPos+1)*optionHeight,pawgui::theme_main->button_box_selected_color, true);
+                        gpe::gcanvas->render_rectangle( relativeOptionX+relativeOptionX+padding_default+optionHeight/8,relativeOptionY+1+(i-iStartPos)*optionHeight+optionHeight/8,relativeOptionX+relativeOptionX+padding_default+optionHeight/2+optionHeight/8,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight*5/8,pawgui::theme_main->button_box_selected_color, true);
 
-                        gpe::gfs->render_text( relativeOptionX+GENERAL_GPE_GUI_PADDING+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/2,tOption->optionName,fontRenderColor,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_center,255);
+                        gpe::gfs->render_text( relativeOptionX+padding_default+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/2,tOption->optionName,fontRenderColor,font_textinput,gpe::fa_left,gpe::fa_center,255);
                     }
                     else
                     {
-                        gpe::gfs->render_text( relativeOptionX+foundIconWidth+GENERAL_GPE_GUI_PADDING*2,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/2,tOption->optionName,fontRenderColor,FONT_LABEL,gpe::fa_left,gpe::fa_middle,255);
+                        gpe::gfs->render_text( relativeOptionX+foundIconWidth+padding_default*2,relativeOptionY+(i-iStartPos)*optionHeight+optionHeight/2,tOption->optionName,fontRenderColor,FONT_LABEL,gpe::fa_left,gpe::fa_middle,255);
                     }
                     if( tOption->optionTexture!=NULL)
                     {
                         if( tOption->useGuiColor)
                         {
-                            tOption->optionTexture->render_align_resized( relativeOptionX+GENERAL_GPE_GUI_PADDING,relativeOptionY+(i-iStartPos)*optionHeight+(optionHeight)/2,foundIconWidth,foundIconWidth,gpe::fa_left,gpe::fa_middle, NULL,theme_main->popup_box_font_color );
+                            tOption->optionTexture->render_align_resized( relativeOptionX+padding_default,relativeOptionY+(i-iStartPos)*optionHeight+(optionHeight)/2,foundIconWidth,foundIconWidth,gpe::fa_left,gpe::fa_middle, NULL,pawgui::theme_main->popup_box_font_color );
                         }
                         else
                         {
-                            tOption->optionTexture->render_align_resized( relativeOptionX+GENERAL_GPE_GUI_PADDING,relativeOptionY+(i-iStartPos)*optionHeight+(optionHeight)/2,foundIconWidth,foundIconWidth, gpe::fa_left, gpe::fa_middle, NULL );
+                            tOption->optionTexture->render_align_resized( relativeOptionX+padding_default,relativeOptionY+(i-iStartPos)*optionHeight+(optionHeight)/2,foundIconWidth,foundIconWidth, gpe::fa_left, gpe::fa_middle, NULL );
                         }
                     }
                     else if( tOption->optionanimation!=NULL)
                     {
                         if( tOption->useGuiColor)
                         {
-                            //tOption->optionanimation->render_special( tOption->subimageIndex,relativeOptionX+GENERAL_GPE_GUI_PADDING+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight +(optionHeight-foundIconWidth)/2,foundIconWidth,foundIconWidth,theme_main->main_box_font_color,cam);
+                            //tOption->optionanimation->render_special( tOption->subimageIndex,relativeOptionX+padding_default+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight +(optionHeight-foundIconWidth)/2,foundIconWidth,foundIconWidth,pawgui::theme_main->main_box_font_color,cam);
                         }
                         else
                         {
-                            //tOption->optionanimation->render_resized( tOption->subimageIndex,relativeOptionX+GENERAL_GPE_GUI_PADDING+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight +(optionHeight-foundIconWidth)/2,foundIconWidth,foundIconWidth,cam);
+                            //tOption->optionanimation->render_resized( tOption->subimageIndex,relativeOptionX+padding_default+checkBoxWidth,relativeOptionY+(i-iStartPos)*optionHeight +(optionHeight-foundIconWidth)/2,foundIconWidth,foundIconWidth,cam);
                         }
                     }
                 }
@@ -661,29 +661,29 @@ namespace pawgui
 
             if( iStartPos > 0 )
             {
-                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+4,theme_main->button_box_selected_color,false,228);
+                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+4,pawgui::theme_main->button_box_selected_color,false,228);
             }
             else if( iStartPos+maxOptionsInView < (int)subOptions.size() )
             {
-                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+widget_box.h-4,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,theme_main->button_box_selected_color,false,228);
+                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY+widget_box.h-4,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,pawgui::theme_main->button_box_selected_color,false,228);
             }
             if( isInUse)
             {
-                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,theme_main->button_box_selected_color, true);
+                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,pawgui::theme_main->button_box_selected_color, true);
             }
             else
             {
-                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,theme_main->main_border_color, true );
+                gpe::gcanvas->render_rectangle( relativeOptionX,relativeOptionY,relativeOptionX+widget_box.w,relativeOptionY+widget_box.h,pawgui::theme_main->main_border_color, true );
             }
 
             if( maxOptionsInView < (int)subOptions.size() )
             {
-                optionsScroller->render_self( viewedSpace, cam );
+                optionsScroller->render_self( view_space, cam );
             }
         }
     }
 
-    void widget_selctbox::rename_option(int optionId, std::string new_name)
+    void widget_selectbox::rename_option(int optionId, std::string new_name)
     {
         if( optionId >=0 && optionId < (int)subOptions.size() )
         {
@@ -695,7 +695,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::remove_option(int optionId)
+    void widget_selectbox::remove_option(int optionId)
     {
         if( optionId>=0 && optionId < (int)subOptions.size() )
         {
@@ -710,7 +710,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::set_option_height( int newOptionHeight)
+    void widget_selectbox::set_option_height( int newOptionHeight)
     {
         if( newOptionHeight > 0)
         {
@@ -719,7 +719,7 @@ namespace pawgui
         maxOptionsInView = floor( (float)widget_box.h / (float)optionHeight );
     }
 
-    void widget_selctbox::set_selected_option( std::string optionToSelect)
+    void widget_selectbox::set_selected_option( std::string optionToSelect)
     {
         selectbox_option * tempOption = NULL;
         for( int i = (int)subOptions.size()-1; i >=0; i--)
@@ -743,7 +743,7 @@ namespace pawgui
         }
     }
 
-    void widget_selctbox::set_selection( int selId )
+    void widget_selectbox::set_selection( int selId )
     {
         if( selId >= (int)subOptions.size() )
         {
@@ -759,7 +759,7 @@ namespace pawgui
         correct_camera();
     }
 
-    void widget_selctbox::toggle_others_checked()
+    void widget_selectbox::toggle_others_checked()
     {
         showHideOthersCheckboxToggle = !showHideOthersCheckboxToggle;
         selectbox_option * tOption = NULL;
@@ -770,7 +770,7 @@ namespace pawgui
                 tOption = subOptions[i];
                 if( tOption!=NULL)
                 {
-                    tOption->isChecked = showHideOthersCheckboxToggle;
+                    tOption->isClicked = showHideOthersCheckboxToggle;
                 }
             }
         }

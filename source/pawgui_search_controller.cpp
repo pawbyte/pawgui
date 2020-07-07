@@ -40,8 +40,8 @@ namespace pawgui
 
     search_controller::search_controller()
     {
-        previousSearchMode = SEARCH_MODE_FINDALL;
-        textSearchMode = 0;
+        previousSearchMode = pawgui::search_mode::find_text;
+        textSearchMode = pawgui::search_mode::find_text;
         showFindAllResults = false;
         findTextStringBox = new widget_input_text("");
         findTextStringBox->resubmissionAllowed = true;
@@ -126,31 +126,31 @@ namespace pawgui
 
     void search_controller::close_finder()
     {
-        if( textSearchMode >= SEARCH_MODE_FIND)
+        if( textSearchMode >= pawgui::search_mode::mode_none)
         {
             previousSearchMode = textSearchMode;
         }
-        textSearchMode = -1;
+        textSearchMode = pawgui::search_mode::mode_none;
         showFindAllResults = false;
     }
     bool search_controller::using_search()
     {
         switch( textSearchMode)
         {
-        case SEARCH_MODE_FIND:
+        case search_mode::find_text:
             if( findTextStringBox->is_inuse() )
             {
                 return true;
             }
             break;
 
-        case SEARCH_MODE_GOTO:
+        case search_mode::goto_line:
             if( goToLineStringBox->is_inuse() )
             {
                 return true;
             }
             break;
-        case SEARCH_MODE_FINDALL:
+        case search_mode::find_text_all:
             if( findTextStringBox->is_inuse() )
             {
                 return true;

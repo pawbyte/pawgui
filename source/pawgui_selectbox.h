@@ -44,7 +44,7 @@ namespace pawgui
         public:
             bool sectionHasContent;
             bool useGuiColor;
-            bool isChecked;
+            bool isClicked;
             std::string optionName;
             gpe::texture_base * optionTexture;
             gpe::animaton2d * optionanimation;
@@ -55,7 +55,7 @@ namespace pawgui
             void prerender_self( );
     };
 
-    class widget_selctbox: public widget_basic
+    class widget_selectbox: public widget_basic
     {
         private:
             std::vector <selectbox_option * > subOptions;
@@ -72,8 +72,8 @@ namespace pawgui
             int upDelay;
             bool showCheckboxes;
             int optionIconWidth;
-            widget_selctbox(std::string name = "");
-            ~widget_selctbox();
+            widget_selectbox(std::string name = "");
+            ~widget_selectbox();
             std::string get_data();
             void load_data(std::string dataString);
             void add_option(std::string newOptionName, float newOpValue = -1,gpe::texture_base * evRepIcon = NULL, gpe::animaton2d * evRepanimation=NULL, int subimageInIndex = 0, bool selectNew = false, bool useGuiColor = true);
@@ -93,8 +93,8 @@ namespace pawgui
             bool move_down_space();
             bool move_up_space();
             void prerender_self( );
-            void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
-            void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
+            void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
             void rename_option(int optionId, std::string new_name);
             void remove_option(int optionId);
             void set_option_height( int newOptionHeight);

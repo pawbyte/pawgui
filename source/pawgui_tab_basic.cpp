@@ -42,19 +42,19 @@ namespace pawgui
         isFullWidth = true;
         tabIsRightClicked = false;
         isInUse = false;
-        guiListTypeName = "tabbar";
+        widget_type = "tabbar";
         widget_box.x = 16;
         widget_box.y = 16;
         widget_box.w = 32;
         widget_box.h = 18;
 
-        barXPadding = GENERAL_GPE_GUI_PADDING;
+        barXPadding = padding_default;
         barYPadding = 4;
         fontTextWidth = 12;
         fontTextHeight = 12;
-        if( GUI_TAB_FONT!=NULL)
+        if( font_tab!=NULL)
         {
-            GUI_TAB_FONT->get_metrics("A",&fontTextWidth,&fontTextHeight);
+            font_tab->get_metrics("A",&fontTextWidth,&fontTextHeight);
         }
         else
         {
@@ -188,15 +188,15 @@ namespace pawgui
         return (int)subOptions.size();
     }
 
-    void widget_tabbar::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_tabbar::process_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
         tabIsRightClicked = false;
-        //widget_box.w = viewedSpace->w - widget_box.x;
-        if( widget_box.w!=0 && viewedSpace!=NULL && cam!=NULL)
+        //widget_box.w = view_space->w - widget_box.x;
+        if( widget_box.w!=0 && view_space!=NULL && cam!=NULL)
         {
-            widget_basic::process_self(viewedSpace, cam);
+            widget_basic::process_self(view_space, cam);
             calculate_tabs();
             if( isClicked || isRightClicked)
             {
@@ -207,10 +207,10 @@ namespace pawgui
                 isInUse = false;
             }
 
-            int cTabXPos = widget_box.x+viewedSpace->x-cam->x;
+            int cTabXPos = widget_box.x+view_space->x-cam->x;
             int cTabX2Pos = cTabXPos;
-            int cTabYPos = widget_box.y+viewedSpace->y-cam->y;
-            int cTabY2Pos = widget_box.y+widget_box.h+viewedSpace->y-cam->y;
+            int cTabYPos = widget_box.y+view_space->y-cam->y;
+            int cTabY2Pos = widget_box.y+widget_box.h+view_space->y-cam->y;
             int optionsSize = (int)subOptions.size();
             cTabX2Pos += optionsSize * tabSize;
             cTabXPos = cTabX2Pos - tabSize;
@@ -299,13 +299,13 @@ namespace pawgui
         return tabRemoved;
     }
 
-    void widget_tabbar::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam)
+    void widget_tabbar::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam)
     {
         //gpe::gcanvas->render_rect(&widget_box,barColor,false);
         //gpe::gcanvas->render_rect(&widget_box,barOutlineColor,true);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if(viewedSpace!=NULL && cam!=NULL)
+        if(view_space!=NULL && cam!=NULL)
         {
             if( (int)subOptions.size() >0 )
             {
@@ -313,7 +313,7 @@ namespace pawgui
                 int tabFontWidth = 0;
                 int tabFontHeight = 0;
                 int maxCharactersAllowed = 0;
-                GUI_TAB_FONT->get_metrics("A", &tabFontWidth, &tabFontHeight );
+                font_tab->get_metrics("A", &tabFontWidth, &tabFontHeight );
                 maxCharactersAllowed = tabSize/tabFontWidth -1;
 
                 int cTabXPos = widget_box.x-cam->x;
@@ -337,25 +337,25 @@ namespace pawgui
                     }
                     if( tabInUse==i)
                     {
-                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,theme_main->program_color_header,false);
-                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,theme_main->main_border_color,true);
-                        gpe::gfs->render_text( cTabXPos+tabSize/2,widget_box.y+widget_box.h/2-cam->y, tabOptionStr, theme_main->popup_box_font_color,GUI_TAB_FONT,gpe::fa_center,gpe::fa_middle);
+                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->program_color_header,false);
+                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_color,true);
+                        gpe::gfs->render_text( cTabXPos+tabSize/2,widget_box.y+widget_box.h/2-cam->y, tabOptionStr, pawgui::theme_main->popup_box_font_color,font_tab,gpe::fa_center,gpe::fa_middle);
                     }
                     else
                     {
-                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,theme_main->program_color,false);
-                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,theme_main->main_border_color,true);
-                        gpe::gfs->render_text( cTabXPos+tabSize/2,widget_box.y+widget_box.h/2-cam->y, tabOptionStr, theme_main->main_box_font_color,GUI_TAB_FONT,gpe::fa_center,gpe::fa_middle);
+                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->program_color,false);
+                        gpe::gcanvas->render_rectangle( cTabXPos,widget_box.y-cam->y,cTabX2Pos,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_color,true);
+                        gpe::gfs->render_text( cTabXPos+tabSize/2,widget_box.y+widget_box.h/2-cam->y, tabOptionStr, pawgui::theme_main->main_box_font_color,font_tab,gpe::fa_center,gpe::fa_middle);
                     }
                     if( canCloseTabs )
                     {
-                        if( gpe::point_between(gpe::input->mouse_position_x, gpe::input->mouse_position_y,viewedSpace->x+cTabX2Pos-32,viewedSpace->y+cTabY1Pos, viewedSpace->x+cTabX2Pos,viewedSpace->y+cTabY2Pos) )
+                        if( gpe::point_between(gpe::input->mouse_position_x, gpe::input->mouse_position_y,view_space->x+cTabX2Pos-32,view_space->y+cTabY1Pos, view_space->x+cTabX2Pos,view_space->y+cTabY2Pos) )
                         {
-                            gpe::gfs->render_text( cTabXPos+tabSize-GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2-cam->y, "×", theme_main->main_box_font_highlight_color,GUI_TAB_FONT,gpe::fa_right,gpe::fa_middle);
+                            gpe::gfs->render_text( cTabXPos+tabSize-padding_default,widget_box.y+widget_box.h/2-cam->y, "×", pawgui::theme_main->main_box_font_highlight_color,font_tab,gpe::fa_right,gpe::fa_middle);
                         }
                         else
                         {
-                            gpe::gfs->render_text( cTabXPos+tabSize-GENERAL_GPE_GUI_PADDING,widget_box.y+widget_box.h/2-cam->y, "×", theme_main->main_box_font_color,GUI_TAB_FONT,gpe::fa_right,gpe::fa_middle);
+                            gpe::gfs->render_text( cTabXPos+tabSize-padding_default,widget_box.y+widget_box.h/2-cam->y, "×", pawgui::theme_main->main_box_font_color,font_tab,gpe::fa_right,gpe::fa_middle);
                         }
                     }
                     cTabXPos = cTabX2Pos;
@@ -363,13 +363,13 @@ namespace pawgui
             }
             else
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->program_color,false);
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_border_color,true);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->program_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_color,true);
             }
             /*if( isHovered)
             {
                 //Uncomment in the even a tab bar randomly behaves weirdly
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_border_highlight_color,true);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_highlight_color,true);
             }*/
         }
     }

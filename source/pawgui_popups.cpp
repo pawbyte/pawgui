@@ -118,11 +118,11 @@ namespace pawgui
             //Update screen
             gpe::game_runtime->end_loop( );
             gpe::game_runtime->start_loop();
-            gpe::gcanvas->render_rectangle( 32,gpe::screen_height/2 - 48,gpe::screen_width-32,gpe::screen_height/2 + 48,theme_main->popup_box_color,false);
-            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2 - 32,displayMessageTitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
-            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2,displayMessageSubtitle,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
-            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2 + 32,displayMessageString,theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
-            gpe::gcanvas->render_rectangle( 32,gpe::screen_height/2 - 48,gpe::screen_width-32,gpe::screen_height/2 + 48,theme_main->popup_box_border_color,true);
+            gpe::gcanvas->render_rectangle( 32,gpe::screen_height/2 - 48,gpe::screen_width-32,gpe::screen_height/2 + 48,pawgui::theme_main->popup_box_color,false);
+            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2 - 32,displayMessageTitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
+            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2,displayMessageSubtitle,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
+            gpe::gfs->render_text( gpe::screen_width/2,gpe::screen_height/2 + 32,displayMessageString,pawgui::theme_main->popup_box_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
+            gpe::gcanvas->render_rectangle( 32,gpe::screen_height/2 - 48,gpe::screen_width-32,gpe::screen_height/2 + 48,pawgui::theme_main->popup_box_border_color,true);
 
             gpe::game_runtime->end_loop();
             gpe::game_runtime->start_loop();
@@ -158,7 +158,7 @@ namespace pawgui
     void display_user_alert(std::string messageTitle, std::string messageContent, int messageType, gpe::shape_rect * cam)
     {
         gpe::game_runtime->end_loop();
-        //RESOURCE_TO_DRAG = NULL;
+        //resource_dragged = NULL;
         gpe::cursor_main_controller->cursor_change("arrow");
         //editor_gui_main->reset_gui_info();
         main_overlay_system->update_tooltip("");
@@ -169,8 +169,8 @@ namespace pawgui
 
         gpe::shape_rect widget_box;
 
-        widget_box.w = gpe::screen_width*3/4 -128 - GENERAL_GPE_GUI_PADDING*4;
-        widget_box.h = gpe::screen_height*3/4 - 64 - GENERAL_GPE_GUI_PADDING*4;
+        widget_box.w = gpe::screen_width*3/4 -128 - padding_default*4;
+        widget_box.h = gpe::screen_height*3/4 - 64 - padding_default*4;
         widget_box.x = gpe::screen_width - widget_box.w;
         widget_box.y = gpe::screen_height - widget_box.h;
         int maxMessageWidth = 0;
@@ -189,7 +189,7 @@ namespace pawgui
         if( defaultFontWidth > 0 && defaultFontHeight > 0)
         {
             maxMessageWidth = (widget_box.w-64) / defaultFontWidth;
-            maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+GENERAL_GPE_GUI_PADDING);
+            maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+padding_default);
             if( (int)messageTitle.size() > 0)
             {
                 if((int)messageTitle.size() > maxMessageWidth )
@@ -214,12 +214,12 @@ namespace pawgui
 
             if( (int) messageSubTitles.size() < maxMessageHeight )
             {
-                widget_box.h = messageSubTitles.size()*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                widget_box.h = messageSubTitles.size()*(defaultFontHeight+padding_default)+padding_default*4+64;
                 widget_box.y = (gpe::screen_height - widget_box.h)/2;
             }
             else
             {
-                widget_box.h = maxMessageHeight*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                widget_box.h = maxMessageHeight*(defaultFontHeight+padding_default)+padding_default*4+64;
                 widget_box.y = (gpe::screen_height - widget_box.h)/2;
             }
 
@@ -232,7 +232,7 @@ namespace pawgui
                 }
             }
 
-            widget_box.w = (maxMessageWidth*defaultFontWidth)+128 + GENERAL_GPE_GUI_PADDING*4;
+            widget_box.w = (maxMessageWidth*defaultFontWidth)+128 + padding_default*4;
             widget_box.x = (gpe::screen_width - widget_box.w)/2;
 
             while( exitOperation==false )
@@ -293,7 +293,7 @@ namespace pawgui
                 }
                 if( okButton!=NULL)
                 {
-                    okButton->set_coords(widget_box.x+( widget_box.w-okButton->get_width() )/2,widget_box.y+widget_box.h-GENERAL_GPE_GUI_PADDING-okButton->get_height() );
+                    okButton->set_coords(widget_box.x+( widget_box.w-okButton->get_width() )/2,widget_box.y+widget_box.h-padding_default-okButton->get_height() );
                     okButton->process_self( NULL, NULL);
                     if( okButton->is_clicked() && !windowBeingDragged )
                     {
@@ -308,20 +308,20 @@ namespace pawgui
                 gpe::renderer_main->reset_viewpoint();
                 //if( WINDOW_WAS_JUST_RESIZED )
                 {
-                    gpe::gcanvas->render_rectangle( 0,0,gpe::screen_width,gpe::screen_height,theme_main->program_color, false, 255);
+                    gpe::gcanvas->render_rectangle( 0,0,gpe::screen_width,gpe::screen_height,pawgui::theme_main->program_color, false, 255);
                     main_overlay_system->render_frozen_screenshot( );
                 }
                 //Update screen
-                gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_color,false);
+                gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_color,false);
 
-                gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,theme_main->popup_box_highlight_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,pawgui::theme_main->popup_box_highlight_color,false);
 
-                gpe::gfs->render_text( widget_box.x+widget_box.w/2,widget_box.y+GENERAL_GPE_GUI_PADDING,messageTitle,theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
-                gpe::gfs->render_text( widget_box.x+widget_box.w-GENERAL_GPE_GUI_PADDING,widget_box.y+GENERAL_GPE_GUI_PADDING,"×",theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_right,gpe::fa_top);
+                gpe::gfs->render_text( widget_box.x+widget_box.w/2,widget_box.y+padding_default,messageTitle,pawgui::theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_center,gpe::fa_top);
+                gpe::gfs->render_text( widget_box.x+widget_box.w-padding_default,widget_box.y+padding_default,"×",pawgui::theme_main->popup_box_highlight_font_color,gpe::font_default,gpe::fa_right,gpe::fa_top);
 
                 for( iSubMessage = 0; iSubMessage < (int)messageSubTitles.size(); iSubMessage++)
                 {
-                    gpe::gfs->render_text( widget_box.x+32,widget_box.y+GENERAL_GPE_GUI_PADDING+32+iSubMessage*(defaultFontHeight+GENERAL_GPE_GUI_PADDING),messageSubTitles.at(iSubMessage),theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
+                    gpe::gfs->render_text( widget_box.x+32,widget_box.y+padding_default+32+iSubMessage*(defaultFontHeight+padding_default),messageSubTitles.at(iSubMessage),pawgui::theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
                 }
                 if( okButton!=NULL)
                 {
@@ -329,11 +329,11 @@ namespace pawgui
                 }
                 if( gpe::point_within_rect(gpe::input->mouse_position_x,gpe::input->mouse_position_y,&widget_box) )
                 {
-                    gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_highlight_alt_color,true);
+                    gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_highlight_alt_color,true);
                 }
                 else
                 {
-                    gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_border_color,true);
+                    gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_border_color,true);
                 }
                 gpe::game_runtime->end_loop();
             }
@@ -349,7 +349,7 @@ namespace pawgui
     int display_prompt_message(std::string messageTitle, std::string messageContent, bool showCancelButton )
     {
         gpe::game_runtime->end_loop();
-        //RESOURCE_TO_DRAG = NULL;
+        //resource_dragged = NULL;
         int maxMessageWidth = 0;
         int maxMessageHeight = 0;
         int defaultFontWidth = 12;
@@ -360,7 +360,7 @@ namespace pawgui
         main_overlay_system->take_frozen_screenshot( );
         gpe::input->reset_all_input();
         bool exitOperation = false;
-        int returnVal = DISPLAY_QUERY_CANCEL;
+        int returnVal = display_query_cancel;
         widget_button_label * yesButton = new widget_button_label( "Yes[ENTER]","");
         yesButton->set_width(96);
         widget_button_label * noButon = NULL;
@@ -395,7 +395,7 @@ namespace pawgui
         widget_box.x = (gpe::screen_width - widget_box.w)/2;
         widget_box.y = 72;
         maxMessageWidth = (widget_box.w-32) / defaultFontWidth;
-        maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+GENERAL_GPE_GUI_PADDING);
+        maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+padding_default);
         int newBarX2Pos = widget_box.x+widget_box.w;
         int newBarY2Pos = widget_box.w+widget_box.h;
         main_overlay_system->render_frozen_screenshot( );
@@ -403,7 +403,7 @@ namespace pawgui
         if( defaultFontWidth > 0 && defaultFontHeight > 0)
         {
             maxMessageWidth = (widget_box.w-32) / defaultFontWidth;
-            maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+GENERAL_GPE_GUI_PADDING);
+            maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+padding_default);
 
             messageSubTitles.clear();
             if( (int)messageTitle.size() > 0)
@@ -430,11 +430,11 @@ namespace pawgui
 
             if( (int) messageSubTitles.size() < maxMessageHeight )
             {
-                widget_box.h = messageSubTitles.size()*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                widget_box.h = messageSubTitles.size()*(defaultFontHeight+padding_default)+padding_default*4+64;
             }
             else
             {
-                widget_box.h = maxMessageHeight*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                widget_box.h = maxMessageHeight*(defaultFontHeight+padding_default)+padding_default*4+64;
             }
 
             maxMessageWidth = (int)messageTitle.size();
@@ -541,7 +541,7 @@ namespace pawgui
                 if( boxWasResized)
                 {
                     maxMessageWidth = (widget_box.w-32) / defaultFontWidth;
-                    maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+GENERAL_GPE_GUI_PADDING);
+                    maxMessageHeight = (widget_box.h-64) / (defaultFontHeight+padding_default);
 
                     messageSubTitles.clear();
                     /*if( (int)messageTitle.size() > 0)
@@ -567,11 +567,11 @@ namespace pawgui
                     }
                     /*if( (int) messageSubTitles.size() < maxMessageHeight )
                     {
-                        widget_box.h = messageSubTitles.size()*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                        widget_box.h = messageSubTitles.size()*(defaultFontHeight+padding_default)+padding_default*4+64;
                     }
                     else
                     {
-                        widget_box.h = maxMessageHeight*(defaultFontHeight+GENERAL_GPE_GUI_PADDING)+GENERAL_GPE_GUI_PADDING*4+64;
+                        widget_box.h = maxMessageHeight*(defaultFontHeight+padding_default)+padding_default*4+64;
                     }*/
 
                     maxMessageWidth = (int)messageTitle.size();
@@ -585,11 +585,11 @@ namespace pawgui
                     boxWasResized = false;
                 }
 
-                yesButton->set_coords( GENERAL_GPE_GUI_PADDING+64,widget_box.h-32);
-                noButon->set_coords(yesButton->get_xpos()+yesButton->get_width()+GENERAL_GPE_GUI_PADDING,yesButton->get_ypos() );
+                yesButton->set_coords( padding_default+64,widget_box.h-32);
+                noButon->set_coords(yesButton->get_xpos()+yesButton->get_width()+padding_default,yesButton->get_ypos() );
                 if( cancelButton!=NULL)
                 {
-                    cancelButton->set_coords( noButon->get_xpos()+noButon->get_width()+GENERAL_GPE_GUI_PADDING,noButon->get_ypos() );
+                    cancelButton->set_coords( noButon->get_xpos()+noButon->get_width()+padding_default,noButon->get_ypos() );
                     cancelButton->process_self(&widget_box);
                 }
                 yesButton->process_self(&widget_box);
@@ -601,33 +601,33 @@ namespace pawgui
                     if( cancelButton!=NULL)
                     {
                         exitOperation = true;
-                        returnVal = DISPLAY_QUERY_CANCEL;
+                        returnVal = display_query_cancel;
                     }
                     else
                     {
                         exitOperation = true;
-                        returnVal = DISPLAY_QUERY_NO;
+                        returnVal = display_query_no;
                     }
                 }
                 else if( gpe::input->check_kb_released(kb_n) )
                 {
                     exitOperation = true;
-                    returnVal = DISPLAY_QUERY_NO;
+                    returnVal = display_query_no;
                 }
                 else if( noButon->is_clicked() )
                 {
                     exitOperation = true;
-                    returnVal = DISPLAY_QUERY_NO;
+                    returnVal = display_query_no;
                 }
                 else if( cancelButton!=NULL &&  cancelButton->is_clicked() )
                 {
                     exitOperation = true;
-                    returnVal = DISPLAY_QUERY_CANCEL;
+                    returnVal = display_query_cancel;
                 }
                 else if( gpe::input->check_kb_released(kb_enter) || yesButton->is_clicked() )
                 {
                     exitOperation = true;
-                    returnVal = DISPLAY_QUERY_YES;
+                    returnVal = display_query_yes;
                 }
                 if( !gpe::window_controller_main->is_resized() )
                 {
@@ -639,14 +639,14 @@ namespace pawgui
                     }
                     gpe::renderer_main->set_viewpoint( &widget_box);
 
-                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,theme_main->popup_box_color,false);
-                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,32,theme_main->popup_box_highlight_color,false);
+                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,pawgui::theme_main->popup_box_color,false);
+                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,32,pawgui::theme_main->popup_box_highlight_color,false);
 
-                    gpe::gfs->render_text( GENERAL_GPE_GUI_PADDING*2,GENERAL_GPE_GUI_PADDING,messageTitle,theme_main->popup_box_highlight_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
-                    //render_text( widget_box.x+GENERAL_GPE_GUI_PADDING+32,widget_box.y+64,messageContent,theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
+                    gpe::gfs->render_text( padding_default*2,padding_default,messageTitle,pawgui::theme_main->popup_box_highlight_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
+                    //render_text( widget_box.x+padding_default+32,widget_box.y+64,messageContent,pawgui::theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
                     for( iSubMessage = 0; iSubMessage < (int)messageSubTitles.size(); iSubMessage++)
                     {
-                        gpe::gfs->render_text( 32,GENERAL_GPE_GUI_PADDING+32+iSubMessage*(defaultFontHeight+GENERAL_GPE_GUI_PADDING),messageSubTitles.at(iSubMessage),theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
+                        gpe::gfs->render_text( 32,padding_default+32+iSubMessage*(defaultFontHeight+padding_default),messageSubTitles.at(iSubMessage),pawgui::theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top);
                     }
 
                     yesButton->render_self( &widget_box );
@@ -655,8 +655,8 @@ namespace pawgui
                     {
                         cancelButton->render_self( &widget_box );
                     }
-                    gpe::gcanvas->render_rectangle( 1,1,widget_box.w-1,widget_box.h-1,theme_main->popup_box_border_color,true);
-                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,theme_main->popup_box_highlight_color,true);
+                    gpe::gcanvas->render_rectangle( 1,1,widget_box.w-1,widget_box.h-1,pawgui::theme_main->popup_box_border_color,true);
+                    gpe::gcanvas->render_rectangle( 0,0,widget_box.w,widget_box.h,pawgui::theme_main->popup_box_highlight_color,true);
                     //editor_gui_main-render_gui_info(gpe::renderer_main, true);
                 }
                 gpe::game_runtime->end_loop();
@@ -693,7 +693,7 @@ namespace pawgui
     std::string get_string_from_popup(std::string messageTitle, std::string messageContent, std::string startName)
     {
         gpe::game_runtime->end_loop();
-        //RESOURCE_TO_DRAG = NULL;
+        //resource_dragged = NULL;
         main_overlay_system->update_tooltip("");
         gpe::cursor_main_controller->cursor_change("arrow");
         main_overlay_system->take_frozen_screenshot( );
@@ -720,10 +720,10 @@ namespace pawgui
         {
             promptBoxWidth =biggestStringWidth;
         }
-        promptBoxWidth+=GENERAL_GPE_GUI_PADDING*3;
+        promptBoxWidth+=padding_default*3;
         gpe::shape_rect widget_box;
-        widget_box.x = (gpe::screen_width-promptBoxWidth)/2-GENERAL_GPE_GUI_PADDING;
-        widget_box.y = gpe::screen_height/2-64-GENERAL_GPE_GUI_PADDING;
+        widget_box.x = (gpe::screen_width-promptBoxWidth)/2-padding_default;
+        widget_box.y = gpe::screen_height/2-64-padding_default;
         widget_box.w = promptBoxWidth+128;
         widget_box.h = 192;
         main_overlay_system->render_frozen_screenshot( );
@@ -734,14 +734,14 @@ namespace pawgui
 
             //editor_gui_main->reset_gui_info();
 
-            widget_box.x = (gpe::screen_width-promptBoxWidth)/2-GENERAL_GPE_GUI_PADDING;
-            widget_box.y = gpe::screen_height/2-64-GENERAL_GPE_GUI_PADDING;
+            widget_box.x = (gpe::screen_width-promptBoxWidth)/2-padding_default;
+            widget_box.y = gpe::screen_height/2-64-padding_default;
 
-            newStringBox->set_coords( widget_box.x+GENERAL_GPE_GUI_PADDING,widget_box.y+64);
+            newStringBox->set_coords( widget_box.x+padding_default,widget_box.y+64);
             newStringBox->set_width(widget_box.w - 64);
 
-            yesButton->set_coords( widget_box.x+GENERAL_GPE_GUI_PADDING,newStringBox->get_ypos()+newStringBox->get_height() + GENERAL_GPE_GUI_PADDING);
-            cancelButton->set_coords( yesButton->get_xpos()+yesButton->get_width()+GENERAL_GPE_GUI_PADDING,yesButton->get_ypos() );
+            yesButton->set_coords( widget_box.x+padding_default,newStringBox->get_ypos()+newStringBox->get_height() + padding_default);
+            cancelButton->set_coords( yesButton->get_xpos()+yesButton->get_width()+padding_default,yesButton->get_ypos() );
 
             newStringBox->process_self();
             yesButton->process_self();
@@ -766,15 +766,15 @@ namespace pawgui
             {
                 main_overlay_system->render_frozen_screenshot( );
             }
-            gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_color,false);
-            gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,theme_main->popup_box_highlight_color,false);
+            gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_color,false);
+            gpe::gcanvas->render_rectangle( widget_box.x,widget_box.y,widget_box.x+widget_box.w,widget_box.y+32,pawgui::theme_main->popup_box_highlight_color,false);
 
-            gpe::gfs->render_text( (gpe::screen_width-promptBoxWidth)/2+GENERAL_GPE_GUI_PADDING,gpe::screen_height/2-64,messageTitle,theme_main->popup_box_highlight_font_color,font_default_prompt,gpe::fa_left,gpe::fa_center );
-            gpe::gfs->render_text( (gpe::screen_width-promptBoxWidth)/2+GENERAL_GPE_GUI_PADDING,gpe::screen_height/2-32,messageContent,theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top );
+            gpe::gfs->render_text( (gpe::screen_width-promptBoxWidth)/2+padding_default,gpe::screen_height/2-64,messageTitle,pawgui::theme_main->popup_box_highlight_font_color,font_default_prompt,gpe::fa_left,gpe::fa_center );
+            gpe::gfs->render_text( (gpe::screen_width-promptBoxWidth)/2+padding_default,gpe::screen_height/2-32,messageContent,pawgui::theme_main->popup_box_font_color,font_default_prompt,gpe::fa_left,gpe::fa_top );
             yesButton->render_self( );
             cancelButton->render_self( );
             newStringBox->render_self( );
-            gpe::gcanvas->render_rect( &widget_box,theme_main->popup_box_border_color,true );
+            gpe::gcanvas->render_rect( &widget_box,pawgui::theme_main->popup_box_border_color,true );
             gpe::game_runtime->end_loop();
         }
         if( yesButton!=NULL)

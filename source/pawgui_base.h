@@ -40,10 +40,6 @@ SOFTWARE.
 
 namespace pawgui
 {
-    extern int POPUP_FONT_SIZE_WIDTH;
-    extern int POPUP_FONT_SIZE_HEIGHT;
-    extern int POPUP_MENU_VALUE;
-
     class widget_basic
     {
         protected:
@@ -57,9 +53,9 @@ namespace pawgui
             bool isHovered;
             bool isModified;
             bool isInUse;
-            std::string opName;
-            std::string guiListTypeName;
-            int guiListTypeId;
+            std::string widget_name;
+            std::string widget_type;
+            int widget_type_id;
             int maxWidth, maxHeight;
             bool isFullWidth;
             std::string renderPackageName;
@@ -109,8 +105,8 @@ namespace pawgui
             virtual void set_width(int newWidth);
             virtual void set_coords(int newX = -1, int newY = -1);
             virtual void prerender_self( );
-            virtual void process_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect *cam = NULL);
-            virtual void render_self( gpe::shape_rect * viewedSpace = NULL, gpe::shape_rect * cam = NULL);
+            virtual void process_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect *cam = NULL);
+            virtual void render_self( gpe::shape_rect * view_space = NULL, gpe::shape_rect * cam = NULL);
             bool requires_newline();
             void scale_height(float scaleH);
             void scale_width(float scaleW);

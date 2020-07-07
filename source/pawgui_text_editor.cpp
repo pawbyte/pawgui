@@ -31,9 +31,12 @@ SOFTWARE.
 
 */
 
-#include "pawgui_text_editor.h"
 #include "pawgui_context.h"
+#include "pawgui_file_popups.h"
+#include "pawgui_general_resource_container.h"
+#include "pawgui_search_controller.h"
 #include "pawgui_statusbar.h"
+#include "pawgui_text_editor.h"
 
 namespace pawgui
 {
@@ -80,22 +83,22 @@ namespace pawgui
         }
         if( (int)anchorProjectResourceName.size() > 0 )
         {
-            opName = "["+anchorProjectResourceName+"]["+lineMessage+"]";
+            widget_name = "["+anchorProjectResourceName+"]["+lineMessage+"]";
         }
         else
         {
-            opName = "["+lineMessage+"]";
+            widget_name = "["+lineMessage+"]";
         }
-        opName+=" Ln "+ stg_ex::int_to_string(lineN+1)+"Col "+ stg_ex::int_to_string(charN+1);
+        widget_name+=" Ln "+ stg_ex::int_to_string(lineN+1)+"Col "+ stg_ex::int_to_string(charN+1);
         widget_box.x = 0;
         widget_box.y = 0;
         if( FONT_LABEL_ANCHOR!=NULL)
         {
             int bWid = 0;
             int bHgt = 0;
-            FONT_LABEL_ANCHOR->get_metrics(opName.c_str(), &bWid, &bHgt);
+            FONT_LABEL_ANCHOR->get_metrics(widget_name.c_str(), &bWid, &bHgt);
             widget_box.w = bWid;
-            widget_box.h = bHgt+GENERAL_GPE_GUI_PADDING*2;
+            widget_box.h = bHgt+padding_default*2;
         }
     }
 
@@ -104,9 +107,9 @@ namespace pawgui
 
     }
 
-    void widget_text_anchor::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_text_anchor::process_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
-        widget_basic::process_self(viewedSpace,cam);
+        widget_basic::process_self(view_space,cam);
 
         if( isHovered)
         {
@@ -116,28 +119,28 @@ namespace pawgui
         {
             if( gpe::input->check_kb_down(kb_ctrl) && gpe::input->check_kb_released(kb_c) )
             {
-                gpe::input->clipboard_set (opName.c_str() );
+                gpe::input->clipboard_set (widget_name.c_str() );
             }
         }
     }
 
-    void widget_text_anchor::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_text_anchor::render_self( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( (int)opName.size() > 0 && viewedSpace!=NULL && cam!=NULL )
+        if( (int)widget_name.size() > 0 && view_space!=NULL && cam!=NULL )
         {
             if( isHovered)
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_box_highlight_color,false);
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_border_highlight_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_box_highlight_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_highlight_color,false);
             }
             else
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_box_color,false);
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->main_border_color,true);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_box_color,false);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->main_border_color,true);
             }
-            gpe::gfs->render_text( widget_box.x-cam->x+GENERAL_GPE_GUI_PADDING,widget_box.y-cam->y+GENERAL_GPE_GUI_PADDING,opName,theme_main->text_box_font_color,FONT_LABEL_ANCHOR,gpe::fa_left,gpe::fa_middle);
+            gpe::gfs->render_text( widget_box.x-cam->x+padding_default,widget_box.y-cam->y+padding_default,widget_name,pawgui::theme_main->text_box_font_color,FONT_LABEL_ANCHOR,gpe::fa_left,gpe::fa_middle);
         }
     }
 
@@ -193,7 +196,7 @@ namespace pawgui
 
         highlightXPos = 0;
         highlightYPos = 0;
-        guiListTypeName = "textarea";
+        widget_type = "textarea";
         lastfloatClickAction = 0;
         undoableActionOccurred = false;
         currentPositionInHistory = 0;
@@ -237,9 +240,9 @@ namespace pawgui
         textYScroll = new widget_scrollbar_yaxis();
         TEXTBOX_FONT_SIZE_WIDTH = 10;
         TEXTBOX_FONT_SIZE_HEIGHT = 10;
-        if( FONT_TEXTINPUT!=NULL)
+        if( font_textinput!=NULL)
         {
-            FONT_TEXTINPUT->get_metrics("A",&TEXTBOX_FONT_SIZE_WIDTH,&TEXTBOX_FONT_SIZE_HEIGHT);
+            font_textinput->get_metrics("A",&TEXTBOX_FONT_SIZE_WIDTH,&TEXTBOX_FONT_SIZE_HEIGHT);
         }
 
         lineCountBox = new gpe::shape_rect();
@@ -1025,11 +1028,11 @@ namespace pawgui
         return stringsFoundInSearch;
     }
 
-    void widget_text_editor::find_mouse_cursor(int *mXCursor, int *mYCursor, gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::find_mouse_cursor(int *mXCursor, int *mYCursor, gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( viewedSpace!=NULL && cam!=NULL && (int)listOfStrings.size() > 0)
+        if( view_space!=NULL && cam!=NULL && (int)listOfStrings.size() > 0)
         {
             if( gpe::point_within_rect(gpe::input->mouse_position_x,gpe::input->mouse_position_y, textSpaceRect)  )
             {
@@ -1749,7 +1752,7 @@ namespace pawgui
                             tempTerm = main_syntax_highlighter->suggestedCompilerTerms[i];
                             if( tempTerm!=NULL)
                             {
-                                if( tempTerm->termType==CTERM_FUNCTION)
+                                if( tempTerm->termType==cterm_function)
                                 {
                                     tTerwindow_width = (int)tempTerm->termString.size()+(int)tempTerm->get_parameters().size()+(int)tempTerm->termFunctionReturnType.size()+3; // functionName(parameters)
                                 }
@@ -1772,9 +1775,9 @@ namespace pawgui
                         TEXTBOX_FONT_SIZE_WIDTH = 12;
                         TEXTBOX_FONT_SIZE_HEIGHT = 12;
 
-                        if( FONT_TEXTINPUT!=NULL)
+                        if( font_textinput!=NULL)
                         {
-                            FONT_TEXTINPUT->get_metrics("A",&TEXTBOX_FONT_SIZE_WIDTH,&TEXTBOX_FONT_SIZE_HEIGHT);
+                            font_textinput->get_metrics("A",&TEXTBOX_FONT_SIZE_WIDTH,&TEXTBOX_FONT_SIZE_HEIGHT);
                         }
                         main_syntax_highlighter-> maxSuggestedTextWidth= 64+main_syntax_highlighter->maxSuggestedTextWidth*TEXTBOX_FONT_SIZE_WIDTH;
                     }
@@ -1910,9 +1913,9 @@ namespace pawgui
         return maxCharsUsed;
     }
 
-    void widget_text_editor::handle_scrolling( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam  )
+    void widget_text_editor::handle_scrolling( gpe::shape_rect * view_space, gpe::shape_rect * cam  )
     {
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
 
         charactersWithinView = renderBox->w/( ( float)TEXTBOX_FONT_SIZE_WIDTH);
@@ -1953,7 +1956,7 @@ namespace pawgui
             textXScroll->contextRect.x = (float)lineStartXPos;
             textXScroll->contextRect.w = (float)charactersWithinView;
 
-            textXScroll->process_self(viewedSpace,cam );
+            textXScroll->process_self(view_space,cam );
             if( textXScroll->has_moved() || textXScroll->is_scrolling() )
             {
                 lineStartXPos = mostChractersUsed * ( (float)textXScroll->scrollXPos/(float)textXScroll->get_width() );
@@ -1983,7 +1986,7 @@ namespace pawgui
                 textYScroll->contextRect.y = (float)lineStartYPos;
                 textYScroll->contextRect.h = (float)linesWithinView;
 
-                textYScroll->process_self(viewedSpace,cam );
+                textYScroll->process_self(view_space,cam );
                 if( textYScroll->has_moved() )
                 {
                     lineStartYPos =  round ( textYScroll->contextRect.y );
@@ -2438,7 +2441,7 @@ namespace pawgui
                             */
                             else if ( stg_ex::char_is_alpha(currStringToRender[currPosToParse],true,true) )
                             {
-                                //color = theme_main->text_box_font_color;
+                                //color = pawgui::theme_main->text_box_font_color;
                                 currPosToParse++;
                                 while (currPosToParse < lineEnd && stg_ex::char_is_alnum(currStringToRender[currPosToParse],true,true) )
                                 {
@@ -2447,7 +2450,7 @@ namespace pawgui
                             }
                             else
                             {
-                                //color = theme_main->text_box_font_color;
+                                //color = pawgui::theme_main->text_box_font_color;
                                 //anything else is just regular text as well...
                                 currPosToParse++;
                             }
@@ -2475,16 +2478,16 @@ namespace pawgui
         return !missingSymbolDetected;
     }
 
-    void widget_text_editor::process_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::process_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
         hasScrollControl = false;
         prevCursorXPos = cursorXPos;
         prevCursorYPos = cursorYPos;
-        setup_editor(viewedSpace,cam);
-        widget_basic::process_self(viewedSpace,cam);
-        handle_scrolling(viewedSpace,cam);
+        setup_editor(view_space,cam);
+        widget_basic::process_self(view_space,cam);
+        handle_scrolling(view_space,cam);
 
         if( clickedOutside)
         {
@@ -2522,7 +2525,7 @@ namespace pawgui
             //sets the buttonbar to the width of the text editor( minus width of yScroll width[16 ).
             //textEditorButtonBar->set_width(widget_box.w);
             textEditorButtonBar->set_height(24);
-            textEditorButtonBar->process_self(viewedSpace,cam);
+            textEditorButtonBar->process_self(view_space,cam);
             buttonBarClicked = textEditorButtonBar->is_clicked();
             if( textEditorButtonBar->selectedOption>= 0 && textEditorButtonBar->selectedOption < TEXTAREA_OPTION_MAX_OPTIONS)
             {
@@ -2531,7 +2534,7 @@ namespace pawgui
                     std::string importTextFileName = get_filename_open_from_popup("Import Text","",main_settings->fileOpenTextFileDir );
                     if( (int)importTextFileName.size() > 0)
                     {
-                        //if( display_prompt_message("Warning!","Clearing this text area is irreversible. Are you sure you want to continue this operation?")==DISPLAY_QUERY_YES )
+                        //if( display_prompt_message("Warning!","Clearing this text area is irreversible. Are you sure you want to continue this operation?")==display_query_yes )
                         {
                             import_text( importTextFileName);
                         }
@@ -2556,7 +2559,7 @@ namespace pawgui
                     std::string exportTextFileName = get_filename_save_from_popup("Export Text","",main_settings->fileOpenFunctionDir);
                     if( sff_ex::file_exists(exportTextFileName) )
                     {
-                        if( display_prompt_message("Warning!","File Exists already, do you wish to overwrite it?)")==DISPLAY_QUERY_YES )
+                        if( display_prompt_message("Warning!","File Exists already, do you wish to overwrite it?)")==display_query_yes )
                         {
                             export_text( exportTextFileName);
                         }
@@ -2568,7 +2571,7 @@ namespace pawgui
                 }
                 else if( textEditorButtonBar->selectedOption==TEXTAREA_OPTION_CLEAR)
                 {
-                    if( display_prompt_message("Warning!","Are you sure you want to continue this operation?")==DISPLAY_QUERY_YES )
+                    if( display_prompt_message("Warning!","Are you sure you want to continue this operation?")==display_query_yes )
                     {
                         clear_all_lines();
                         listOfStrings.push_back("");
@@ -2635,7 +2638,7 @@ namespace pawgui
                 {
                     if( gpe::input->check_mouse_down( mb_left ) )
                     {
-                        update_cursor_to_mouse(viewedSpace, cam);
+                        update_cursor_to_mouse(view_space, cam);
                         if( lineStartXPos < 0)
                         {
                             lineStartXPos = 0;
@@ -2646,9 +2649,9 @@ namespace pawgui
                         }
                     }
                     //Handles the Mouse movements & buttons
-                    if( gpe::input->check_mouse_button_clicked(0) && RESOURCE_TO_DRAG==NULL )
+                    if( gpe::input->check_mouse_button_clicked(0) && resource_dragged==NULL )
                     {
-                        update_cursor_to_mouse(viewedSpace, cam);
+                        update_cursor_to_mouse(view_space, cam);
                         if( cursorYPos >=0 && cursorYPos < (int)listOfStrings.size() )
                         {
                             lineToEdit = listOfStrings[cursorYPos];
@@ -2778,7 +2781,7 @@ namespace pawgui
                     {
                         //if( lastfloatClickAction==0)
                         {
-                            update_cursor_to_mouse(viewedSpace, cam);
+                            update_cursor_to_mouse(view_space, cam);
                             if( cursorYPos >=0 && cursorYPos < (int)listOfStrings.size() )
                             {
                                 selectionCursorXPos = selectionEndCursorXPos = cursorXPos;
@@ -2791,7 +2794,7 @@ namespace pawgui
                     {
                         //if( lastfloatClickAction==0)
                         {
-                            update_cursor_to_mouse(viewedSpace, cam);
+                            update_cursor_to_mouse(view_space, cam);
                             if( cursorYPos >=0 && cursorYPos < (int)listOfStrings.size() )
                             {
                                 selectionEndCursorXPos = cursorXPos;
@@ -2854,17 +2857,17 @@ namespace pawgui
                         lastfloatClickAction = 0;
                         main_syntax_highlighter->highlightedTerm = NULL;
                     }
-                    else if( gpe::input->mouse_movement_received && RESOURCE_TO_DRAG==NULL )
+                    else if( gpe::input->mouse_movement_received && resource_dragged==NULL )
                     {
                         //Highlights documenation under mouse if found.
                         int tMouseX = 0, tMouseY = 0;
-                        find_mouse_cursor(&tMouseX,&tMouseY, viewedSpace, cam);
+                        find_mouse_cursor(&tMouseX,&tMouseY, view_space, cam);
                         if( tMouseX!=highlightXPos || tMouseY!=highlightYPos)
                         {
                             find_documentation_description(tMouseX,tMouseY);
                         }
                     }
-                    else if( RESOURCE_TO_DRAG!=NULL && !isReadOnly )
+                    else if( resource_dragged!=NULL && !isReadOnly )
                     {
                         if( gpe::input->check_mouse_released( mb_left))
                         {
@@ -2873,14 +2876,14 @@ namespace pawgui
                                 mouseHoveringInTextArea = true;
                                 gpe::cursor_main_controller->cursor_change("ibeam");
 
-                                update_cursor_to_mouse(viewedSpace, cam);
+                                update_cursor_to_mouse(view_space, cam);
                                 if( cursorYPos >=0 && cursorYPos < (int)listOfStrings.size() )
                                 {
                                     if( cursorXPos >=0 && cursorXPos <= (int)listOfStrings[cursorYPos].size() )
                                     {
 
-                                        listOfStrings[cursorYPos] = stg_ex::get_substring(listOfStrings[cursorYPos],0,cursorXPos)+RESOURCE_TO_DRAG->get_name()+stg_ex::get_substring(listOfStrings[cursorYPos],cursorXPos);
-                                        RESOURCE_TO_DRAG = NULL;
+                                        listOfStrings[cursorYPos] = stg_ex::get_substring(listOfStrings[cursorYPos],0,cursorXPos)+resource_dragged->get_name()+stg_ex::get_substring(listOfStrings[cursorYPos],cursorXPos);
+                                        resource_dragged = NULL;
                                     }
                                 }
                             }
@@ -2929,7 +2932,7 @@ namespace pawgui
                         move_down(1);
                     }
 
-                    update_cursor_to_mouse(viewedSpace, cam);
+                    update_cursor_to_mouse(view_space, cam);
                     if( cursorYPos >=0 && cursorYPos < (int)listOfStrings.size() )
                     {
                         selectionEndCursorXPos = cursorXPos;
@@ -3055,7 +3058,7 @@ namespace pawgui
                         {
                             redo_edit();
                             gpe::input->reset_all_input();
-                            process_self( viewedSpace,cam );
+                            process_self( view_space,cam );
                         }
                     }
                     else if( gpe::input->kb_button_released[kb_z] && !isReadOnly)
@@ -3064,7 +3067,7 @@ namespace pawgui
                         {
                             undo_edit();
                             gpe::input->reset_all_input();
-                            process_self( viewedSpace,cam );
+                            process_self( view_space,cam );
                         }
                     }
                     else if( upDelay > (main_settings->textAreaDelayTime)  || ( !gpe::input->kb_button_pressed[kb_up] && gpe::input->kb_button_released[kb_up] ) )
@@ -3228,7 +3231,7 @@ namespace pawgui
                                     syntax_compiler_term * tempTerm = main_syntax_highlighter->suggestedCompilerTerms.at(main_syntax_highlighter->iSuggestionPos);
                                     if( tempTerm!=NULL)
                                     {
-                                        if( tempTerm->termType==CTERM_FUNCTION)
+                                        if( tempTerm->termType==cterm_function)
                                         {
                                             prevStr = prevStr.substr(0,tempCLineXStartPos)+tempTerm->termString+"()"+prevStr.substr(tempCLineXEndPos+1);
                                             cursorXPos = tempCLineXStartPos + (int)tempTerm->termString.size()+1;
@@ -3894,7 +3897,7 @@ namespace pawgui
             {
                 if( isCodeEditor && codeEditorType==0)
                 {
-                    //parse_code_javascript(viewedSpace,cam);
+                    //parse_code_javascript(view_space,cam);
                 }
                 parseForErrorsTimerPos = 0;
             }
@@ -3962,18 +3965,18 @@ namespace pawgui
         switch( main_search_controller->textSearchMode )
         {
         //find
-        case 1:
+        case search_mode::find_text:
             if( main_search_controller->findTextStringBox->has_content() )
             {
                 if( main_search_controller->findTextStringBox->was_submitted() || main_search_controller->findButton->is_clicked() )
                 {
-                    if( find_string(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_checked(),false)==false )
+                    if( find_string(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_clicked(),false)==false )
                     {
                         cursorXPos = 0;
                         cursorYPos = 0;
                         lineStartXPos = 0;
                         lineStartYPos = 0;
-                        if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_checked(),false)==false)
+                        if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_clicked(),false)==false)
                         {
                             main_overlay_system->update_temporary_message("Searched for","["+main_search_controller->findTextStringBox->get_string()+"]","Unable to Find String");
                         }
@@ -3983,7 +3986,7 @@ namespace pawgui
                 /*
                 else if( main_search_controller->findAllButton->is_clicked() )
                 {
-                    findAllResult = find_all_strings(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_checked() );
+                    findAllResult = find_all_strings(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_clicked() );
                     displayMessageTitle = "Substring Search";
                     displayMessageSubtitle = main_search_controller->findTextStringBox->get_string();
 
@@ -4004,7 +4007,7 @@ namespace pawgui
             break;
 
         //goto line
-        case 2:
+        case search_mode::goto_line:
             //main_search_controller->goToLineStringBox->set_string("1");
 
             if( (int)listOfStrings.size() > 0)
@@ -4023,20 +4026,20 @@ namespace pawgui
             break;
 
         //find/replace
-        case 3:
+        case search_mode::replace_text:
             if( !isReadOnly)
             {
                 if( main_search_controller->findTextStringBox->has_content() )
                 {
                     if( main_search_controller->findTextStringBox->was_submitted() || main_search_controller->findButton->is_clicked() )
                     {
-                        if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_checked(),false)==false )
+                        if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_clicked(),false)==false )
                         {
                             cursorXPos = 0;
                             cursorYPos = 0;
                             lineStartXPos = 0;
                             lineStartYPos = 0;
-                            if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_checked(),false)==false)
+                            if( find_string(main_search_controller->findTextStringBox->get_string(),true,main_search_controller->findMatchCase->is_clicked(),false)==false)
                             {
                                 main_overlay_system->update_temporary_message("Searched for","["+main_search_controller->findTextStringBox->get_string()+"]","Unable to Find String");
                             }
@@ -4046,7 +4049,7 @@ namespace pawgui
                     /*
                     else if( main_search_controller->findAllButton->is_clicked() )
                     {
-                        findAllResult = find_all_strings(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_checked() );
+                        findAllResult = find_all_strings(main_search_controller->findTextStringBox->get_string(),main_search_controller->findMatchCase->is_clicked() );
                         displayMessageTitle = "Substring Search";
                         displayMessageSubtitle = main_search_controller->findTextStringBox->get_string();
 
@@ -4073,7 +4076,7 @@ namespace pawgui
                         }
                         else if( main_search_controller->replaceAllButton->is_clicked() )
                         {
-                            if( display_prompt_message("Warning!","All copies of the text will be replaced. Are you sure you want to continue this operation?")==DISPLAY_QUERY_YES )
+                            if( display_prompt_message("Warning!","All copies of the text will be replaced. Are you sure you want to continue this operation?")==display_query_yes )
                             {
                                 findAllResult = find_all_strings(main_search_controller->findTextStringBox->get_string(),true);
                                 if( main_loader_display != NULL )
@@ -4104,7 +4107,7 @@ namespace pawgui
 
         default:
 
-            break;
+        break;
         }
 
         if( !isReadOnly && pasteCommandGiven && gpe::input->clipboard_empty() == false )
@@ -4113,7 +4116,7 @@ namespace pawgui
             paste_clipboard();
             main_syntax_highlighter->clear_all();
             gpe::input->reset_all_input();
-            process_self( viewedSpace,cam );
+            process_self( view_space,cam );
         }
 
         if( undoableActionOccurred && !isReadOnly )
@@ -4125,7 +4128,7 @@ namespace pawgui
                 save_edit();
             }
         }
-        set_highlight_pos( viewedSpace, cam );
+        set_highlight_pos( view_space, cam );
     }
 
     void widget_text_editor::redo_edit()
@@ -4146,11 +4149,11 @@ namespace pawgui
         }
     }
 
-    void widget_text_editor::render_code( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::render_code( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( viewedSpace!=NULL && cam!=NULL && textEditorButtonBar!=NULL && has_content() )
+        if( view_space!=NULL && cam!=NULL && textEditorButtonBar!=NULL && has_content() )
         {
             int mostCharactersOfText = get_most_characters_used();
             if( mostCharactersOfText > charactersWithinView && showYScroll )
@@ -4563,7 +4566,7 @@ namespace pawgui
                                                 }
                                                 else if ( stg_ex::char_is_alpha(currStringToRender[currPosToParse],false,true) )
                                                 {
-                                                    //color = theme_main->text_box_font_color;
+                                                    //color = pawgui::theme_main->text_box_font_color;
                                                     tempParseTextToAdd->textStart = currPosToParse;
                                                     currPosToParse++;
                                                     while (currPosToParse < lineEnd && stg_ex::char_is_alnum(currStringToRender[currPosToParse],false,true) )
@@ -4578,7 +4581,7 @@ namespace pawgui
                                                 {
                                                     if(currStringToRender[currPosToParse]!=' ')
                                                     {
-                                                        //color = theme_main->text_box_font_color;
+                                                        //color = pawgui::theme_main->text_box_font_color;
                                                         //anything else is just regular text as well...
                                                         tempParseTextToAdd->textStart = currPosToParse;
                                                         tempParseTextToAdd->textEnd = currPosToParse+1;
@@ -4649,83 +4652,83 @@ namespace pawgui
                     textRenderXPos = renderBox->x+2;
                     textRenderYPos = renderBox->y+(i-lineStartYPos)*(editorZoomLevel*defaultLineHeight);
 
-                    color = theme_main->text_box_font_color;
-                    normalLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_color;
+                    normalLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_number_color;
-                    numberLineText->render_tokens( FONT_TEXTinput_NUMBER,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color,true );
+                    color = pawgui::theme_main->text_box_font_number_color;
+                    numberLineText->render_tokens( font_textinput_number,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color,true );
 
-                    color = theme_main->text_box_font_symbols_color;
-                    symbolLineText->render_tokens( FONT_TEXTinput_SYMBOL,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_symbols_color;
+                    symbolLineText->render_tokens( font_textinput_symbol,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
                     //
                     if( colorblind_mode_on )
                     {
-                        color = theme_main->text_box_font_function_alt_color;
+                        color = pawgui::theme_main->text_box_font_function_alt_color;
                     }
                     else
                     {
-                        color = theme_main->text_box_font_function_color;
+                        color = pawgui::theme_main->text_box_font_function_color;
                     }
-                    functionLineText->render_tokens( FONT_TEXTinput_FUNCTION,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    functionLineText->render_tokens( font_textinput_function,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
                     //
                     if( colorblind_mode_on)
                     {
-                        color = theme_main->text_box_font_keyword_alt_color;
+                        color = pawgui::theme_main->text_box_font_keyword_alt_color;
                     }
                     else
                     {
-                        color = theme_main->text_box_font_keyword_color;
+                        color = pawgui::theme_main->text_box_font_keyword_color;
                     }
-                    keywordLineText->render_tokens( FONT_TEXTinput_KEYWORD,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    keywordLineText->render_tokens( font_textinput_keyword,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
                     if( colorblind_mode_on)
                     {
-                        color = theme_main->text_box_project_keyword_alt_color;
+                        color = pawgui::theme_main->text_box_project_keyword_alt_color;
                     }
                     else
                     {
-                        color = theme_main->text_box_project_keyword_color;
+                        color = pawgui::theme_main->text_box_project_keyword_color;
                     }
-                    projectKeywordLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    projectKeywordLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
                     if( colorblind_mode_on)
                     {
-                        color = theme_main->text_box_project_function_alt_color;
+                        color = pawgui::theme_main->text_box_project_function_alt_color;
                     }
                     else
                     {
-                        color = theme_main->text_box_project_function_color;
+                        color = pawgui::theme_main->text_box_project_function_color;
                     }
-                    projectFunctionLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    projectFunctionLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
 
 
                     if( colorblind_mode_on)
                     {
-                        color = theme_main->text_box_font_variable_alt_color;
+                        color = pawgui::theme_main->text_box_font_variable_alt_color;
                     }
                     else
                     {
-                        color = theme_main->text_box_font_variable_color;
+                        color = pawgui::theme_main->text_box_font_variable_color;
                     }
-                    variableLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    variableLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_datatype_color;
-                    datatypeLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_datatype_color;
+                    datatypeLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_datatype_color;
-                    datatypeLineText->render_tokens( FONT_TEXTINPUT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_datatype_color;
+                    datatypeLineText->render_tokens( font_textinput,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_squote_color;
-                    sQuoteLineText->render_tokens( FONT_TEXTinput_QUOTE,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_squote_color;
+                    sQuoteLineText->render_tokens( font_textinput_quote,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_dquote_color;
-                    dQuoteLineText->render_tokens( FONT_TEXTinput_QUOTE,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_dquote_color;
+                    dQuoteLineText->render_tokens( font_textinput_quote,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
 
-                    color = theme_main->text_box_font_comment_color;
-                    commentLineText->render_tokens( FONT_TEXTinput_COMMENT,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
+                    color = pawgui::theme_main->text_box_font_comment_color;
+                    commentLineText->render_tokens( font_textinput_comment,currStringToRender,textRenderXPos,textRenderYPos,lineStartXPos,lineStartXPos+charactersWithinView,color );
                 }
             }
 
@@ -4752,39 +4755,39 @@ namespace pawgui
         }
     }
 
-    void widget_text_editor::render_linebox( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::render_linebox( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( viewedSpace!=NULL && cam!=NULL )
+        if( view_space!=NULL && cam!=NULL )
         {
             //draws the line count box
             if( lineCountBoxWidth>0 && main_settings->showTextEditorLineCount )
             {
-                gpe::gcanvas->render_rect(lineCountBox,theme_main->text_box_outer_color,false);
+                gpe::gcanvas->render_rect(lineCountBox,pawgui::theme_main->text_box_outer_color,false);
                 int lineSize = (editorZoomLevel*defaultLineHeight);
                 int lineYPos = lineCountBox->y;
                 for(  int i=lineStartYPos; i <= lineStartYPos+linesWithinView && i < (int)listOfStrings.size(); i++)
                 {
                     if( i == cursorYPos)
                     {
-                        gpe::gcanvas->render_rectangle( lineCountBox->x,lineYPos,lineCountBox->x + lineCountBox->w, lineYPos+lineSize,theme_main->text_box_highlight_color,false);
+                        gpe::gcanvas->render_rectangle( lineCountBox->x,lineYPos,lineCountBox->x + lineCountBox->w, lineYPos+lineSize,pawgui::theme_main->text_box_highlight_color,false);
                     }
-                    gpe::gfs->render_text( lineCountBox->x+lineCountBox->w/2, lineYPos,stg_ex::int_to_string(i+1),theme_main->text_box_font_color,FONT_TEXTINPUT,gpe::fa_center,gpe::fa_top,255);
+                    gpe::gfs->render_text( lineCountBox->x+lineCountBox->w/2, lineYPos,stg_ex::int_to_string(i+1),pawgui::theme_main->text_box_font_color,font_textinput,gpe::fa_center,gpe::fa_top,255);
                     lineYPos+=lineSize;
                 }
-                gpe::gcanvas->render_rect( lineCountBox, theme_main->text_box_outline_color,true);
+                gpe::gcanvas->render_rect( lineCountBox, pawgui::theme_main->text_box_outline_color,true);
             }
         }
     }
 
-    void widget_text_editor::render_plain( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::render_plain( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        if( viewedSpace!=NULL && cam!=NULL && has_content() )
+        if( view_space!=NULL && cam!=NULL && has_content() )
         {
-            gpe::color * textColor = theme_main->text_box_font_color;
+            gpe::color * textColor = pawgui::theme_main->text_box_font_color;
             int foundSpecialLogPos = 0;
             int subCopyStartPos = 0;
             std::string stringToRender = "";
@@ -4795,14 +4798,14 @@ namespace pawgui
                 {
                     subCopyStartPos = 0;
 
-                    textColor = theme_main->text_box_font_color;
+                    textColor = pawgui::theme_main->text_box_font_color;
                     if( isTextLog)
                     {
-                        textColor = theme_main->text_box_font_color;
+                        textColor = pawgui::theme_main->text_box_font_color;
                         foundSpecialLogPos = stringToRender.find("Error:");
                         if( foundSpecialLogPos!=(int)std::string::npos)
                         {
-                            textColor = theme_main->text_box_font_color;
+                            textColor = pawgui::theme_main->text_box_font_color;
                             subCopyStartPos =7;
                         }
                         else
@@ -4810,7 +4813,7 @@ namespace pawgui
                             foundSpecialLogPos = stringToRender.find("Warning:");
                             if( foundSpecialLogPos!=(int)std::string::npos)
                             {
-                                textColor = theme_main->text_box_font_keyword_color;
+                                textColor = pawgui::theme_main->text_box_font_keyword_color;
                                 subCopyStartPos =8;
                             }
                             else
@@ -4818,7 +4821,7 @@ namespace pawgui
                                 foundSpecialLogPos = stringToRender.find("Comment:");
                                 if( foundSpecialLogPos!=(int)std::string::npos)
                                 {
-                                    textColor = theme_main->text_box_font_comment_color;
+                                    textColor = pawgui::theme_main->text_box_font_comment_color;
                                     subCopyStartPos =8;
                                 }
                             }
@@ -4827,18 +4830,18 @@ namespace pawgui
                     stringToRender = stg_ex::get_substring(stringToRender,lineStartXPos,charactersWithinView );
                     //gpe::error_log->report("Rendering ["+stringToRender+"]..." );
                     gpe::gfs->render_text( renderBox->x+2,renderBox->y+4+(iLine-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
-                                     stringToRender,textColor,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_top,255 );
+                                     stringToRender,textColor,font_textinput,gpe::fa_left,gpe::fa_top,255 );
                 }
             }
         }
     }
 
-    void widget_text_editor::render_self( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::render_self( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        setup_editor(viewedSpace,cam);
-        if( viewedSpace!=NULL &&  cam!=NULL  )
+        setup_editor(view_space,cam);
+        if( view_space!=NULL &&  cam!=NULL  )
         {
             int subCopyStartPos = 0;
             if( (int)listOfStrings.size()==0)
@@ -4863,7 +4866,7 @@ namespace pawgui
                 redrawDelay = 0;
             }
 
-            gpe::gcanvas->render_rect( renderBox,theme_main->text_box_color,false);
+            gpe::gcanvas->render_rect( renderBox,pawgui::theme_main->text_box_color,false);
             if( has_content() )
             {
                 //Calculates and highlights the symbols
@@ -4875,7 +4878,7 @@ namespace pawgui
                         renderBox->y+(symbolCursorYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                         renderBox->x+2+( std::min(mostCharactersOfText,symbolCursorXPos)-lineStartXPos+1)*TEXTBOX_FONT_SIZE_WIDTH,
                         renderBox->y+(symbolCursorYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                        theme_main->text_box_font_comment_color,false,64);
+                        pawgui::theme_main->text_box_font_comment_color,false,64);
                 }
                 if( symbolEndCursorXPos >= lineStartXPos && symbolEndCursorYPos >=lineStartYPos )
                 {
@@ -4884,7 +4887,7 @@ namespace pawgui
                         renderBox->y+(symbolEndCursorYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                         renderBox->x+2+( std::min(mostCharactersOfText,symbolEndCursorXPos)-lineStartXPos+1)*TEXTBOX_FONT_SIZE_WIDTH,
                         renderBox->y+(symbolEndCursorYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                        theme_main->text_box_font_comment_color,false,64);
+                        pawgui::theme_main->text_box_font_comment_color,false,64);
                 }
 
                 //Renders the text highlights
@@ -4917,7 +4920,7 @@ namespace pawgui
                                     renderBox->y+(minHighlightYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                     renderBox->x+2+( std::min(mostCharactersOfText,(int)listOfStrings.at(minHighlightYPos).size() )-lineStartXPos+1)*TEXTBOX_FONT_SIZE_WIDTH,
                                     renderBox->y+(minHighlightYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                                    theme_main->text_box_highlight_color,false);
+                                    pawgui::theme_main->text_box_highlight_color,false);
                             }
                             else
                             {
@@ -4925,7 +4928,7 @@ namespace pawgui
                                     renderBox->x+2,
                                     renderBox->y+(i-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                     renderBox->x+2+TEXTBOX_FONT_SIZE_WIDTH,
-                                    renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),theme_main->text_box_highlight_color,false);
+                                    renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),pawgui::theme_main->text_box_highlight_color,false);
 
                             }
                         }
@@ -4942,7 +4945,7 @@ namespace pawgui
                                             renderBox->x+2,
                                             renderBox->y+(i-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                             renderBox->x+2+( std::min( mostCharactersOfText,(int)listOfStrings[i].size() )-lineStartXPos )*TEXTBOX_FONT_SIZE_WIDTH,
-                                            renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),theme_main->text_box_highlight_color,false);
+                                            renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),pawgui::theme_main->text_box_highlight_color,false);
                                     }
                                     else
                                     {
@@ -4950,7 +4953,7 @@ namespace pawgui
                                             renderBox->x+2,
                                             renderBox->y+(i-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                             renderBox->x+2+TEXTBOX_FONT_SIZE_WIDTH,
-                                            renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),theme_main->text_box_highlight_color,false);
+                                            renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),pawgui::theme_main->text_box_highlight_color,false);
                                     }
                                 }
                             }
@@ -4966,7 +4969,7 @@ namespace pawgui
                                     renderBox->y+(maxHighlightYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                     renderBox->x+2+( std::min(mostCharactersOfText,maxHighlightXPos)-lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH,
                                     renderBox->y+(maxHighlightYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                                    theme_main->text_box_highlight_color,false);
+                                    pawgui::theme_main->text_box_highlight_color,false);
                             }
                             else
                             {
@@ -4974,7 +4977,7 @@ namespace pawgui
                                     renderBox->x+2,
                                     renderBox->y+(i-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                     renderBox->x+2+TEXTBOX_FONT_SIZE_WIDTH,
-                                    renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),theme_main->text_box_highlight_color,false);
+                                    renderBox->y+(i-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),pawgui::theme_main->text_box_highlight_color,false);
                             }
                         }
                     }
@@ -4992,7 +4995,7 @@ namespace pawgui
                             renderBox->y+(maxHighlightYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                             renderBox->x+2+( maxHighlightXPos-lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH,
                             renderBox->y+(maxHighlightYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                            theme_main->text_box_highlight_color,false);
+                            pawgui::theme_main->text_box_highlight_color,false);
                     }
                 }
                 //Renders the texts
@@ -5000,12 +5003,12 @@ namespace pawgui
                 if( main_settings->showTextEditorSyntaxHightlight && isCodeEditor)
                 {
                     //Codes
-                    render_code( viewedSpace,cam);
+                    render_code( view_space,cam);
                 }
                 else
                 {
                     //Codes
-                    render_plain( viewedSpace,cam);
+                    render_plain( view_space,cam);
                 }
 
 
@@ -5013,11 +5016,11 @@ namespace pawgui
                 //Renders the scrollbars
                 if( showXScroll && textXScroll!=NULL)
                 {
-                    textXScroll->render_self( viewedSpace,cam);
+                    textXScroll->render_self( view_space,cam);
                 }
                 if( showYScroll && textYScroll!=NULL)
                 {
-                    textYScroll->render_self( viewedSpace,cam);
+                    textYScroll->render_self( view_space,cam);
                 }
 
                 //attempt to draw the cursor
@@ -5029,14 +5032,14 @@ namespace pawgui
 
 
 
-            gpe::gcanvas->render_rect( renderBox,theme_main->text_box_outline_color,true);
+            gpe::gcanvas->render_rect( renderBox,pawgui::theme_main->text_box_outline_color,true);
             if( !isReadOnly && textEditorButtonBar!=NULL && showButtonBar )
             {
-                textEditorButtonBar->render_self( viewedSpace,cam);
+                textEditorButtonBar->render_self( view_space,cam);
             }
 
             //Renders the linebox seen on the left
-            render_linebox( viewedSpace, cam );
+            render_linebox( view_space, cam );
             if( isInUse && (prevCursorXPos >=lineStartXPos && prevCursorXPos <= lineStartXPos+charactersWithinView) &&  ( prevCursorYPos >=lineStartYPos && prevCursorYPos <= lineStartYPos+linesWithinView ) )
             {
                 if( prevCursorXPos!=cursorXPos || prevCursorYPos!=cursorYPos )
@@ -5044,7 +5047,7 @@ namespace pawgui
                     gpe::gcanvas->render_vertical_line_color( renderBox->x+2+(prevCursorXPos-lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH,
                                                      renderBox->y+(prevCursorYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                                      renderBox->y+(prevCursorYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                                                     theme_main->text_box_color);
+                                                     pawgui::theme_main->text_box_color);
                 }
             }
 
@@ -5056,20 +5059,20 @@ namespace pawgui
                     gpe::gcanvas->render_vertical_line_color( renderBox->x+2+(cursorXPos-lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH,
                                                      renderBox->y+(cursorYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                                      renderBox->y+(cursorYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                                                     theme_main->text_box_font_color);
+                                                     pawgui::theme_main->text_box_font_color);
                 }
                 else
                 {
                     gpe::gcanvas->render_vertical_line_color( renderBox->x+2+(cursorXPos-lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH,
                                                      renderBox->y+(cursorYPos-lineStartYPos)*(editorZoomLevel*defaultLineHeight),
                                                      renderBox->y+(cursorYPos-lineStartYPos+1)*(editorZoomLevel*defaultLineHeight),
-                                                     theme_main->text_box_color);
+                                                     pawgui::theme_main->text_box_color);
                 }
             }
 
             if( isInUse)
             {
-                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,theme_main->text_box_highlight_color,true);
+                gpe::gcanvas->render_rectangle( widget_box.x-cam->x,widget_box.y-cam->y,widget_box.x+widget_box.w-cam->x,widget_box.y+widget_box.h-cam->y,pawgui::theme_main->text_box_highlight_color,true);
                 if( !isReadOnly)
                 {
                     std::string editorFeedbackLine = "Line: "+ stg_ex::int_to_string(cursorYPos+1)+", Column: "+ stg_ex::int_to_string(cursorXPos+1);
@@ -5090,7 +5093,7 @@ namespace pawgui
                     int iRendSuggestion = 0;
                     syntax_compiler_term * cTerm = NULL;
                     std::string fullPhraseToRender = "";
-                    int suggestionRenderYPos = widget_box.y+viewedSpace->y;
+                    int suggestionRenderYPos = widget_box.y+view_space->y;
                     if( cursorYPos >= lineStartYPos)
                     {
                         if( cursorYPos+suggestedTextMaxInViewCount <= lineStartYPos+linesWithinView && suggestedTextMaxInViewCount < linesWithinView )
@@ -5115,7 +5118,7 @@ namespace pawgui
                             cTerm = suggestedCompilerTerms[iSuggestedEntry];
                             if( cTerm!=NULL)
                             {
-                                if( cTerm->termType==CTERM_FUNCTION)
+                                if( cTerm->termType==cterm_function)
                                 {
                                     if( (int)cTerm->termScope.size() > 0 && cTerm->termScope!="User Global" )
                                     {
@@ -5136,18 +5139,18 @@ namespace pawgui
                                 }
                                 if( iSuggestedEntry==iSuggestionPos)
                                 {
-                                    gpe::gcanvas->render_rectangle(  widget_box.x+viewedSpace->x, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,widget_box.x+viewedSpace->x+maxSuggestedTextWidth, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*(iRendSuggestion+1),theme_main->popup_box_highlight_color,false);
-                                    render_only_text( widget_box.x+viewedSpace->x+32, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,fullPhraseToRender,theme_main->popup_box_highlight_font_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_top,255 );
+                                    gpe::gcanvas->render_rectangle(  widget_box.x+view_space->x, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,widget_box.x+view_space->x+maxSuggestedTextWidth, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*(iRendSuggestion+1),pawgui::theme_main->popup_box_highlight_color,false);
+                                    render_only_text( widget_box.x+view_space->x+32, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,fullPhraseToRender,pawgui::theme_main->popup_box_highlight_font_color,font_textinput,gpe::fa_left,gpe::fa_top,255 );
                                 }
                                 else
                                 {
-                                    gpe::gcanvas->render_rectangle(  widget_box.x+viewedSpace->x, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,widget_box.x+viewedSpace->x+maxSuggestedTextWidth, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*(iRendSuggestion+1),theme_main->popup_box_color,false);
-                                    render_only_text( widget_box.x+viewedSpace->x+32, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,fullPhraseToRender,theme_main->popup_box_font_color,FONT_TEXTINPUT,gpe::fa_left,gpe::fa_top,255 );
+                                    gpe::gcanvas->render_rectangle(  widget_box.x+view_space->x, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,widget_box.x+view_space->x+maxSuggestedTextWidth, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*(iRendSuggestion+1),pawgui::theme_main->popup_box_color,false);
+                                    render_only_text( widget_box.x+view_space->x+32, suggestionRenderYPos+(editorZoomLevel*defaultLineHeight)*iRendSuggestion,fullPhraseToRender,pawgui::theme_main->popup_box_font_color,font_textinput,gpe::fa_left,gpe::fa_top,255 );
                                 }
                                 iRendSuggestion++;
                             }
                         }
-                        gpe::gcanvas->render_rectangle(  widget_box.x+viewedSpace->x, suggestionRenderYPos,widget_box.x+viewedSpace->x+maxSuggestedTextWidth, suggestionRenderYPos+GPE_AVERAGE_LINE_HEIGHT*(iRendSuggestion+1),theme_main->popup_box_border_color,true);
+                        gpe::gcanvas->render_rectangle(  widget_box.x+view_space->x, suggestionRenderYPos,widget_box.x+view_space->x+maxSuggestedTextWidth, suggestionRenderYPos+default_line_height*(iRendSuggestion+1),pawgui::theme_main->popup_box_border_color,true);
 
                     }
                     else
@@ -5155,7 +5158,7 @@ namespace pawgui
                         codeBeingSuggested = false;
                         suggestedCompilerTerms.clear();
                     }
-                    gpe::renderer_main->set_viewpoint( viewedSpace );
+                    gpe::renderer_main->set_viewpoint( view_space );
                 }
             }
             */
@@ -5534,15 +5537,15 @@ namespace pawgui
         cursorTimer = 0;
     }
 
-    void widget_text_editor::set_highlight_pos( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam  )
+    void widget_text_editor::set_highlight_pos( gpe::shape_rect * view_space, gpe::shape_rect * cam  )
     {
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
-        if( viewedSpace!=NULL && cam!=NULL && isCodeEditor && main_syntax_highlighter!=NULL && !isReadOnly && isInUse )
+        if( view_space!=NULL && cam!=NULL && isCodeEditor && main_syntax_highlighter!=NULL && !isReadOnly && isInUse )
         {
             if( main_syntax_highlighter->codeBeingSuggested && (int)main_syntax_highlighter->suggestedCompilerTerms.size() > 0 )
             {
-                int suggestionRenderYPos = renderBox->y +viewedSpace->y;
+                int suggestionRenderYPos = renderBox->y +view_space->y;
                 if( cursorYPos >= lineStartYPos)
                 {
                     if( cursorYPos+main_syntax_highlighter->suggestedTextMaxInViewCount <= lineStartYPos+linesWithinView && main_syntax_highlighter->suggestedTextMaxInViewCount < linesWithinView )
@@ -5561,7 +5564,7 @@ namespace pawgui
                         suggestionRenderYPos+=textEditorButtonBar->get_height();
                     }
                 }
-                main_syntax_highlighter->highlightedTermXPos = renderBox->x+viewedSpace->x;
+                main_syntax_highlighter->highlightedTermXPos = renderBox->x+view_space->x;
                 main_syntax_highlighter->highlightedTermYPos = suggestionRenderYPos;
             }
             else if( main_syntax_highlighter->highlightedTerm!=NULL && highlightYPos >=lineStartYPos && highlightYPos <= lineStartYPos+linesWithinView+3 )
@@ -5569,32 +5572,32 @@ namespace pawgui
                 std::string fullTermDescription = "";
                 //highlightedTerm = highlightedTerm;
 
-                main_syntax_highlighter->highlightedTermXPos = renderBox->x+viewedSpace->x+lineCountBoxWidth+( (highlightXPos -lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH);
+                main_syntax_highlighter->highlightedTermXPos = renderBox->x+view_space->x+lineCountBoxWidth+( (highlightXPos -lineStartXPos)*TEXTBOX_FONT_SIZE_WIDTH);
                 int suggestionRenderYPos = 0;
 
                 if( highlightYPos > lineStartYPos+1)
                 {
                     if( highlightYPos+3 <= lineStartYPos+linesWithinView)
                     {
-                        suggestionRenderYPos = (highlightYPos-lineStartYPos+1)*GPE_AVERAGE_LINE_HEIGHT;
+                        suggestionRenderYPos = (highlightYPos-lineStartYPos+1)*default_line_height;
                     }
                     else
                     {
-                        suggestionRenderYPos = (highlightYPos-lineStartYPos-4 )*GPE_AVERAGE_LINE_HEIGHT;
+                        suggestionRenderYPos = (highlightYPos-lineStartYPos-4 )*default_line_height;
                     }
                 }
                 else
                 {
-                    suggestionRenderYPos=(highlightYPos-lineStartYPos+3)*GPE_AVERAGE_LINE_HEIGHT;
+                    suggestionRenderYPos=(highlightYPos-lineStartYPos+3)*default_line_height;
                 }
-                main_syntax_highlighter->highlightedTermYPos = renderBox->y+viewedSpace->y+suggestionRenderYPos;
+                main_syntax_highlighter->highlightedTermYPos = renderBox->y+view_space->y+suggestionRenderYPos;
             }
         }
     }
 
-    void widget_text_editor::setup_editor( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::setup_editor( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
         if( main_settings->showTextEditorLineCount && isReadOnly==false )
         {
@@ -5645,8 +5648,8 @@ namespace pawgui
         renderBox->w = widget_box.w-lineCountBoxWidth;
 
 
-        textSpaceRect->x = viewedSpace->x + renderBox->x;
-        textSpaceRect->y = viewedSpace->y + renderBox->y;
+        textSpaceRect->x = view_space->x + renderBox->x;
+        textSpaceRect->y = view_space->y + renderBox->y;
         textSpaceRect->w = renderBox->w;
         textSpaceRect->h = renderBox->h;
     }
@@ -5685,11 +5688,11 @@ namespace pawgui
         }
     }
 
-    void widget_text_editor::update_cursor_to_mouse( gpe::shape_rect * viewedSpace, gpe::shape_rect * cam )
+    void widget_text_editor::update_cursor_to_mouse( gpe::shape_rect * view_space, gpe::shape_rect * cam )
     {
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         cam = gpe::camera_find(cam);
-        find_mouse_cursor(&cursorXPos, &cursorYPos, viewedSpace, cam);
+        find_mouse_cursor(&cursorXPos, &cursorYPos, view_space, cam);
         lineToEdit = listOfStrings[cursorYPos];
         showCursor = true;
         cursorTimer = 0;
@@ -5784,7 +5787,7 @@ namespace pawgui
 
     widget_text_editor_wrapped::widget_text_editor_wrapped()
     {
-        guiListTypeName = "wrappedtextarea";
+        widget_type = "wrappedtextarea";
         set_read_only();
         isCodeEditor = false;
         widget_box.w = 640;
@@ -5855,17 +5858,17 @@ namespace pawgui
                 int defaultFontWidth = 0;
                 int defaultFontHeight = 0;
                 int iSubMessage = 0;
-                if( FONT_TEXTINPUT!=NULL)
+                if( font_textinput!=NULL)
                 {
-                    FONT_TEXTINPUT->get_metrics("A",&defaultFontWidth, &defaultFontHeight);
-                    FONT_TEXTINPUT->clear_cache();
+                    font_textinput->get_metrics("A",&defaultFontWidth, &defaultFontHeight);
+                    font_textinput->clear_cache();
                 }
 
                 std::vector < std::string > messageSubTitles;
 
                 if( defaultFontWidth > 0 && defaultFontHeight > 0)
                 {
-                    maxMessageWidth = ( widget_box.w -GENERAL_GPE_GUI_PADDING)/ defaultFontWidth;
+                    maxMessageWidth = ( widget_box.w -padding_default)/ defaultFontWidth;
 
                     if( (int)paragraphText.size() > 0)
                     {

@@ -38,14 +38,14 @@ SOFTWARE.
 
 namespace pawgui
 {
-    widget_resource_container * RESOURCE_TO_DRAG = NULL;
-    widget_resource_container * LAST_CLICKED_RESOURCE = NULL;
-    bool RESOURCEMENU_WAS_RIGHTCLICKED = false;
-    widget_resource_container * RESOURCE_BEINGRENAMED = NULL;
+    widget_resource_container * resource_dragged = NULL;
+    widget_resource_container * resource_last_clicked = NULL;
+    bool resourcemenu_rightclicked = false;
+    widget_resource_container * resource_being_renamed = NULL;
 
-    int LAST_CLICKED_RESTYPE = -1;
-    int DRAGGED_RESTYPE = -1;
-    int lastResTypeRendered = -1;
+    int resource_last_clicked_type = -1;
+    int resource_dragged_type = -1;
+    int resourcetype_last_rendered_type = -1;
 
     std::string project_current_name = "";
     std::string seeked_project_name = "";
@@ -58,7 +58,7 @@ namespace pawgui
         subContentsModified = false;
         parentResource = NULL;
         projectParentFileName = projectParentName = projFolderName;
-        opName = new_name;
+        widget_name = new_name;
         resourceType = rType;
         resourceId = rId;
         isFolder = folder;
@@ -71,7 +71,7 @@ namespace pawgui
         element_box.x = 0;
         element_box.y = 0;
         element_box.w = 0;
-        element_box.h = RESOURCE_AREA_HEIGHT;
+        element_box.h = resource_container_default_height;
         containeranimation = NULL;
         containerTexture = NULL;
         animationFrameNumber = 0;
@@ -80,9 +80,9 @@ namespace pawgui
         int textW = 0;
         int textH = 0;
 
-        if( (int)opName.size()>0 && FONT_TOOLBAR!=NULL)
+        if( (int)widget_name.size()>0 && font_toolbar!=NULL)
         {
-            FONT_TOOLBAR->get_metrics(opName,&textW, &textH);
+            font_toolbar->get_metrics(widget_name,&textW, &textH);
         }
         strTexWidth = textW;
         strTexHeight = textH;
@@ -108,23 +108,23 @@ namespace pawgui
 
     widget_resource_container::~widget_resource_container()
     {
-        gpe::error_log->report("Removing Resource named ["+opName+"].");
+        gpe::error_log->report("Removing Resource named ["+widget_name+"].");
         if( main_loader_display != NULL )
         {
-            main_loader_display->update_submessages( "Removing Resource", opName );
+            main_loader_display->update_submessages( "Removing Resource", widget_name );
         }
         if( heldResource!=NULL)
         {
-            gpe::error_log->report("Removing Held-Resource named ["+opName+"].");
+            gpe::error_log->report("Removing Held-Resource named ["+widget_name+"].");
             if( main_tab_resource_bar!=NULL)
             {
                 main_tab_resource_bar->close_resource_tab( projectParentName,heldResource->globalResouceIdNumber );
             }
-            gpe::error_log->report("Held-Resource deleted ["+opName+"].");
+            gpe::error_log->report("Held-Resource deleted ["+widget_name+"].");
             delete heldResource;
             heldResource = NULL;
         }
-        gpe::error_log->report("Held-Resource's sub-options deleted ["+opName+"].");
+        gpe::error_log->report("Held-Resource's sub-options deleted ["+widget_name+"].");
         widget_resource_container * tempSubOp = NULL;
         for( int i = (int)subOptions.size()-1; i >=0; i--)
         {
@@ -147,7 +147,7 @@ namespace pawgui
             containerTexture = NULL;*/
         }
         subOptions.clear();
-        gpe::error_log->report("Resource ["+opName+"] deleted.");
+        gpe::error_log->report("Resource ["+widget_name+"] deleted.");
 
     }
 
@@ -199,9 +199,9 @@ namespace pawgui
                 {
                     subOptions.push_back( newResource );
                 }
-                else if( RESOURCE_TO_DRAG!=NULL)
+                else if( resource_dragged!=NULL)
                 {
-                    if( RESOURCE_TO_DRAG->matches(newResource) )
+                    if( resource_dragged->matches(newResource) )
                     {
                         subOptions.insert(subOptions.begin(),newResource);
                     }
@@ -223,13 +223,13 @@ namespace pawgui
         int new_id = (int)subOptions.size()+1;
         widget_resource_container * newFolder = new widget_resource_container(projectParentFileName,resourceTypeName,resourceType,new_id,true, gResId, rezPropValue);
         newFolder->element_box.x = element_box.x;
-        newFolder->element_box.y = element_box.y+new_id*RESOURCE_AREA_HEIGHT;
-        //element_box.h+=RESOURCE_AREA_HEIGHT;
+        newFolder->element_box.y = element_box.y+new_id*resource_container_default_height;
+        //element_box.h+=resource_container_default_height;
         newFolder->parentResource = this;
         subOptions.push_back(newFolder);
         if( subMenuIsOpen)
         {
-            element_box.h += RESOURCE_AREA_HEIGHT;
+            element_box.h += resource_container_default_height;
         }
         return newFolder;
     }
@@ -239,11 +239,11 @@ namespace pawgui
         int new_id = (int)subOptions.size()+1;
         widget_resource_container * newFolder = new widget_resource_container(projectParentFileName,resourceTypeName,rType,new_id,true, gResId,rezPropValue);
         newFolder->element_box.x = element_box.x;
-        newFolder->element_box.y = element_box.y+new_id*RESOURCE_AREA_HEIGHT;
-        //element_box.h+=RESOURCE_AREA_HEIGHT;
+        newFolder->element_box.y = element_box.y+new_id*resource_container_default_height;
+        //element_box.h+=resource_container_default_height;
         newFolder->parentResource = this;
         subOptions.push_back(newFolder);
-        element_box.h += RESOURCE_AREA_HEIGHT;
+        element_box.h += resource_container_default_height;
         return newFolder;
     }
 
@@ -257,7 +257,7 @@ namespace pawgui
         if( heldResource!=NULL)
         {
             std::string fName = heldResource->get_current_name();
-            if( fName!=opName)
+            if( fName!=widget_name)
             {
                 if( autoChange)
                 {
@@ -388,7 +388,7 @@ namespace pawgui
 
     std::string widget_resource_container::get_name()
     {
-        return opName;
+        return widget_name;
     }
 
     std::string widget_resource_container::get_project_name()
@@ -685,20 +685,20 @@ namespace pawgui
         }
     }
 
-    int widget_resource_container::process_container(int xPos, int yPos, int selectedId, gpe::shape_rect * viewedSpace, gpe::shape_rect * cam, bool mouseInRange )
+    int widget_resource_container::process_container(int xPos, int yPos, int selectedId, gpe::shape_rect * view_space, gpe::shape_rect * cam, bool mouseInRange )
     {
         int returnAnswer = -1;
-        int lxPos = xPos-cam->x+viewedSpace->x;
-        int lyPos = yPos-cam->y+viewedSpace->y;
+        int lxPos = xPos-cam->x+view_space->x;
+        int lyPos = yPos-cam->y+view_space->y;
         int lx2Pos = lxPos+cam->w;
-        int ly2Pos = lyPos+RESOURCE_AREA_HEIGHT;
+        int ly2Pos = lyPos+resource_container_default_height;
         bool folderOpened = false;
         subContentsModified = false;
-        foundX2Pos = xPos+strTexWidth+RESOURCE_AREA_HEIGHT*3/2;
+        foundX2Pos = xPos+strTexWidth+resource_container_default_height*3/2;
         if( isFolder || isSuperFolder || isSuperProjectFolder )
         {
             widget_resource_container * cResource = NULL;
-            int subYPos = yPos+RESOURCE_AREA_HEIGHT;
+            int subYPos = yPos+resource_container_default_height;
             if( mouseInRange && gpe::input->check_mouse_pressed(0) )
             {
                 if( gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,lxPos,lyPos,lx2Pos,ly2Pos) )
@@ -707,7 +707,7 @@ namespace pawgui
 
                     if( !isSuperFolder && !isSuperProjectFolder)
                     {
-                        RESOURCE_TO_DRAG = this;
+                        resource_dragged = this;
                     }
                 }
             }
@@ -719,10 +719,10 @@ namespace pawgui
                     seeked_project_name = projectParentFileName;
 
                     bool openAllowed = true;
-                    if( RESOURCE_TO_DRAG!=NULL)
+                    if( resource_dragged!=NULL)
                     {
-                        LAST_CLICKED_RESOURCE = this;
-                        if( RESOURCE_TO_DRAG->matches(this)!=1)
+                        resource_last_clicked = this;
+                        if( resource_dragged->matches(this)!=1)
                         {
                             openAllowed = false;
                         }
@@ -748,7 +748,7 @@ namespace pawgui
                                 cResource = subOptions[i];
                                 if(cResource != NULL)
                                 {
-                                    cResource->process_container(xPos+RESOURCE_AREA_HEIGHT,subYPos,selectedId,viewedSpace,cam,mouseInRange);
+                                    cResource->process_container(xPos+resource_container_default_height,subYPos,selectedId,view_space,cam,mouseInRange);
                                     subYPos += cResource->element_box.h;
                                     element_box.h += cResource->element_box.h;
                                 }
@@ -764,29 +764,29 @@ namespace pawgui
                     returnAnswer = globalResouceId;
                     seeked_project_name = projectParentFileName;
 
-                    LAST_CLICKED_RESOURCE = this;
-                    LAST_CLICKED_RESTYPE = resourceType;
-                    RESOURCEMENU_WAS_RIGHTCLICKED = true;
-                    RESOURCE_TO_DRAG = NULL;
+                    resource_last_clicked = this;
+                    resource_last_clicked_type = resourceType;
+                    resourcemenu_rightclicked = true;
+                    resource_dragged = NULL;
                 }
             }
             else if( mouseInRange && gpe::point_between(gpe::input->mouse_position_x,gpe::input->mouse_position_y,lxPos,lyPos,lx2Pos,ly2Pos) )
             {
-                main_overlay_system->update_tooltip( opName );
+                main_overlay_system->update_tooltip( widget_name );
             }
 
             if( subMenuIsOpen )
             {
                 cResource = NULL;
-                subYPos = yPos+RESOURCE_AREA_HEIGHT;
-                element_box.h = RESOURCE_AREA_HEIGHT;
+                subYPos = yPos+resource_container_default_height;
+                element_box.h = resource_container_default_height;
                 int subAnswer = -1;
                 for(int i = 0; i<(int)subOptions.size(); i+=1)
                 {
                     cResource = subOptions[i];
                     if(cResource != NULL)
                     {
-                        subAnswer = cResource->process_container(xPos,subYPos,selectedId,viewedSpace,cam,mouseInRange);
+                        subAnswer = cResource->process_container(xPos,subYPos,selectedId,view_space,cam,mouseInRange);
                         if(subAnswer>=0)
                         {
                             returnAnswer = subAnswer;
@@ -813,13 +813,13 @@ namespace pawgui
             }
             else
             {
-                element_box.h = RESOURCE_AREA_HEIGHT;
-                foundX2Pos = xPos+strTexWidth+RESOURCE_AREA_HEIGHT/2;
+                element_box.h = resource_container_default_height;
+                foundX2Pos = xPos+strTexWidth+resource_container_default_height/2;
             }
         }
         else
         {
-            element_box.h = RESOURCE_AREA_HEIGHT;
+            element_box.h = resource_container_default_height;
             //set_basic_image_value();
 
             if( mouseInRange && gpe::input->check_mouse_button_clicked(0))
@@ -833,8 +833,8 @@ namespace pawgui
                     returnAnswer = globalResouceId;
                     seeked_project_name = projectParentFileName;
 
-                    LAST_CLICKED_RESOURCE = this;
-                    RESOURCE_TO_DRAG = NULL;
+                    resource_last_clicked = this;
+                    resource_dragged = NULL;
                 }
             }
             else if( mouseInRange && gpe::input->check_mouse_released( mb_left))
@@ -847,40 +847,40 @@ namespace pawgui
                     }
                     returnAnswer = globalResouceId;
                     seeked_project_name = projectParentFileName;
-                    LAST_CLICKED_RESOURCE = this;
+                    resource_last_clicked = this;
                 }
             }
             else if( mouseInRange && gpe::input->check_mouse_released(1) )
             {
-                if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,viewedSpace->x-cam->x,lyPos,lx2Pos,ly2Pos) )
+                if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,view_space->x-cam->x,lyPos,lx2Pos,ly2Pos) )
                 {
                     returnAnswer = globalResouceId;
                     seeked_project_name = projectParentFileName;
-                    LAST_CLICKED_RESOURCE = this;
-                    RESOURCEMENU_WAS_RIGHTCLICKED = true;
+                    resource_last_clicked = this;
+                    resourcemenu_rightclicked = true;
                 }
             }
             else if( mouseInRange && gpe::input->check_mouse_pressed(0) )
             {
-                if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,viewedSpace->x-cam->x,lyPos,lx2Pos,ly2Pos) )
+                if( gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,view_space->x-cam->x,lyPos,lx2Pos,ly2Pos) )
                 {
-                    RESOURCE_TO_DRAG = this;
+                    resource_dragged = this;
                 }
             }
             else if(mouseInRange && gpe::point_within(gpe::input->mouse_position_x,gpe::input->mouse_position_y,lxPos,lyPos,lx2Pos,ly2Pos) )
             {
-                main_overlay_system->update_tooltip( opName );
+                main_overlay_system->update_tooltip( widget_name );
             }
 
             if(heldResource!=NULL)
             {
                 std::string heldresource_name = heldResource->get_name();
-                if( opName!=heldresource_name )
+                if( widget_name!=heldresource_name )
                 {
                     if( heldresource_name.size()>0 && stg_ex::is_alnum(heldresource_name,false,true)  )
                     {
                         resouceNameChanged = true;
-                        opName = heldresource_name;
+                        widget_name = heldresource_name;
                     }
                 }
             }
@@ -900,23 +900,23 @@ namespace pawgui
         return false;
     }
 
-    void widget_resource_container::render_contained_object( gpe::shape_rect * viewedSpace, gpe::shape_rect *cam)
+    void widget_resource_container::render_contained_object( gpe::shape_rect * view_space, gpe::shape_rect *cam)
     {
 
     }
 
-    void widget_resource_container::render_option( int xPos, int yPos, int selectedIdNumber, gpe::shape_rect * viewedSpace, gpe::shape_rect * cam, bool renderSubOptions, bool renderAutomatically)
+    void widget_resource_container::render_option( int xPos, int yPos, int selectedIdNumber, gpe::shape_rect * view_space, gpe::shape_rect * cam, bool renderSubOptions, bool renderAutomatically)
     {
         bool selfIsInView = false;
 
-        viewedSpace = gpe::camera_find( viewedSpace );
+        view_space = gpe::camera_find( view_space );
         cam = gpe::camera_find( cam );
         int rendY = yPos;
         if( rendY>=cam->y && rendY <=cam->y+cam->h )
         {
             selfIsInView = true;
         }
-        else if( rendY+RESOURCE_AREA_HEIGHT >=cam->y && rendY+RESOURCE_AREA_HEIGHT <=cam->y+cam->h  )
+        else if( rendY+resource_container_default_height >=cam->y && rendY+resource_container_default_height <=cam->y+cam->h  )
         {
             selfIsInView = true;
         }
@@ -928,24 +928,24 @@ namespace pawgui
                 int subOptionsSize = (int)subOptions.size();
                 if( (selfIsInView || renderAutomatically) && subOptionsSize > 0 )
                 {
-                    gpe::gfs->render_text( xPos-cam->x,yPos-cam->y,"-",theme_main->main_box_font_color,FONT_RESOURCEBAR,gpe::fa_left,gpe::fa_top);
+                    gpe::gfs->render_text( xPos-cam->x,yPos-cam->y,"-",pawgui::theme_main->main_box_font_color,font_resourcebar,gpe::fa_left,gpe::fa_top);
                 }
                 widget_resource_container * foundContainer = NULL;
-                int subXPos = xPos+RESOURCE_AREA_HEIGHT;
-                int subYPos = yPos+RESOURCE_AREA_HEIGHT;
+                int subXPos = xPos+resource_container_default_height;
+                int subYPos = yPos+resource_container_default_height;
                 for( int i=0; i< subOptionsSize; i++ )
                 {
                     foundContainer = subOptions[i];
                     if(foundContainer!=NULL)
                     {
-                        foundContainer->render_option( subXPos,subYPos,selectedIdNumber,viewedSpace,cam,renderSubOptions,renderAutomatically);
+                        foundContainer->render_option( subXPos,subYPos,selectedIdNumber,view_space,cam,renderSubOptions,renderAutomatically);
                         subYPos+=foundContainer->element_box.h;
                     }
                 }
             }
             else if( (selfIsInView || renderAutomatically ) && (int)subOptions.size() > 0 )
             {
-                gpe::gfs->render_text( xPos-cam->x,yPos-cam->y,"+",theme_main->main_box_font_color,FONT_RESOURCEBAR,gpe::fa_left,gpe::fa_top);
+                gpe::gfs->render_text( xPos-cam->x,yPos-cam->y,"+",pawgui::theme_main->main_box_font_color,font_resourcebar,gpe::fa_left,gpe::fa_top);
             }
         }
 
@@ -953,50 +953,49 @@ namespace pawgui
         {
             if(globalResouceId ==selectedIdNumber && projectParentName.compare(project_current_name)==0 )
             {
-                //gpe::gcanvas->render_rectangle( xPos-cam->x,yPos-cam->y,xPos+RESOURCE_AREA_HEIGHT*2+GENERAL_NEAR_ICON_YPADDING+strTexWidth-cam->x,yPos+16-cam->y,theme_main->button_box_highlight_color,false,64);
-                gpe::gcanvas->render_rectangle( xPos-cam->x, yPos-cam->y, widget_box.w-cam->x,yPos+16-cam->y,theme_main->button_box_highlight_color,false,64);
+                gpe::gcanvas->render_rectangle( xPos-cam->x, yPos-cam->y, widget_box.w-cam->x,yPos+16-cam->y,pawgui::theme_main->button_box_highlight_color,false,64);
             }
 
             if( (isFolder || isSuperFolder || isSuperProjectFolder ) && containerTexture!=NULL )
             {
                 if(projectParentName.compare(project_current_name)==0 && isSuperProjectFolder)
                 {
-                    containerTexture->render_tex_resized( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y,RESOURCE_AREA_HEIGHT,RESOURCE_AREA_HEIGHT,NULL,theme_main->folder_color_highlight);
+                    containerTexture->render_tex_resized( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y,resource_container_default_height,resource_container_default_height,NULL,pawgui::theme_main->folder_color_highlight);
                 }
                 else
                 {
-                    containerTexture->render_tex_resized( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y,RESOURCE_AREA_HEIGHT,RESOURCE_AREA_HEIGHT,NULL,theme_main->folder_color);
+                    containerTexture->render_tex_resized( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y,resource_container_default_height,resource_container_default_height,NULL,pawgui::theme_main->folder_color);
                 }
             }
             else if( !isSuperProjectFolder && !isFolder && !isSuperFolder )
             {
-                render_image( xPos,yPos,RESOURCE_AREA_HEIGHT,RESOURCE_AREA_HEIGHT,NULL,cam );
+                render_image( xPos,yPos,resource_container_default_height,resource_container_default_height,NULL,cam );
             }
 
-            gpe::gfs->render_text( xPos+RESOURCE_AREA_HEIGHT+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y+RESOURCE_AREA_HEIGHT/2,opName,theme_main->main_box_font_color,FONT_RESOURCEBAR,gpe::fa_left,gpe::fa_center);
-            lastResTypeRendered = resourceType;
+            gpe::gfs->render_text( xPos+resource_container_default_height+default_icon_plusminus_size-cam->x,yPos-cam->y+resource_container_default_height/2,widget_name,pawgui::theme_main->main_box_font_color,font_resourcebar,gpe::fa_left,gpe::fa_center);
+            resourcetype_last_rendered_type = resourceType;
         }
     }
 
-    void widget_resource_container::render_image( int xPos, int yPos, int rWidth, int rHeight, gpe::shape_rect * viewedSpace, gpe::shape_rect *cam, gpe::color * renderColor)
+    void widget_resource_container::render_image( int xPos, int yPos, int r_width, int r_height, gpe::shape_rect * view_space, gpe::shape_rect *cam, gpe::color * renderColor)
     {
         if( renderColor == NULL )
         {
             renderColor = gpe::c_white;
         }
         cam = gpe::camera_find(cam);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         bool imageWasRendered = false;
 
         if( (isFolder || isSuperProjectFolder) && containerTexture!=NULL )
         {
             if(projectParentName.compare(project_current_name)==0 && isSuperProjectFolder)
             {
-                containerTexture->render_tex_resized( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y,rWidth,rHeight,NULL,theme_main->folder_color_highlight);
+                containerTexture->render_tex_resized( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y,r_width,r_height,NULL,pawgui::theme_main->folder_color_highlight);
             }
             else
             {
-                containerTexture->render_tex_resized( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y,rWidth,rHeight,NULL,theme_main->folder_color);
+                containerTexture->render_tex_resized( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y,r_width,r_height,NULL,pawgui::theme_main->folder_color);
             }
         }
         else if( !isSuperProjectFolder)
@@ -1004,7 +1003,7 @@ namespace pawgui
             gpe::animaton2d * myAnim = get_resource_animation();
             if( myAnim !=NULL )
             {
-                myAnim->render_resized( 0, xPos - cam->x, yPos - cam->y, rWidth, rHeight, NULL );
+                myAnim->render_resized( 0, xPos - cam->x, yPos - cam->y, r_width, r_height, NULL );
                 imageWasRendered= true;
             }
             else
@@ -1012,7 +1011,7 @@ namespace pawgui
                 gpe::texture_base * myTexture = get_resource_texture();
                 if( myTexture!=NULL)
                 {
-                    myTexture->render_tex_resized( xPos-cam->x, yPos-cam->y, rWidth, rHeight,NULL);
+                    myTexture->render_tex_resized( xPos-cam->x, yPos-cam->y, r_width, r_height,NULL);
                     imageWasRendered= true;
                 }
             }
@@ -1020,44 +1019,44 @@ namespace pawgui
 
         if( imageWasRendered==false && containerTexture!=NULL )
         {
-            gpe::color * imageColor  = theme_main->main_box_font_color;
+            gpe::color * imageColor  = pawgui::theme_main->main_box_font_color;
 
-            if( rWidth <=0 && rHeight <= 0 )
+            if( r_width <=0 && r_height <= 0 )
             {
-                rWidth = rHeight = RESOURCE_AREA_HEIGHT;
+                r_width = r_height = resource_container_default_height;
             }
 
             if(projectParentName.compare(project_current_name)==0 && isSuperProjectFolder)
             {
-                containerTexture->render_tex_resized(xPos-cam->x,yPos-cam->y,rWidth,rHeight,NULL,theme_main->main_box_font_color);
+                containerTexture->render_tex_resized(xPos-cam->x,yPos-cam->y,r_width,r_height,NULL,pawgui::theme_main->main_box_font_color);
             }
             else
             {
-                containerTexture->render_tex_resized(  xPos-cam->x,yPos-cam->y,rWidth,rHeight,NULL,theme_main->main_box_font_color);
+                containerTexture->render_tex_resized(  xPos-cam->x,yPos-cam->y,r_width,r_height,NULL,pawgui::theme_main->main_box_font_color);
             }
         }
 
     }
 
-    void widget_resource_container::render_image_scaled( int xPos, int yPos, float xScale, float yScale, gpe::shape_rect * viewedSpace, gpe::shape_rect *cam, gpe::color * renderColor)
+    void widget_resource_container::render_image_scaled( int xPos, int yPos, float xScale, float yScale, gpe::shape_rect * view_space, gpe::shape_rect *cam, gpe::color * renderColor)
     {
         if( renderColor == NULL )
         {
             renderColor = gpe::c_white;
         }
         cam = gpe::camera_find(cam);
-        viewedSpace = gpe::camera_find(viewedSpace);
+        view_space = gpe::camera_find(view_space);
         bool imageWasRendered = false;
 
         if( (isFolder || isSuperProjectFolder) && containerTexture!=NULL )
         {
             if(projectParentName.compare(project_current_name)==0 && isSuperProjectFolder)
             {
-                containerTexture->render_tex_scaled( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y, xScale,yScale,NULL, theme_main->folder_color_highlight);
+                containerTexture->render_tex_scaled( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y, xScale,yScale,NULL, pawgui::theme_main->folder_color_highlight);
             }
             else
             {
-                containerTexture->render_tex_scaled( xPos+GENERAL_PLUSMINUX_ICON_SIZE-cam->x,yPos-cam->y,xScale,yScale,NULL, theme_main->folder_color );
+                containerTexture->render_tex_scaled( xPos+default_icon_plusminus_size-cam->x,yPos-cam->y,xScale,yScale,NULL, pawgui::theme_main->folder_color );
             }
         }
         else if( !isSuperProjectFolder)
@@ -1081,15 +1080,15 @@ namespace pawgui
 
         if( imageWasRendered==false && containerTexture!=NULL )
         {
-            gpe::color * imageColor  = theme_main->main_box_font_color;
+            gpe::color * imageColor  = pawgui::theme_main->main_box_font_color;
 
             if(projectParentName.compare(project_current_name)==0 && isSuperProjectFolder)
             {
-                containerTexture->render_tex_scaled( xPos-cam->x,yPos-cam->y, xScale, yScale, NULL,theme_main->main_box_font_color);
+                containerTexture->render_tex_scaled( xPos-cam->x,yPos-cam->y, xScale, yScale, NULL,pawgui::theme_main->main_box_font_color);
             }
             else
             {
-                containerTexture->render_tex_scaled( xPos-cam->x,yPos-cam->y,xScale, yScale, NULL,theme_main->main_box_font_color);
+                containerTexture->render_tex_scaled( xPos-cam->x,yPos-cam->y,xScale, yScale, NULL,pawgui::theme_main->main_box_font_color);
             }
         }
     }
@@ -1237,13 +1236,13 @@ namespace pawgui
 
     void widget_resource_container::set_name(std::string new_name)
     {
-        opName = new_name;
+        widget_name = new_name;
         int textW = 0;
         int textH = 0;
 
-        if( (int)opName.size()>0 && FONT_TOOLBAR!=NULL)
+        if( (int)widget_name.size()>0 && font_toolbar!=NULL)
         {
-            FONT_TOOLBAR->get_metrics(opName,&textW, &textH);
+            font_toolbar->get_metrics(widget_name,&textW, &textH);
         }
         strTexWidth = textW;
         strTexHeight = textH;
@@ -1285,19 +1284,19 @@ namespace pawgui
             {
                 if( isSuperProjectFolder)
                 {
-                    *fileTarget << "[Project=" << opName<< "]\n";
+                    *fileTarget << "[Project=" << widget_name<< "]\n";
                 }
                 else if(isSuperFolder)
                 {
-                    *fileTarget << nestedTabsStr << "[SuperFolder=" << opName<< "]\n";
+                    *fileTarget << nestedTabsStr << "[SuperFolder=" << widget_name<< "]\n";
                     if( main_loader_display != NULL )
                     {
-                        main_loader_display->update_submessages( "Saving "+opName+" resources", "Please wait..." );
+                        main_loader_display->update_submessages( "Saving "+widget_name+" resources", "Please wait..." );
                     }
                 }
                 else if( isFolder)
                 {
-                    *fileTarget << nestedTabsStr << "[Folder=" << opName << "," << globalResouceId << "]\n";
+                    *fileTarget << nestedTabsStr << "[Folder=" << widget_name << "," << globalResouceId << "]\n";
                 }
                 if( heldResource!=NULL)
                 {

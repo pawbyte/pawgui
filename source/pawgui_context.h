@@ -39,13 +39,15 @@ SOFTWARE.
 namespace pawgui
 {
     const int context_menu_height_default = 28;
+    extern int popup_font_size_width;
+    extern int popup_font_size_height;
 
     class popup_menu_option
     {
     private:
         bool isContext;
         bool showShortCuts;
-        std::string opName;
+        std::string widget_name;
         int opId;
         gpe::animaton2d * opanimation;
         gpe::texture_base * opTexture;
